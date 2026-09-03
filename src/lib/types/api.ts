@@ -56,6 +56,13 @@ export interface MasterRef {
 export interface MediaRef {
   id: string;
   url: string;
+  variants?: Partial<Record<'thumb' | 'card' | 'hero', {
+    url: string;
+    mime_type: string;
+    file_size: number;
+    width: number;
+    height: number;
+  }>> | null;
   file_name: string;
   mime_type: string;
   title: string | null;

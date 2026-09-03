@@ -25,6 +25,7 @@ import { FaqAccordion } from '@/components/content/faq-accordion';
 import { LeadersSection } from '@/components/home/leaders-section';
 import { OrganizationJsonLd } from '@/components/seo/json-ld';
 import { detailPath } from '@/lib/api/endpoints';
+import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 
 export const revalidate = 300;
 
@@ -288,12 +289,12 @@ export default async function HomePage() {
                   className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-muted"
                 >
                   <Image
-                    src={event.cover_media!.url}
+                    src={mediaUrl(event.cover_media!, 'card')}
                     alt={event.cover_media!.alt_text || event.cover_media!.title || event.title_en || ''}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 380px"
-                    unoptimized={event.cover_media!.url.startsWith('http://localhost')}
+                    unoptimized={isLocalMediaUrl(mediaUrl(event.cover_media!, 'card'))}
                   />
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

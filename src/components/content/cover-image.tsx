@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { ImageOff } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { MediaRef } from '@/lib/types/api';
+import { isLocalMediaUrl, mediaUrl, type MediaVariantName } from '@/utils/media-url';
 
 /**
  * Render a media reference as an optimized image with meaningful alt text. Falls
@@ -15,6 +16,7 @@ export function CoverImage({
   sizes = '(max-width: 768px) 100vw, 400px',
   priority = false,
   rounded = true,
+  variant = 'card',
 }: {
   media: MediaRef | null | undefined;
   fallbackAlt?: string;
@@ -22,6 +24,7 @@ export function CoverImage({
   sizes?: string;
   priority?: boolean;
   rounded?: boolean;
+  variant?: MediaVariantName;
 }) {
   const wrapper = cn('relative overflow-hidden bg-muted', rounded && 'rounded-md', className);
 
@@ -35,17 +38,18 @@ export function CoverImage({
 
   // alt="" marks a decorative image; meaningful images get descriptive text.
   const alt = media.alt_text || media.title || media.caption || fallbackAlt;
+  const src = mediaUrl(media, variant);
 
   return (
     <div className={wrapper}>
       <Image
-        src={media.url}
+        src={src}
         alt={alt}
         fill
         sizes={sizes}
         priority={priority}
         className="object-cover"
-        unoptimized={media.url.startsWith('http://localhost')}
+        unoptimized={isLocalMediaUrl(src)}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
 import { BilingualTitle, BilingualLead } from '@/components/content/bilingual';
 import { cn } from '@/utils/cn';
+import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 
 export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
   const { language } = useLanguage();
@@ -69,6 +70,7 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
   // current is always a valid index (guarded by total === 0 above + modular arithmetic)
   const activeImage = images[current]!;
   const caption = pickText(activeImage.caption_en, activeImage.caption_hi, language);
+  const activeSrc = mediaUrl(activeImage.media, 'hero');
 
   return (
     <>
@@ -92,12 +94,13 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
       <div className="group relative mt-6 overflow-hidden rounded-xl bg-black" style={{ aspectRatio: '16/9' }}>
         <Image
           key={current}
-          src={activeImage.media.url}
+          src={activeSrc}
           alt={caption || gallery.title_en}
           fill
           sizes="(max-width: 1024px) 100vw, 900px"
           className="object-contain"
           priority
+          unoptimized={isLocalMediaUrl(activeSrc)}
         />
 
         {/* Counter badge */}
@@ -171,11 +174,12 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
                 )}
               >
                 <Image
-                  src={img.media.url}
+                  src={mediaUrl(img.media, 'thumb')}
                   alt={thumbAlt}
                   fill
                   sizes="80px"
                   className="object-cover"
+                  unoptimized={isLocalMediaUrl(mediaUrl(img.media, 'thumb'))}
                 />
               </button>
             );

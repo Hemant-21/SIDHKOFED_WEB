@@ -8,6 +8,7 @@ import { useLanguage } from '@/providers/language-provider';
 import { buttonClasses } from '@/components/ui/button';
 import { pickText } from '@/utils/bilingual';
 import { formatNumber } from '@/utils/format';
+import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 import { HeroSearchBar } from './hero-search-bar';
 import type { GalleryImage, DashboardMetric } from '@/lib/types/content';
 
@@ -40,7 +41,7 @@ export function HeroSearch({ slides, stats }: HeroSearchProps) {
           where the diagonal right panel is hidden. Reuses the same slide/fallback source. */}
       <div className="relative h-48 w-full overflow-hidden sm:h-64 lg:hidden">
         <Image
-          src={currentSlide ? currentSlide.media.url : '/hero-cooperative.png'}
+          src={currentSlide ? mediaUrl(currentSlide.media, 'hero') : '/hero-cooperative.png'}
           alt={
             currentSlide
               ? currentSlide.media.alt_text || currentSlide.caption_en || currentSlide.media.title || ''
@@ -50,7 +51,7 @@ export function HeroSearch({ slides, stats }: HeroSearchProps) {
           className="object-cover"
           priority
           sizes="100vw"
-          unoptimized={Boolean(currentSlide?.media.url.startsWith('http://localhost'))}
+          unoptimized={Boolean(currentSlide && isLocalMediaUrl(mediaUrl(currentSlide.media, 'hero')))}
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
       </div>
@@ -154,13 +155,13 @@ export function HeroSearch({ slides, stats }: HeroSearchProps) {
                   aria-hidden={i !== current}
                 >
                   <Image
-                    src={slide.media.url}
+                    src={mediaUrl(slide.media, 'hero')}
                     alt={slide.media.alt_text || slide.caption_en || slide.media.title || ''}
                     fill
                     className="object-cover"
                     priority={i === 0}
                     sizes="(max-width: 1280px) 50vw, 640px"
-                    unoptimized={slide.media.url.startsWith('http://localhost')}
+                    unoptimized={isLocalMediaUrl(mediaUrl(slide.media, 'hero'))}
                   />
                 </div>
               ))}
