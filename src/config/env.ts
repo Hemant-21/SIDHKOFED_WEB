@@ -25,5 +25,3 @@ export const env = {
   /** Default UI language. English primary, Hindi optional (codex §10). */
   defaultLanguage: read('NEXT_PUBLIC_DEFAULT_LANGUAGE', 'en') as 'en' | 'hi',
 } as const;
-
-export type AppEnv = typeof env;

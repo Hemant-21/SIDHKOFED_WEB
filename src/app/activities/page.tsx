@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { GraduationCap, Megaphone, Users2, Trophy } from 'lucide-react';
+import { GraduationCap, Megaphone, Users2 } from 'lucide-react';
 import { getListSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type { EventSummary } from '@/lib/types/content';
@@ -31,9 +31,6 @@ type SP = Record<string, string | string[] | undefined>;
  * `/publications` uses for `knowledge_category`) — clicking a card and picking the same value
  * in the filter dropdown are indistinguishable, since both just set the same URL param.
  *
- * Success Stories has no backing data in the Events API (no matching EventType — see
- * masters.ts → EVENT_TYPES), so it can't be a same-page `event_type` filter value; it links to
- * its existing dedicated page instead, which already has an honest "coming soon" state.
  */
 const ICON_CLASS = 'h-5 w-5 text-primary';
 
@@ -55,12 +52,6 @@ const ACTIVITY_CATEGORIES: CategoryCardDef[] = [
     titleKey: 'page.activities.institutional.title',
     descriptionKey: 'page.activities.institutional.subtitle',
     href: '/activities?event_type=meeting#listing',
-  },
-  {
-    icon: <Trophy className={ICON_CLASS} aria-hidden="true" />,
-    titleKey: 'page.activities.success.title',
-    descriptionKey: 'page.activities.success.subtitle',
-    href: '/activities/success-stories',
   },
 ];
 

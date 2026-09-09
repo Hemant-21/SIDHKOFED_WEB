@@ -6,8 +6,6 @@
 
 export type Language = 'en' | 'hi';
 
-export const LANGUAGES: Language[] = ['en', 'hi'];
-
 export const LANGUAGE_LABELS: Record<Language, string> = {
   en: 'English',
   hi: 'हिन्दी',
@@ -161,8 +159,6 @@ const en: Dict = {
   'page.activities.workshops.subtitle': 'Workshops and community awareness programmes conducted by SIDHKOFED.',
   'page.activities.institutional.title': 'Meetings, Visits & Institutional Events',
   'page.activities.institutional.subtitle': 'Meetings, field visits, conferences and MoU signings.',
-  'page.activities.success.title': 'Success Stories',
-  'page.activities.success.subtitle': 'Stories of impact from cooperative members and beneficiaries.',
 
   'page.membership.title': 'Membership',
   'page.membership.subtitle': 'Institutional and cooperative membership in SIDHKOFED and District Unions.',
@@ -233,7 +229,6 @@ const en: Dict = {
   'page.notifications.tenders.title': 'Tenders',
   'page.notifications.tenders.subtitle': 'Active and upcoming tenders from SIDHKOFED.',
 
-  'page.successStories.comingSoon': 'Success Stories will be available here soon.',
 
   // Detail sections / common labels
   'detail.documents': 'Documents',
@@ -464,8 +459,6 @@ const hi: Dict = {
   'page.activities.workshops.subtitle': 'SIDHKOFED द्वारा आयोजित कार्यशालाएँ और सामुदायिक जागरूकता कार्यक्रम।',
   'page.activities.institutional.title': 'बैठकें, दौरे और संस्थागत कार्यक्रम',
   'page.activities.institutional.subtitle': 'बैठकें, क्षेत्र भ्रमण, सम्मेलन और MoU हस्ताक्षर।',
-  'page.activities.success.title': 'सफलता की कहानियाँ',
-  'page.activities.success.subtitle': 'सहकारी सदस्यों और लाभार्थियों के प्रभाव की कहानियाँ।',
 
   'page.membership.title': 'सदस्यता',
   'page.membership.subtitle': 'SIDHKOFED और जिला संघों में संस्थागत और सहकारी सदस्यता।',
@@ -536,7 +529,6 @@ const hi: Dict = {
   'page.notifications.tenders.title': 'निविदाएं',
   'page.notifications.tenders.subtitle': 'SIDHKOFED की सक्रिय और आगामी निविदाएं।',
 
-  'page.successStories.comingSoon': 'सफलता की कहानियाँ जल्द यहाँ उपलब्ध होंगी।',
 
   // Public enquiry form (procurement buyer/seller enquiry)
   'form.enquiry.name': 'पूरा नाम',
@@ -567,7 +559,7 @@ const hi: Dict = {
     'पूछताछ फ़ॉर्म अस्थायी रूप से अनुपलब्ध है। कृपया नीचे दिए गए विवरण से सीधे संपर्क करें।',
 };
 
-export const DICTIONARIES: Record<Language, Dict> = { en, hi };
+const DICTIONARIES: Record<Language, Dict> = { en, hi };
 
 /** Translate a UI key for a language, falling back to English then the key itself. */
 export function translate(lang: Language, key: string): string {

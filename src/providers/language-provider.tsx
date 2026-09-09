@@ -87,8 +87,3 @@ export function useLanguage(): LanguageContextValue {
   if (!ctx) throw new Error('useLanguage must be used within <LanguageProvider>');
   return ctx;
 }
-
-/** Shorthand for the translate function alone. */
-export function useT(): (key: string) => string {
-  return useLanguage().t;
-}

@@ -3,12 +3,12 @@
  * response uses exactly one envelope. The public site only ever reads these.
  */
 
-export interface ResponseMeta {
+interface ResponseMeta {
   request_id: string;
   message?: string;
 }
 
-export interface Pagination {
+interface Pagination {
   page: number;
   page_size: number;
   total_items: number;
@@ -88,13 +88,6 @@ export interface DocumentLinkRef {
   file_url: string;
   language: string;
   publication_date?: string | null;
-}
-
-export interface PageRef {
-  id: string;
-  slug: string;
-  title_en: string;
-  title_hi: string | null;
 }
 
 export interface ProgrammeLinkRef {

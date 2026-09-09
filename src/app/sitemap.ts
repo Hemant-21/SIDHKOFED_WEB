@@ -21,7 +21,6 @@ const STATIC_ROUTES = [
   '/activities/trainings',
   '/activities/workshops-awareness',
   '/activities/institutional-events',
-  '/activities/success-stories',
   '/membership',
   '/procurement',
   '/procurement/announcements',

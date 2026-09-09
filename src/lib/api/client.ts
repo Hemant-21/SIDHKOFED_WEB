@@ -9,9 +9,9 @@
 
 import axios, { AxiosError, type AxiosInstance } from 'axios';
 import { env } from '@/config/env';
-import type { ListResult, PaginatedResponse, SuccessResponse, ErrorResponse } from '@/lib/types/api';
+import type { SuccessResponse, ErrorResponse } from '@/lib/types/api';
 
-export const publicClient: AxiosInstance = axios.create({
+const publicClient: AxiosInstance = axios.create({
   baseURL: env.apiBaseUrl,
   timeout: 20_000,
   headers: { Accept: 'application/json' },
@@ -42,37 +42,6 @@ function normalize(err: unknown): ClientApiError {
     );
   }
   return new ClientApiError(0, 'error', err instanceof Error ? err.message : 'Unexpected error');
-}
-
-export type QueryParams = Record<string, string | number | boolean | null | undefined>;
-
-function cleanParams(params?: QueryParams): QueryParams | undefined {
-  if (!params) return undefined;
-  const out: QueryParams = {};
-  for (const [k, v] of Object.entries(params)) {
-    if (v !== undefined && v !== null && v !== '') out[k] = v;
-  }
-  return out;
-}
-
-/** GET a paginated list → `{ items, pagination }`. */
-export async function fetchList<T>(path: string, params?: QueryParams): Promise<ListResult<T>> {
-  try {
-    const { data } = await publicClient.get<PaginatedResponse<T>>(path, { params: cleanParams(params) });
-    return { items: data.data, pagination: data.pagination };
-  } catch (err) {
-    throw normalize(err);
-  }
-}
-
-/** GET a single resource → unwrapped `data`. */
-export async function fetchOne<T>(path: string, params?: QueryParams): Promise<T> {
-  try {
-    const { data } = await publicClient.get<SuccessResponse<T>>(path, { params: cleanParams(params) });
-    return data.data;
-  } catch (err) {
-    throw normalize(err);
-  }
 }
 
 /**

@@ -13,29 +13,29 @@ import type {
   GalleryLinkRef,
 } from './api';
 
-export interface FinancialYearRef {
+interface FinancialYearRef {
   id: string;
   label: string;
 }
-export interface ReportingPeriodRef {
+interface ReportingPeriodRef {
   id: string;
   slug: string;
   name_en: string;
   name_hi: string | null;
 }
-export interface ProgrammeRef {
+interface ProgrammeRef {
   id: string;
   slug: string;
   title_en: string;
   title_hi: string | null;
 }
-export interface InstitutionRef {
+interface InstitutionRef {
   id: string;
   slug: string;
   name_en: string;
   name_hi: string | null;
 }
-export interface DocumentRef {
+interface DocumentRef {
   id: string;
   slug: string;
   title_en: string;
@@ -45,7 +45,7 @@ export interface DocumentRef {
   language: string;
   publication_date: string | null;
 }
-export interface DocumentFileRef {
+interface DocumentFileRef {
   id: string;
   file_url: string;
   file_name: string;
@@ -53,7 +53,7 @@ export interface DocumentFileRef {
   file_size: number;
   title: string | null;
 }
-export interface SourceEventRef {
+interface SourceEventRef {
   id: string;
   slug: string;
   title_en: string;
@@ -79,7 +79,7 @@ export interface EventSummary {
   highlight_type: string | null;
   public_url: string;
 }
-export interface EventNewsLink {
+interface EventNewsLink {
   id: string;
   slug: string;
   title_en: string;
@@ -184,7 +184,7 @@ export interface DocumentDetail extends DocumentSummary {
 }
 
 // ── Toolkits ─────────────────────────────────────────────────────────────────
-export interface ToolkitItem {
+interface ToolkitItem {
   id: string;
   name_en: string;
   name_hi: string | null;
@@ -213,7 +213,7 @@ export interface ToolkitDetail extends ToolkitSummary {
   description_hi: string | null;
   items: ToolkitItem[];
 }
-export interface ToolkitDistributionSummaryItem {
+interface ToolkitDistributionSummaryItem {
   id: string;
   name_en: string;
   name_hi?: string | null;
@@ -474,7 +474,7 @@ export const SEARCH_CONTENT_TYPES = [
   'procurement_update',
   'page',
 ] as const;
-export type SearchContentType = (typeof SEARCH_CONTENT_TYPES)[number];
+type SearchContentType = (typeof SEARCH_CONTENT_TYPES)[number];
 
 export interface SearchResult {
   content_type: SearchContentType;

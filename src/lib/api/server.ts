@@ -13,9 +13,9 @@ import { env } from '@/config/env';
 import type { ListResult, PaginatedResponse, SuccessResponse, ErrorResponse } from '@/lib/types/api';
 
 /** Default ISR window for public content (seconds). Tunable per call. */
-export const DEFAULT_REVALIDATE = 300;
+const DEFAULT_REVALIDATE = 300;
 
-export class ApiError extends Error {
+class ApiError extends Error {
   constructor(
     public readonly status: number,
     public readonly code: string,
@@ -83,7 +83,7 @@ async function request<T>(path: string, opts: FetchOpts = {}): Promise<T> {
 }
 
 /** Fetch a single resource and return the unwrapped `data`. */
-export async function getOne<T>(path: string, opts: FetchOpts = {}): Promise<T> {
+async function getOne<T>(path: string, opts: FetchOpts = {}): Promise<T> {
   const body = await request<SuccessResponse<T>>(path, opts);
   return body.data;
 }
@@ -102,7 +102,7 @@ export async function getOneOrNull<T>(path: string, opts: FetchOpts = {}): Promi
 }
 
 /** Fetch a paginated list and return `{ items, pagination }`. */
-export async function getList<T>(path: string, opts: FetchOpts = {}): Promise<ListResult<T>> {
+async function getList<T>(path: string, opts: FetchOpts = {}): Promise<ListResult<T>> {
   const body = await request<PaginatedResponse<T>>(path, opts);
   return { items: body.data, pagination: body.pagination };
 }

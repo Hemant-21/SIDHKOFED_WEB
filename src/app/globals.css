@@ -13,28 +13,28 @@
  */
 @layer base {
   :root {
-    --background: 210 20% 98%;
+    --background: 152 24% 97%;
     --foreground: 222 22% 12%;
 
     --surface: 0 0% 100%;
     --surface-foreground: 222 22% 12%;
 
-    --muted: 214 16% 92%;
+    --muted: 150 20% 92%;
     --muted-foreground: 215 16% 38%;
 
-    --border: 214 18% 86%;
-    --input: 214 18% 84%;
+    --border: 154 18% 84%;
+    --input: 154 18% 81%;
     --ring: 158 64% 32%;
 
     /* SIDHKOFED cooperative green primary. */
     --primary: 158 64% 24%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 214 16% 92%;
+    --secondary: 151 24% 91%;
     --secondary-foreground: 222 22% 18%;
 
     /* Warm earthen accent for highlights / calls to action. */
-    --accent: 28 80% 42%;
+    --accent: 28 88% 45%;
     --accent-foreground: 0 0% 100%;
 
     --success: 150 60% 30%;
@@ -49,7 +49,7 @@
     --info: 211 80% 40%;
     --info-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --radius: 0.875rem;
 
     --font-size-scale: 1;
   }
@@ -100,7 +100,9 @@
   }
 
   body {
-    background-color: hsl(var(--background));
+    background:
+      radial-gradient(circle at 8% 0%, hsl(var(--primary) / 0.06), transparent 28rem),
+      hsl(var(--background));
     color: hsl(var(--foreground));
     font-feature-settings: 'rlig' 1, 'calt' 1;
     text-rendering: optimizeLegibility;

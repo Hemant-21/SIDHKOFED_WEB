@@ -15,7 +15,7 @@ export function SiteHeader() {
   const { t, language } = useLanguage();
 
   return (
-    <header className="sticky top-0 z-[60] border-b border-border bg-surface/95 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-[60] border-b border-border/80 bg-surface/95 shadow-sm backdrop-blur">
       {/* Utility bar — full org name on the left, controls on the right */}
       <div className="border-b border-border bg-primary text-primary-foreground">
         <Container className="flex h-10 items-center justify-between gap-4">
@@ -52,7 +52,7 @@ export function SiteHeader() {
           <Link
             href="/search"
             aria-label={t('nav.search')}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground hover:bg-muted"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted"
           >
             <Search className="h-5 w-5" aria-hidden="true" />
           </Link>
