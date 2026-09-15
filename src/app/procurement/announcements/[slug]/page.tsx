@@ -32,14 +32,14 @@ export default async function ProcurementDetailPage({ params }: { params: { slug
       <BreadcrumbJsonLd
         items={[
           { name: 'Procurement', url: '/procurement' },
-          { name: 'Announcements', url: '/procurement/announcements' },
+          { name: 'Announcements', url: '/procurement?procurement_update_category=announcements-schedules' },
           { name: item.title_en, url: item.public_url },
         ]}
       />
       <DetailLayout
         crumbs={[
           { label: 'Procurement', href: '/procurement' },
-          { label: 'Announcements', href: '/procurement/announcements' },
+          { label: 'Announcements', href: '/procurement?procurement_update_category=announcements-schedules#listing' },
           { label: item.title_en },
         ]}
         aside={<ProcurementAside item={item} />}

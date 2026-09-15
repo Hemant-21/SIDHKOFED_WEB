@@ -7,7 +7,7 @@ import { PAGE_SIZE, toPage } from '@/lib/listing';
 import { ListingLayout } from '@/components/listing/listing-layout';
 import { PaginationNav } from '@/components/listing/pagination-nav';
 import { ResultsSummary } from '@/components/listing/results-summary';
-import { EmptyState } from '@/components/feedback/states';
+import { ListingEmptyState } from '@/components/feedback/states';
 import { GalleryCard } from '@/components/cards/gallery-card';
 
 export const revalidate = 300;
@@ -43,11 +43,11 @@ export default async function GalleriesListPage({ searchParams }: { searchParams
         { label: 'Publications', href: '/publications' },
         { label: 'Media Gallery', href: '/publications/media' },
       ]}
-      summary={<ResultsSummary total={list.pagination.total_items} />}
+      summary={list.error ? null : <ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >
       {list.items.length === 0 ? (
-        <EmptyState />
+        <ListingEmptyState failed={list.error} filtered={Object.entries(searchParams).some(([key, value]) => key !== 'page' && Boolean(value))} />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {list.items.map((gallery) => (

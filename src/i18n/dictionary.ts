@@ -108,6 +108,9 @@ const en: Dict = {
   'filter.level': 'Level',
   'filter.membershipType': 'Membership type',
   'filter.knowledgeCategory': 'Knowledge category',
+  'filter.communicationType': 'Communication type',
+  'filter.documentType': 'Document type',
+  'filter.section': 'Section',
   'filter.timing': 'Timing',
 
   // Page titles + subtitles
@@ -245,7 +248,6 @@ const en: Dict = {
   'detail.viewNews': 'Read related news',
   'detail.sourceEvent': 'From event',
   'detail.relatedProgrammes': 'Related programmes',
-  'detail.trainingTypes': 'Permitted training types',
   'detail.fundingSource': 'Funding source',
   'detail.participants': 'Participants',
   'detail.visitWebsite': 'Visit website',
@@ -401,6 +403,9 @@ const hi: Dict = {
   'filter.level': 'स्तर',
   'filter.membershipType': 'सदस्यता प्रकार',
   'filter.knowledgeCategory': 'ज्ञान श्रेणी',
+  'filter.communicationType': 'संचार प्रकार',
+  'filter.documentType': 'दस्तावेज़ प्रकार',
+  'filter.section': 'अनुभाग',
   'filter.timing': 'समय',
 
   'page.events.title': 'कार्यक्रम',

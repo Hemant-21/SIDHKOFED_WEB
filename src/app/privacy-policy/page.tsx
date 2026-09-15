@@ -24,9 +24,9 @@ export default function PrivacyPolicyPage() {
       <Container className="py-12">
         <div className="prose prose-gray max-w-3xl dark:prose-invert">
           <p className="lead">
-            This Privacy Policy explains how the Sidho-Kanho Birsha Murmu Krishi Evam Vanopaj
-            Rajya Sahkari Sangh Maryadit (SIDHKOFED) website collects, uses and protects
-            information when you visit this portal.
+            This Privacy Policy explains how the Sidho-Kanho Agriculture and Forest Produce State
+            Cooperative Federation Ltd. (SIDHKOFED) website collects, uses and protects information
+            when you visit this portal.
           </p>
 
           <h2>Information We Collect</h2>
@@ -64,12 +64,13 @@ export default function PrivacyPolicyPage() {
 
           <h2>Contact</h2>
           <p>
-            For questions about this policy, contact the SIDHKOFED office at Sameti Bhawan, Kanke
-            Road, Ranchi — 834 008 or email{' '}
+            For questions about this policy, contact the SIDHKOFED office at 1st Floor, Sameti
+            Bhawan, Behind Krishi Bhawan, Kanke Road, Ranchi, Jharkhand – 834008, call{' '}
+            <a href="tel:06512913142">0651-2913142</a>, or email{' '}
             <a href="mailto:sidhokanhofed@gmail.com">sidhokanhofed@gmail.com</a>.
           </p>
 
-          <p className="text-sm text-muted-foreground">Last updated: June 2026</p>
+          <p className="text-sm text-muted-foreground">Last updated: September 2026</p>
         </div>
       </Container>
     </>

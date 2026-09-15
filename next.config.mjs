@@ -49,6 +49,8 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  // Keep the live development server from overwriting production build manifests.
+  distDir: isProd ? '.next' : '.next-development',
   reactStrictMode: true,
   poweredByHeader: false,
   // Enable standalone output for Docker — produces a self-contained server

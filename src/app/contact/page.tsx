@@ -9,6 +9,7 @@ import { Container } from '@/components/ui/container';
 import { LocalizedHeading, LocalizedText } from '@/components/listing/localized-heading';
 import { EnquiryForm } from '@/components/forms/enquiry-form';
 import { OfficeContactCard } from '@/components/content/office-contact-card';
+import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Contact us',
@@ -48,6 +49,8 @@ export default async function ContactPage() {
           </div>
         </div>
       </Container>
+
+      <PageFaqSection pageKey="contact" />
     </>
   );
 }

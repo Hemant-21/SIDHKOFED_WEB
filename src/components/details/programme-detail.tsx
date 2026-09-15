@@ -70,7 +70,6 @@ export function ProgrammeArticle({ programme }: { programme: ProgrammeDetail }) 
 export function ProgrammeAside({ programme }: { programme: ProgrammeDetail }) {
   const { t, language } = useLanguage();
   const commodities = programme.commodities.map((c) => ({ label: pickText(c.name_en, c.name_hi, language) }));
-  const trainings = programme.permitted_training_types.map((c) => ({ label: pickText(c.name_en, c.name_hi, language) }));
 
   return (
     <>
@@ -79,11 +78,7 @@ export function ProgrammeAside({ programme }: { programme: ProgrammeDetail }) {
           <Chips items={commodities} />
         </DetailSection>
       )}
-      {trainings.length > 0 && (
-        <DetailSection title={t('detail.trainingTypes')}>
-          <Chips items={trainings} />
-        </DetailSection>
-      )}
+
     </>
   );
 }

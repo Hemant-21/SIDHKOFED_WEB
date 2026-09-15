@@ -4,17 +4,17 @@
  * Backend-driven filter bar for listing pages. Filter option data (masters,
  * programmes, years) is fetched server-side and passed in; this island only syncs
  * the active selection to the URL query string (shareable, back-button friendly).
- * Search is debounced; selects apply immediately. Unknown filter keys are ignored
- * by the API, so this never breaks a listing.
+ * Search is debounced; multi-selects commit with Apply. Only supported query
+ * fields are exposed by each page.
  */
 
 import { useEffect, useRef, useState } from 'react';
 import { useQueryParams } from '@/hooks/use-query-params';
-import { useDebounce } from '@/hooks/use-debounce';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
 import { SearchInput } from '@/components/ui/search-input';
 import { Select } from '@/components/ui/select';
+import { MultiSelect } from '@/components/ui/multi-select';
 import { Button } from '@/components/ui/button';
 
 export interface FilterOption {
@@ -24,6 +24,8 @@ export interface FilterOption {
 }
 
 export interface FilterSelect {
+  /** Enable only for API fields that accept comma-separated alternatives. */
+  multiple?: boolean;
   /** Query-string key, e.g. `event_type`. */
   key: string;
   /** i18n key for the field label, e.g. `filter.type`. */
@@ -44,19 +46,24 @@ export function FilterBar({
   const { t, language } = useLanguage();
 
   const [term, setTerm] = useState(() => get('search'));
-  const debounced = useDebounce(term, 350);
-  const mounted = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const updateParams = useRef(setParams);
+  updateParams.current = setParams;
+  const urlSearch = get('search');
 
-  // Push the debounced search term to the URL (skips the initial mount so a fresh
-  // load with a pre-set ?search= isn't clobbered).
+  // Back/forward and category navigation restore the search field without
+  // scheduling a stale search that could overwrite the new filter selection.
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return;
-    }
-    setParams({ search: debounced || null });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounced]);
+    clearTimeout(timer.current);
+    setTerm(urlSearch);
+  }, [urlSearch]);
+  useEffect(() => () => clearTimeout(timer.current), []);
+
+  function changeSearch(value: string) {
+    setTerm(value);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => updateParams.current({ search: value || null }), 350);
+  }
 
   const hasActive = Array.from(searchParams.keys()).some((k) => k !== 'page');
 
@@ -69,13 +76,26 @@ export function FilterBar({
               id="listing-search"
               label={t('nav.search')}
               value={term}
-              onChange={setTerm}
+              onChange={changeSearch}
               placeholder={t(searchPlaceholderKey)}
             />
           </div>
         )}
 
-        {selects.map((s) => (
+        {selects.map((s) => s.multiple ? (
+          <MultiSelect
+            key={s.key}
+            id={`filter-${s.key}`}
+            label={t(s.labelKey)}
+            value={get(s.key).split(',').filter(Boolean)}
+            onChange={(values) => setParams({ [s.key]: values.join(',') || null })}
+            placeholder={t('common.all')}
+            applyLabel={language === 'hi' ? 'लागू करें' : 'Apply'}
+            clearLabel={language === 'hi' ? 'सभी हटाएँ' : 'Clear selection'}
+            options={s.options.map((o) => ({ value: o.value, label: pickText(o.name_en, o.name_hi ?? null, language) }))}
+            className="md:w-56"
+          />
+        ) : (
           <Select
             key={s.key}
             id={`filter-${s.key}`}
@@ -95,6 +115,7 @@ export function FilterBar({
           <Button
             variant="outline"
             onClick={() => {
+              clearTimeout(timer.current);
               setTerm('');
               clearParams();
             }}
@@ -103,6 +124,25 @@ export function FilterBar({
           </Button>
         )}
       </div>
+      {selects.some((s) => s.multiple) && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          {language === 'hi' ? 'एक फ़िल्टर में कई विकल्प चुन सकते हैं। परिणाम हर लागू फ़िल्टर से मेल खाते हैं।' : 'Choose one or more options per filter. Results match every applied filter.'}
+        </p>
+      )}
+      {hasActive && (
+        <div aria-label={language === 'hi' ? 'लागू फ़िल्टर' : 'Applied filters'} className="mt-3 flex flex-wrap gap-2">
+          {selects.flatMap((s) => get(s.key).split(',').filter(Boolean).map((value) => {
+            const option = s.options.find((o) => o.value === value);
+            const label = option ? pickText(option.name_en, option.name_hi ?? null, language) : value;
+            return <button key={`${s.key}-${value}`} type="button"
+              aria-label={`${language === 'hi' ? 'हटाएँ' : 'Remove'} ${t(s.labelKey)}: ${label}`}
+              onClick={() => setParams({ [s.key]: get(s.key).split(',').filter((v) => v !== value).join(',') || null })}
+              className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs text-primary hover:bg-primary/10">
+              {t(s.labelKey)}: {label} <span aria-hidden="true">×</span>
+            </button>;
+          }))}
+        </div>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { ListingLayout } from '@/components/listing/listing-layout';
 import { FilterBar } from '@/components/listing/filter-bar';
 import { PaginationNav } from '@/components/listing/pagination-nav';
 import { ResultsSummary } from '@/components/listing/results-summary';
-import { EmptyState } from '@/components/feedback/states';
+import { ListingEmptyState } from '@/components/feedback/states';
 import { DocumentCard } from '@/components/cards/document-card';
 
 export const revalidate = 300;
@@ -48,17 +48,17 @@ export default async function DocumentsPage({ searchParams }: { searchParams: SP
       filters={
         <FilterBar
           selects={[
-            { key: 'document_type', labelKey: 'filter.type', options: documentTypes },
-            { key: 'commodity', labelKey: 'filter.commodity', options: commodities },
+            { key: 'document_type', multiple: true, labelKey: 'filter.type', options: documentTypes },
+            { key: 'commodity', multiple: true, labelKey: 'filter.commodity', options: commodities },
             { key: 'year', labelKey: 'filter.year', options: yearOptions() },
           ]}
         />
       }
-      summary={<ResultsSummary total={list.pagination.total_items} />}
+      summary={list.error ? null : <ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >
       {list.items.length === 0 ? (
-        <EmptyState />
+        <ListingEmptyState failed={list.error} filtered={Object.entries(searchParams).some(([key, value]) => key !== 'page' && Boolean(value))} />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {list.items.map((document) => (

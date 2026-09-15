@@ -28,7 +28,7 @@ export default async function ProgrammeDetailPage({ params }: { params: { slug: 
   const programme = await load(params.slug);
   if (!programme) notFound();
 
-  const hasAside = programme.commodities.length > 0 || programme.permitted_training_types.length > 0;
+  const hasAside = programme.commodities.length > 0;
 
   return (
     <>

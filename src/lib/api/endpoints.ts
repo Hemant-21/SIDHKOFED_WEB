@@ -26,9 +26,16 @@ export const PUBLIC_ENDPOINTS = {
   digitalServices: '/public/digital-services',
   leadership: '/public/leadership',
 
-  // Dashboard
-  dashboard: '/public/dashboard',
-  dashboardKpis: '/public/dashboard/kpis',
+  // Operational Reports — live-calculated replacement for the retired
+  // `/public/dashboard*` (DashboardReport/DashboardMetric) routes. Returns the six
+  // operational reports restricted to public-eligible measures, current financial
+  // year, no filters. Use `detailPath(operationalReports, key)` for the single-report
+  // variant (`GET /public/operational-reports/:key`).
+  operationalReports: '/public/operational-reports',
+
+  // Website Metrics (Stage 6) — curated public figures per placement, distinct from
+  // the Dashboard module above (different backend source: Website Metric snapshots).
+  websiteMetrics: (placement: string) => `/public/website-metrics?placement=${placement}`,
 
   // Masters (for filter dropdowns)
   masters: '/public/masters', // /{key}

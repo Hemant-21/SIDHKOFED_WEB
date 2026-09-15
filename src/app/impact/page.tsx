@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
 import { BarChart3 } from 'lucide-react';
-import { getOneSafe } from '@/lib/api/server';
-import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
-import type { KpisResponse } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { CategoryCards, type CategoryCardDef } from '@/components/listing/category-cards';
 import { LocalizedHero } from '@/components/listing/localized-heading';
-import { KpiStrip } from '@/components/dashboard/kpi-strip';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
 
@@ -35,20 +31,12 @@ const IMPACT_CATEGORIES: CategoryCardDef[] = [
 ];
 
 export default async function ImpactPage() {
-  const kpis = await getOneSafe<KpisResponse>(PUBLIC_ENDPOINTS.dashboardKpis);
-
   return (
     <>
       <Breadcrumbs items={[{ label: 'Impact' }]} />
 
       {/* Page header — same band style as /publications */}
       <LocalizedHero titleKey="page.impact.title" subtitleKey="page.impact.subtitle" />
-
-      {kpis && kpis.kpis.length > 0 ? (
-        <Container className="py-8">
-          <KpiStrip reports={kpis.kpis} />
-        </Container>
-      ) : null}
 
       {/* Browse by Category */}
       <div className="border-b border-border bg-muted/40">

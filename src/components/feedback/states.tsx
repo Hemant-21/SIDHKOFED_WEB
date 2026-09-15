@@ -5,6 +5,17 @@ import { Inbox } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/providers/language-provider';
 
+export function ListingEmptyState({ failed = false, filtered = false }: { failed?: boolean; filtered?: boolean }) {
+  const { language } = useLanguage();
+  if (failed) return <EmptyState
+    title={language === 'hi' ? 'सामग्री लोड नहीं हो सकी' : 'Content could not be loaded'}
+    body={language === 'hi' ? 'कृपया पृष्ठ को रीफ़्रेश करके दोबारा कोशिश करें।' : 'Please refresh the page and try again.'} />;
+  if (filtered) return <EmptyState
+    title={language === 'hi' ? 'कोई परिणाम नहीं मिला' : 'No matching results'}
+    body={language === 'hi' ? 'दूसरे विकल्प चुनें या फ़िल्टर हटाएँ।' : 'Try other selections or clear the filters.'} />;
+  return <EmptyState />;
+}
+
 /** Empty state for listings with no published content. */
 export function EmptyState({ title, body }: { title?: string; body?: string }) {
   const { t } = useLanguage();

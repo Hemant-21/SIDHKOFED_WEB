@@ -17,12 +17,6 @@ interface FinancialYearRef {
   id: string;
   label: string;
 }
-interface ReportingPeriodRef {
-  id: string;
-  slug: string;
-  name_en: string;
-  name_hi: string | null;
-}
 interface ProgrammeRef {
   id: string;
   slug: string;
@@ -69,6 +63,7 @@ export interface EventSummary {
   title_hi: string | null;
   summary_en: string | null;
   event_type: MasterRef;
+  event_category: MasterRef;
   event_status: string;
   date_mode: string;
   start_date: string;
@@ -91,7 +86,6 @@ export interface EventDetail extends EventSummary {
   summary_hi: string | null;
   description_en: string | null;
   description_hi: string | null;
-  training_type: MasterRef | null;
   block: MasterRef | null;
   dynamic_values: Record<string, unknown>;
   outcome_summary_en: string | null;
@@ -156,7 +150,6 @@ export interface ProgrammeDetail extends ProgrammeSummary {
   application_process_hi: string | null;
   funding_source: string | null;
   commodities: MasterRef[];
-  permitted_training_types: MasterRef[];
 }
 
 // ── Documents ────────────────────────────────────────────────────────────────
@@ -167,6 +160,8 @@ export interface DocumentSummary {
   title_hi: string | null;
   document_type: MasterRef;
   knowledge_category: MasterRef | null;
+  communication_type: MasterRef | null;
+  document_section: 'publications' | 'notifications';
   financial_year: FinancialYearRef | null;
   language: string;
   publication_date: string | null;
@@ -303,6 +298,7 @@ export interface ProcurementSummary {
   summary_en: string | null;
   summary_hi: string | null;
   procurement_update_type: MasterRef;
+  procurement_update_category: MasterRef;
   commodity: MasterRef | null;
   rate: number | null;
   unit: string | null;
@@ -401,7 +397,6 @@ export interface Faq {
   question_hi: string | null;
   answer_en: string;
   answer_hi: string | null;
-  faq_category: MasterRef | null;
   highlight_type: string | null;
 }
 
@@ -433,34 +428,65 @@ export interface Leader {
   display_order: number | null;
 }
 
-// ── Dashboard ────────────────────────────────────────────────────────────────
-export interface DashboardMetric {
-  metric_key: string;
+// ── Operational Reports ──────────────────────────────────────────────────────
+// Live-calculated replacement for the retired Dashboard Reports (`DashboardReport`/
+// `DashboardMetric`) concept. See `GET /public/operational-reports` and
+// `GET /public/operational-reports/:key` — no auth, restricted to public-eligible
+// measures, calculated for the current financial year, no filters.
+export interface OperationalReportPeriod {
+  mode: string;
+  start: string;
+  end: string;
+}
+export interface OperationalMeasureCompleteness {
+  known: number;
+  missing: number;
+  undated: number;
+}
+export interface PublicOperationalMeasure {
+  measure_key: string;
   label_en: string;
   label_hi: string | null;
-  value: number | null;
-  value_text: string | null;
   unit: string | null;
-  financial_year: FinancialYearRef | null;
-  reporting_period: ReportingPeriodRef | null;
+  value: number | null;
+  note_en: string;
+  note_hi: string | null;
+  completeness: OperationalMeasureCompleteness | null;
 }
-export interface DashboardReport {
+export interface PublicOperationalReport {
   report_key: string;
   title_en: string;
   title_hi: string | null;
-  description_en: string | null;
-  description_hi: string | null;
-  display_order: number | null;
-  highlight_type: string | null;
-  public_url: string;
-  layout_config?: unknown;
-  metrics: DashboardMetric[];
+  resolved_period: OperationalReportPeriod;
+  measures: PublicOperationalMeasure[];
 }
-export interface DashboardResponse {
-  reports: DashboardReport[];
+/** Shape of `GET /public/operational-reports` (`data` unwraps to `{ reports }`). */
+export interface OperationalReportsResponse {
+  reports: PublicOperationalReport[];
 }
-export interface KpisResponse {
-  kpis: DashboardReport[];
+
+// ── Website Metrics (Stage 6) ──────────────────────────────────────────────────
+// Distinct from `DashboardMetric` above: these come from the Website Metrics module
+// (curated snapshots published per placement — `homepage` | `about_us`), not the
+// Dashboard/Reports module. See `GET /public/website-metrics?placement=...`.
+export interface WebsiteMetricPeriod {
+  mode: string;
+  start: string | null;
+  end: string | null;
+}
+export interface PublicWebsiteMetric {
+  metric_key: string;
+  label_en: string;
+  label_hi: string | null;
+  value: number;
+  unit: string | null;
+  period: WebsiteMetricPeriod;
+  as_of_date: string | null;
+  disclosure_note_en: string;
+  disclosure_note_hi: string | null;
+}
+export interface WebsiteMetricsResponse {
+  metrics: PublicWebsiteMetric[];
 }
 
 // ── Search ───────────────────────────────────────────────────────────────────

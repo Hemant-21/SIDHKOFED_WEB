@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { GraduationCap, Megaphone, Users2 } from 'lucide-react';
+import type { ReactNode } from 'react';
+import { GraduationCap, Megaphone, Users2, Folder } from 'lucide-react';
 import { getListSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type { EventSummary } from '@/lib/types/content';
@@ -10,10 +11,11 @@ import { PaginationNav } from '@/components/listing/pagination-nav';
 import { ResultsSummary } from '@/components/listing/results-summary';
 import { CategoryCards, type CategoryCardDef } from '@/components/listing/category-cards';
 import { LocalizedHero } from '@/components/listing/localized-heading';
-import { EmptyState } from '@/components/feedback/states';
+import { ListingEmptyState } from '@/components/feedback/states';
 import { EventCard } from '@/components/cards/event-card';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
+import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const revalidate = 300;
 
@@ -25,45 +27,26 @@ export const metadata: Metadata = buildMetadata({
 
 type SP = Record<string, string | string[] | undefined>;
 
-/**
- * Browse-by-category shortcuts. The first three deep-link into the same-page listing below via
- * the `event_type` query param the `FilterBar`/`Select` already reads (same pattern
- * `/publications` uses for `knowledge_category`) — clicking a card and picking the same value
- * in the filter dropdown are indistinguishable, since both just set the same URL param.
- *
- */
 const ICON_CLASS = 'h-5 w-5 text-primary';
 
-const ACTIVITY_CATEGORIES: CategoryCardDef[] = [
-  {
-    icon: <GraduationCap className={ICON_CLASS} aria-hidden="true" />,
-    titleKey: 'page.activities.trainings.title',
-    descriptionKey: 'page.activities.trainings.subtitle',
-    href: '/activities?event_type=training#listing',
-  },
-  {
-    icon: <Megaphone className={ICON_CLASS} aria-hidden="true" />,
-    titleKey: 'page.activities.workshops.title',
-    descriptionKey: 'page.activities.workshops.subtitle',
-    href: '/activities?event_type=workshop#listing',
-  },
-  {
-    icon: <Users2 className={ICON_CLASS} aria-hidden="true" />,
-    titleKey: 'page.activities.institutional.title',
-    descriptionKey: 'page.activities.institutional.subtitle',
-    href: '/activities?event_type=meeting#listing',
-  },
-];
+/** Deterministic icon per known category slug; unrecognised/future categories fall back to Folder. */
+const CATEGORY_ICONS: Record<string, ReactNode> = {
+  trainings: <GraduationCap className={ICON_CLASS} aria-hidden="true" />,
+  'workshops-awareness': <Megaphone className={ICON_CLASS} aria-hidden="true" />,
+  'institutional-activities': <Users2 className={ICON_CLASS} aria-hidden="true" />,
+};
 
 export default async function ActivitiesPage({ searchParams }: { searchParams: SP }) {
   const page = toPage(searchParams.page);
+  const selectedCategory = qstr(searchParams.event_category);
 
-  const [list, eventTypes, districts] = await Promise.all([
+  const [list, eventCategories, districts] = await Promise.all([
     getListSafe<EventSummary>(PUBLIC_ENDPOINTS.events, {
       query: {
         page,
         page_size: PAGE_SIZE,
         search: qstr(searchParams.search),
+        event_category: selectedCategory,
         event_type: qstr(searchParams.event_type),
         event_status: qstr(searchParams.event_status),
         district: qstr(searchParams.district),
@@ -71,52 +54,82 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: S
         ordering: '-start_date',
       },
     }),
-    getMasterOptions('event-types'),
+    getMasterOptions('event-categories'),
     getMasterOptions('districts'),
   ]);
+
+  // Event types per category — powers both the card descriptions and the type filter's options.
+  const typesByCategory = new Map(
+    await Promise.all(
+      eventCategories.map(async (c) => [c.value, await getMasterOptions('event-types', { category: c.value })] as const),
+    ),
+  );
+
+  const selectedCategoryOption = eventCategories.find((c) => c.value === selectedCategory);
+  const eventTypes = selectedCategory ? (typesByCategory.get(selectedCategory) ?? []) : [];
+
+  const activityCategories: CategoryCardDef[] = eventCategories.map((c) => {
+    const types = typesByCategory.get(c.value) ?? [];
+    const en = types.length ? types.map((t) => t.name_en).join(', ') : 'No event types yet.';
+    const hi = types.length ? types.map((t) => t.name_hi ?? t.name_en).join(', ') : undefined;
+    return {
+      icon: CATEGORY_ICONS[c.value] ?? <Folder className={ICON_CLASS} aria-hidden="true" />,
+      titleKey: '',
+      descriptionKey: '',
+      title: { en: c.name_en, hi: c.name_hi },
+      description: { en, hi },
+      href: `/activities?event_category=${c.value}#listing`,
+    };
+  });
 
   return (
     <>
       <Breadcrumbs items={[{ label: 'Activities' }]} />
 
-      {/* Page header — same band style as /publications */}
-      <LocalizedHero titleKey="page.activities.title" subtitleKey="page.activities.subtitle" />
+      {/* Page header — stays generic "Activities" regardless of the selected category */}
+      <LocalizedHero titleKey="page.activities.title" subtitleKey="page.activities.subtitle" compact />
 
-      {/* Browse by Category */}
+      {/* Browse by Category — master-driven, ordered by display_order */}
       <div className="border-b border-border bg-muted/40">
-        <Container className="py-8">
-          <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+        <Container className="py-5">
+          <h2 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
             <span className="border-l-4 border-primary pl-3">Browse by Category</span>
           </h2>
-          <CategoryCards categories={ACTIVITY_CATEGORIES} />
+          <CategoryCards categories={activityCategories} />
         </Container>
       </div>
 
-      {/* Full listing — same-page filters; category cards above set the same event_type param */}
-      <Container id="listing" className="scroll-mt-24 py-8">
-        <header className="mb-6">
-          <h2 className="text-xl font-bold text-foreground">All Activities</h2>
+      {/* Full listing — same-page filters; category cards above set the same event_category param */}
+      <Container id="listing" className="scroll-mt-24 py-5">
+        <header className="mb-4">
+          <h2 className="text-xl font-bold text-foreground">
+            {selectedCategoryOption ? selectedCategoryOption.name_en : 'All Activities'}
+          </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Browse all activities or filter by category, status, district and year.
+            {selectedCategoryOption
+              ? `Filter ${selectedCategoryOption.name_en.toLowerCase()} by type, status, district and year, or browse another category above.`
+              : 'Browse all activities or filter by status, district and year, or pick a category above.'}
           </p>
         </header>
         <div className="mb-2">
           <FilterBar
             selects={[
-              { key: 'event_type', labelKey: 'filter.type', options: eventTypes },
+              ...(selectedCategory
+                ? [{ key: 'event_type', multiple: true, labelKey: 'filter.type', options: eventTypes }]
+                : []),
               {
                 key: 'event_status',
                 labelKey: 'filter.status',
                 options: enumOptions(['scheduled', 'ongoing', 'completed', 'postponed', 'cancelled']),
               },
-              { key: 'district', labelKey: 'filter.district', options: districts },
+              { key: 'district', multiple: true, labelKey: 'filter.district', options: districts },
               { key: 'year', labelKey: 'filter.year', options: yearOptions() },
             ]}
           />
         </div>
-        <ResultsSummary total={list.pagination.total_items} />
+        {!list.error && <ResultsSummary total={list.pagination.total_items} />}
         {list.items.length === 0 ? (
-          <EmptyState />
+          <ListingEmptyState failed={list.error} filtered={Object.entries(searchParams).some(([key, value]) => key !== 'page' && Boolean(value))} />
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {list.items.map((event) => (
@@ -126,6 +139,8 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: S
         )}
         <PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />
       </Container>
+
+      <PageFaqSection pageKey="activities" />
     </>
   );
 }

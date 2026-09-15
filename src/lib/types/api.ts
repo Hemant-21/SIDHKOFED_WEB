@@ -40,6 +40,7 @@ export interface ErrorResponse {
 
 /** A normalized list result used across the UI (data + pagination). */
 export interface ListResult<T> {
+  error?: true;
   items: T[];
   pagination: Pagination;
 }

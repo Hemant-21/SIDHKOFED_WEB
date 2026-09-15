@@ -8,6 +8,7 @@ import { Container } from '@/components/ui/container';
 import { LocalizedHeading, LocalizedText } from '@/components/listing/localized-heading';
 import { DigitalServiceCard } from '@/components/cards/digital-service-card';
 import { EmptyState } from '@/components/feedback/states';
+import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const revalidate = 300;
 
@@ -43,6 +44,8 @@ export default async function DigitalServicesPage() {
           </div>
         )}
       </Container>
+
+      <PageFaqSection pageKey="digital-services" />
     </>
   );
 }

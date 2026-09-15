@@ -5,11 +5,11 @@ import { Container } from '@/components/ui/container';
 const ICON_CLASS = 'h-5 w-5 text-primary';
 
 const LINKS = [
-  { icon: <GraduationCap className={ICON_CLASS} aria-hidden="true" />, label: 'Training Programmes', href: '/activities/trainings' },
+  { icon: <GraduationCap className={ICON_CLASS} aria-hidden="true" />, label: 'Training Programmes', href: '/activities?event_category=trainings&event_type=training#listing' },
   { icon: <Package className={ICON_CLASS} aria-hidden="true" />, label: 'Procurement', href: '/procurement' },
   { icon: <Handshake className={ICON_CLASS} aria-hidden="true" />, label: 'Buyer Enquiry', href: '/procurement/enquiry' },
-  { icon: <FileText className={ICON_CLASS} aria-hidden="true" />, label: 'Forms & Formats', href: '/publications/forms-formats' },
-  { icon: <Bell className={ICON_CLASS} aria-hidden="true" />, label: 'Notices', href: '/notifications/notices' },
+  { icon: <FileText className={ICON_CLASS} aria-hidden="true" />, label: 'Forms & Formats', href: '/publications?knowledge_category=acts-and-rules&document_type=form#listing' },
+  { icon: <Bell className={ICON_CLASS} aria-hidden="true" />, label: 'Notices', href: '/notifications?communication_type=notice#listing' },
   { icon: <MonitorSmartphone className={ICON_CLASS} aria-hidden="true" />, label: 'Digital Services', href: '/digital-services' },
 ];
 

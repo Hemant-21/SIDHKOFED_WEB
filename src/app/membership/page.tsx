@@ -1,14 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Users, Building2, FileDown, ArrowRight, ChevronDown } from 'lucide-react';
+import { Users, Building2, FileDown, ArrowRight } from 'lucide-react';
 import { getListSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
-import type { MembershipSummary, Faq } from '@/lib/types/content';
+import type { MembershipSummary } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
 import { SectionHeading } from '@/components/ui/section-heading';
 import { MemberHierarchy } from '@/components/membership/member-hierarchy';
+import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const revalidate = 300;
 
@@ -20,15 +21,12 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function MembershipPage() {
-  const [apex, duList, faqList] = await Promise.all([
+  const [apex, duList] = await Promise.all([
     getListSafe<MembershipSummary>(PUBLIC_ENDPOINTS.memberships, {
       query: { membership_level: 'sidhkofed', page_size: 5 },
     }),
     getListSafe<MembershipSummary>(PUBLIC_ENDPOINTS.memberships, {
       query: { membership_level: 'district_union', page_size: 50, ordering: 'display_order' },
-    }),
-    getListSafe<Faq>(PUBLIC_ENDPOINTS.faqs, {
-      query: { faq_category: 'membership', page_size: 20 },
     }),
   ]);
 
@@ -101,7 +99,7 @@ export default async function MembershipPage() {
             </div>
             <h2 className="mb-1 text-lg font-bold text-foreground">Non-Shareholder</h2>
             <p className="mb-4 text-xs text-muted-foreground">
-              Farmer Producer Organisations (FPOs), Self Help Groups (SHGs), other cooperative
+              Farmer Producer Organisations (FPOs), Self-Help Groups (SHGs), other cooperative
               societies and eligible business entities
             </p>
             <ul className="space-y-2 text-sm text-foreground">
@@ -306,32 +304,8 @@ export default async function MembershipPage() {
         </div>
       </Container>
 
-      {/* ── SECTION 6: FAQs (CMS-driven) ── */}
-      {faqList.items.length > 0 && (
-        <div className="bg-muted/40">
-          <Container className="py-12">
-            <SectionHeading title="Frequently Asked Questions" />
-            <div className="mt-6 divide-y divide-border overflow-hidden rounded-lg border border-border bg-surface">
-              {faqList.items.map((faq) => (
-                <details key={faq.id} className="group">
-                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 marker:hidden hover:bg-muted/50">
-                    <p className="font-semibold text-foreground">{faq.question_en}</p>
-                    <ChevronDown
-                      className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
-                      aria-hidden="true"
-                    />
-                  </summary>
-                  <div className="border-t border-border px-5 pb-5 pt-4">
-                    <p className="text-sm leading-relaxed text-muted-foreground">
-                      {faq.answer_en}
-                    </p>
-                  </div>
-                </details>
-              ))}
-            </div>
-          </Container>
-        </div>
-      )}
+      {/* ── SECTION 6: FAQs — the last content section, immediately above the shared footer ── */}
+      <PageFaqSection pageKey="membership" title="Frequently Asked Questions" />
     </>
   );
 }

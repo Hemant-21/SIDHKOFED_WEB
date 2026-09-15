@@ -8,7 +8,7 @@ import { ListingLayout } from '@/components/listing/listing-layout';
 import { FilterBar } from '@/components/listing/filter-bar';
 import { PaginationNav } from '@/components/listing/pagination-nav';
 import { ResultsSummary } from '@/components/listing/results-summary';
-import { EmptyState } from '@/components/feedback/states';
+import { ListingEmptyState } from '@/components/feedback/states';
 import { ProcurementCard } from '@/components/cards/procurement-card';
 
 export const revalidate = 300;
@@ -34,7 +34,7 @@ export default async function UpcomingProcurementPage({ searchParams }: { search
         search: qstr(searchParams.search),
         commodity: qstr(searchParams.commodity),
         district: qstr(searchParams.district),
-        effective_date_from: today,
+        date_from: today,
         ordering: 'effective_date',
       },
     }),
@@ -51,16 +51,16 @@ export default async function UpcomingProcurementPage({ searchParams }: { search
       filters={
         <FilterBar
           selects={[
-            { key: 'commodity', labelKey: 'filter.commodity', options: commodities },
-            { key: 'district', labelKey: 'filter.district', options: districts },
+            { key: 'commodity', multiple: true, labelKey: 'filter.commodity', options: commodities },
+            { key: 'district', multiple: true, labelKey: 'filter.district', options: districts },
           ]}
         />
       }
-      summary={<ResultsSummary total={list.pagination.total_items} />}
+      summary={list.error ? null : <ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >
       {list.items.length === 0 ? (
-        <EmptyState />
+        <ListingEmptyState failed={list.error} filtered={Object.entries(searchParams).some(([key, value]) => key !== 'page' && Boolean(value))} />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {list.items.map((item) => (

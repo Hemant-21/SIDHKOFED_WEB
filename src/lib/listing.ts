@@ -26,10 +26,27 @@ export function qstr(v: string | string[] | undefined): string | undefined {
   return s && s.trim().length > 0 ? s.trim() : undefined;
 }
 
-/** Fetch an active public master list as filter options (value = slug). */
-export async function getMasterOptions(key: string): Promise<FilterOption[]> {
+/**
+ * Fetch an active public master list as filter options (value = slug).
+ * `category` scopes `event-types` to a single `event-categories` slug (`?event_category=`).
+ * `knowledgeCategory`/`communicationType` similarly scope `document-types` to a single
+ * `knowledge-categories`/`communication-types` slug (`?knowledge_category=`/`?communication_type=`).
+ * `procurementCategory` scopes `procurement-update-types` to a single
+ * `procurement-update-categories` slug (`?procurement_update_category=`). At most one of these
+ * should be passed per call.
+ */
+export async function getMasterOptions(
+  key: string,
+  opts: { category?: string; knowledgeCategory?: string; communicationType?: string; procurementCategory?: string } = {},
+): Promise<FilterOption[]> {
   const { items } = await getListSafe<MasterRef>(`${PUBLIC_ENDPOINTS.masters}/${key}`, {
-    query: { page_size: 100 },
+    query: {
+      page_size: 100,
+      ...(opts.category ? { event_category: opts.category } : {}),
+      ...(opts.knowledgeCategory ? { knowledge_category: opts.knowledgeCategory } : {}),
+      ...(opts.communicationType ? { communication_type: opts.communicationType } : {}),
+      ...(opts.procurementCategory ? { procurement_update_category: opts.procurementCategory } : {}),
+    },
     revalidate: 3600,
   });
   return items.map((m) => ({ value: m.slug, name_en: m.name_en, name_hi: m.name_hi }));

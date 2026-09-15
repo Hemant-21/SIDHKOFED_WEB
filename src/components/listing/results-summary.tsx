@@ -9,7 +9,7 @@ export function ResultsSummary({ total }: { total: number }) {
   const { t, language } = useLanguage();
   return (
     <p className="mb-4 mt-4 text-sm text-muted-foreground" aria-live="polite">
-      {formatNumber(total, language)} {t('common.results')}
+      {formatNumber(total, language)} {language === 'en' && total === 1 ? 'result' : t('common.results')}
     </p>
   );
 }

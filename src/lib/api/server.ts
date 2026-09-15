@@ -116,7 +116,7 @@ export async function getListSafe<T>(path: string, opts: FetchOpts = {}): Promis
   try {
     return await getList<T>(path, opts);
   } catch {
-    return { items: [], pagination: { page: 1, page_size: 0, total_items: 0, total_pages: 0 } };
+    return { error: true, items: [], pagination: { page: 1, page_size: 0, total_items: 0, total_pages: 0 } };
   }
 }
 

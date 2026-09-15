@@ -42,7 +42,7 @@ export function CooperativeStructure() {
           03 · Panchayat Level
         </p>
         <p className="mt-1 text-base font-bold text-foreground">
-          Multi Purpose Cooperative Societies (MPCS)
+          Multipurpose Cooperative Societies (MPCS)
         </p>
         <p className="mt-0.5 text-xs text-muted-foreground">4,454 MPCS (LAMPS / PACS)</p>
       </div>

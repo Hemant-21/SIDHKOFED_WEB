@@ -4,24 +4,23 @@ import { getListSafe, getOneSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type {
   EventSummary,
-  Faq,
   GalleryDetail,
   ProgrammeSummary,
-  CommunicationSummary,
+  DocumentSummary,
   TenderSummary,
-  KpisResponse,
   Leader,
+  WebsiteMetricsResponse,
 } from '@/lib/types/content';
 import { Container } from '@/components/ui/container';
 import { HeroSearch } from '@/components/home/hero-search';
-import { KpiStrip } from '@/components/dashboard/kpi-strip';
+import { WebsiteMetricGrid } from '@/components/dashboard/website-metric-card';
 import { QuickLinks } from '@/components/home/quick-links';
 import { TrainingTimeline } from '@/components/home/training-timeline';
 import { ProgrammeCard } from '@/components/cards/programme-card';
-import { CommunicationCard } from '@/components/cards/communication-card';
+import { DocumentCard } from '@/components/cards/document-card';
 import { TenderCard } from '@/components/cards/tender-card';
 import { HomeSection } from '@/components/home/home-section';
-import { FaqAccordion } from '@/components/content/faq-accordion';
+import { PageFaqSection } from '@/components/content/page-faq-section';
 import { LeadersSection } from '@/components/home/leaders-section';
 import { OrganizationJsonLd } from '@/components/seo/json-ld';
 import { detailPath } from '@/lib/api/endpoints';
@@ -30,59 +29,52 @@ import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [kpis, heroGallery, leaders, programmes, communications, tenders, trainings, faqs, galleryEvents] = await Promise.all([
-    getOneSafe<KpisResponse>(PUBLIC_ENDPOINTS.dashboardKpis),
+  const [websiteMetrics, heroGallery, leaders, programmes, notices, tenders, trainings, galleryEvents] = await Promise.all([
+    getOneSafe<WebsiteMetricsResponse>(PUBLIC_ENDPOINTS.websiteMetrics('homepage')),
     getOneSafe<GalleryDetail>(detailPath(PUBLIC_ENDPOINTS.galleries, 'hero-slides')),
     getListSafe<Leader>(PUBLIC_ENDPOINTS.leadership, { query: { page_size: 12 } }),
     getListSafe<ProgrammeSummary>(PUBLIC_ENDPOINTS.programmes, { query: { show_on_homepage: true, page_size: 6 } }),
-    getListSafe<CommunicationSummary>(PUBLIC_ENDPOINTS.communications, { query: { show_on_homepage: true, page_size: 4 } }),
+    // Notices — switched from OfficialCommunication to notice Documents, matching the
+    // consolidated `/notifications?communication_type=notice` destination (the
+    // OfficialCommunication-backed `/notifications/notices` listing is retired; its
+    // `[slug]` detail pages still read OfficialCommunication and are unaffected).
+    getListSafe<DocumentSummary>(PUBLIC_ENDPOINTS.documents, {
+      query: { document_section: 'notifications', communication_type: 'notice', page_size: 4, ordering: '-publication_date' },
+    }),
     getListSafe<TenderSummary>(PUBLIC_ENDPOINTS.tenders, { query: { tender_status: 'open', page_size: 4 } }),
     getListSafe<EventSummary>(PUBLIC_ENDPOINTS.events, { query: { event_type: 'training', page_size: 3, ordering: '-start_date' } }),
-    getListSafe<Faq>(PUBLIC_ENDPOINTS.faqs, { query: { highlight_type: 'homepage', page_size: 8 } }),
     getListSafe<EventSummary>(PUBLIC_ENDPOINTS.events, { query: { page_size: 10, ordering: '-start_date' } }),
   ]);
 
   const galleryItems = galleryEvents.items.filter((e) => e.cover_media !== null).slice(0, 6);
-  // First 3 live KPI metrics for the hero's inline stat strip — same data `<KpiStrip>`
-  // renders below, just capped shorter for the hero's compact layout.
-  const heroStats = (kpis?.kpis ?? []).flatMap((r) => r.metrics).slice(0, 3);
 
   return (
     <>
       <OrganizationJsonLd />
 
-      {/* 1. Hero — bold split with diagonal image panel, live stats, embedded search */}
+      {/* 1. Hero — bold split with diagonal image panel, embedded search */}
       <section className="overflow-hidden bg-primary">
-        <HeroSearch slides={heroGallery?.images ?? []} stats={heroStats} />
+        <HeroSearch slides={heroGallery?.images ?? []} />
       </section>
 
-      {/* 2. KPI Strip */}
-      {kpis && kpis.kpis.length > 0 && (
-        <section aria-label="Impact at a glance" className="border-b border-border bg-surface">
-          <Container className="py-8">
-            <KpiStrip reports={kpis.kpis} />
-          </Container>
-        </section>
-      )}
-
-      {/* 3. Quick Access */}
+      {/* 2. Quick Access */}
       <QuickLinks />
 
-      {/* 4. Governance band — notices + tenders (promoted: carries the "latest updates"
+      {/* 3. Governance band — notices + tenders (promoted: carries the "latest updates"
           job the retired announcement ticker used to do) */}
-      {(communications.items.length > 0 || tenders.items.length > 0) && (
+      {(notices.items.length > 0 || tenders.items.length > 0) && (
         <section className="bg-muted/40">
           <Container className="py-14">
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
               <HomeSection
                 titleKey="home.section.communications"
-                viewAllHref="/notifications/notices"
-                show={communications.items.length > 0}
+                viewAllHref="/notifications?communication_type=notice#listing"
+                show={notices.items.length > 0}
                 bare
               >
                 <div className="space-y-4">
-                  {communications.items.map((c) => (
-                    <CommunicationCard key={c.id} item={c} />
+                  {notices.items.map((n) => (
+                    <DocumentCard key={n.id} document={n} />
                   ))}
                 </div>
               </HomeSection>
@@ -103,11 +95,12 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* 5. Leadership — demoted below Quick Access/KPI/Governance so it no longer
+      {/* 4. Leadership — demoted below Quick Access/KPI/Governance so it no longer
           outranks citizen tasks; CMS-driven via the Leadership module */}
       <LeadersSection leaders={leaders.items} />
 
-      {/* 6. About editorial — 2-col */}
+      {/* 5. About editorial — 2-col, with the Website Metrics "Key figures" grid
+          folded in below (moved from its own homepage section, next to the hero) */}
       <section className="bg-muted/40">
         <Container className="py-14">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
@@ -145,10 +138,15 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
+          {websiteMetrics && websiteMetrics.metrics.length > 0 && (
+            <div className="mt-10 border-t border-border pt-10">
+              <WebsiteMetricGrid metrics={websiteMetrics.metrics} />
+            </div>
+          )}
         </Container>
       </section>
 
-      {/* 7. Activities & Commodities — CMS programmes */}
+      {/* 6. Activities & Commodities — CMS programmes */}
       {programmes.items.length > 0 && (
         <section>
           <Container className="py-14">
@@ -166,15 +164,15 @@ export default async function HomePage() {
               ))}
             </div>
             <div className="mt-8 text-right">
-              <Link href="/activities" className="text-sm font-medium text-primary hover:underline">
-                View all activities →
+              <Link href="/programmes" className="text-sm font-medium text-primary hover:underline">
+                View all programmes →
               </Link>
             </div>
           </Container>
         </section>
       )}
 
-      {/* 8. Capacity Building — training events timeline */}
+      {/* 7. Capacity Building — training events timeline */}
       <section className={programmes.items.length > 0 ? 'bg-muted/40' : ''}>
         <Container className="py-14">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-start">
@@ -190,7 +188,7 @@ export default async function HomePage() {
                 district societies across Jharkhand.
               </p>
               <Link
-                href="/activities/trainings"
+                href="/activities?event_category=trainings&event_type=training#listing"
                 className="mt-6 inline-block rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 View all trainings
@@ -203,16 +201,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* 9. FAQ — highlight_type=homepage, hidden when empty */}
-      {faqs.items.length > 0 && (
-        <section className={programmes.items.length > 0 ? '' : 'bg-muted/40'}>
-          <Container className="py-14">
-            <FaqAccordion faqs={faqs.items} title="Common Questions" />
-          </Container>
-        </section>
-      )}
-
-      {/* 10. Knowledge Hub — static category cards */}
+      {/* 8. Knowledge Hub — static category cards */}
       <section className="border-t border-border">
         <Container className="py-14">
           <div className="mb-8">
@@ -227,22 +216,22 @@ export default async function HomePage() {
             {[
               {
                 label: 'Reports & Research',
-                href: '/publications/reports-research',
+                href: '/publications?knowledge_category=research-and-reports#listing',
                 desc: 'Annual reports, studies and research publications',
               },
               {
                 label: 'Policies, Guidelines & SOPs',
-                href: '/publications/policies-guidelines-sops',
+                href: '/publications?knowledge_category=training-resources&document_type=guideline,manuals#listing',
                 desc: 'Cooperative governance and operational procedures',
               },
               {
                 label: 'Training Materials',
-                href: '/publications/training-materials',
+                href: '/publications?knowledge_category=training-resources#listing',
                 desc: 'Commodity-wise learning and awareness resources',
               },
               {
                 label: 'Forms & Formats',
-                href: '/publications/forms-formats',
+                href: '/publications?knowledge_category=acts-and-rules&document_type=form#listing',
                 desc: 'Application forms and standard formats',
               },
             ].map((item) => (
@@ -261,7 +250,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* 11. Media Gallery — event cover photos, hidden when fewer than 2 images */}
+      {/* 9. Media Gallery — event cover photos, hidden when fewer than 2 images */}
       {galleryItems.length >= 2 && (
         <section className="bg-muted/40">
           <Container className="py-14">
@@ -307,6 +296,9 @@ export default async function HomePage() {
           </Container>
         </section>
       )}
+
+      {/* 10. FAQ — the last content section, immediately above the shared footer. */}
+      <PageFaqSection pageKey="home" title="Common Questions" />
     </>
   );
 }

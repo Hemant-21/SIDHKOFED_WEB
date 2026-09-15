@@ -3,9 +3,11 @@ import { getListSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Faq } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
-import { qstr, getMasterOptions } from '@/lib/listing';
+import { PAGE_SIZE, toPage, qstr } from '@/lib/listing';
 import { ListingLayout } from '@/components/listing/listing-layout';
 import { FilterBar } from '@/components/listing/filter-bar';
+import { PaginationNav } from '@/components/listing/pagination-nav';
+import { ResultsSummary } from '@/components/listing/results-summary';
 import { EmptyState } from '@/components/feedback/states';
 import { FaqAccordion } from '@/components/details/faq-accordion';
 import { FaqJsonLd } from '@/components/seo/json-ld';
@@ -21,28 +23,30 @@ export const metadata: Metadata = buildMetadata({
 
 type SP = Record<string, string | string[] | undefined>;
 
+/**
+ * The complete FAQ directory — every eligible public FAQ, paginated, with search. No category
+ * filter (categories are gone); page assignment doesn't affect this listing at all, since /faqs
+ * intentionally shows FAQs regardless of which main pages (if any) they're also assigned to.
+ */
 export default async function FaqsPage({ searchParams }: { searchParams: SP }) {
-  const [list, categories] = await Promise.all([
-    getListSafe<Faq>(PUBLIC_ENDPOINTS.faqs, {
-      query: {
-        page_size: 100,
-        faq_category: qstr(searchParams.faq_category),
-        search: qstr(searchParams.search),
-      },
-    }),
-    getMasterOptions('faq-categories'),
-  ]);
+  const page = toPage(searchParams.page);
+
+  const list = await getListSafe<Faq>(PUBLIC_ENDPOINTS.faqs, {
+    query: {
+      page,
+      page_size: PAGE_SIZE,
+      search: qstr(searchParams.search),
+    },
+  });
 
   return (
     <ListingLayout
       titleKey="page.faqs.title"
       subtitleKey="page.faqs.subtitle"
       crumb="FAQs"
-      filters={
-        <FilterBar
-          selects={[{ key: 'faq_category', labelKey: 'filter.category', options: categories }]}
-        />
-      }
+      filters={<FilterBar />}
+      summary={<ResultsSummary total={list.pagination.total_items} />}
+      pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >
       <FaqJsonLd
         items={list.items.map((f) => ({ question: f.question_en, answer: stripTags(f.answer_en) }))}

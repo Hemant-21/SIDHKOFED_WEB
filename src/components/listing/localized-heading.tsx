@@ -10,17 +10,32 @@ import { SectionHeading } from '@/components/ui/section-heading';
 import { Container } from '@/components/ui/container';
 import { useLanguage } from '@/providers/language-provider';
 
+/** A bilingual `en`/`hi` pair, e.g. from a master record's `name_en`/`name_hi` (used by `CategoryCards`). */
+export interface BilingualText {
+  en: string;
+  hi?: string | null;
+}
+
 /**
  * Bilingual page-header "hero" band — a colored `bg-primary` strip with a large white title
  * + subtitle. Mirrors the `/publications` page header exactly (same markup/classes), just
  * resolving text from i18n keys instead of hardcoded English so pages with existing bilingual
  * copy (like `/activities`) don't lose Hindi support to match the visual style.
  */
-export function LocalizedHero({ titleKey, subtitleKey }: { titleKey: string; subtitleKey?: string }) {
+export function LocalizedHero({
+  titleKey,
+  subtitleKey,
+  compact,
+}: {
+  titleKey: string;
+  subtitleKey?: string;
+  /** Tighter padding for pages with content-dense sections below (e.g. category cards + filters). */
+  compact?: boolean;
+}) {
   const { t } = useLanguage();
   return (
     <div className="bg-primary">
-      <Container className="py-10 sm:py-14">
+      <Container className={compact ? 'py-6 sm:py-8' : 'py-10 sm:py-14'}>
         <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{t(titleKey)}</h1>
         {subtitleKey ? <p className="mt-2 max-w-2xl text-base text-white/70">{t(subtitleKey)}</p> : null}
       </Container>

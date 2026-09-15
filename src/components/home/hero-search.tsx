@@ -6,20 +6,15 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/providers/language-provider';
 import { buttonClasses } from '@/components/ui/button';
-import { pickText } from '@/utils/bilingual';
-import { formatNumber } from '@/utils/format';
 import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 import { HeroSearchBar } from './hero-search-bar';
-import type { GalleryImage, DashboardMetric } from '@/lib/types/content';
+import type { GalleryImage } from '@/lib/types/content';
 
 interface HeroSearchProps {
   slides: GalleryImage[];
-  /** First 3 live KPI metrics (same data `<KpiStrip>` renders below) — replaces what
-   *  used to be a hardcoded STATS constant. Hidden entirely when empty. */
-  stats: DashboardMetric[];
 }
 
-export function HeroSearch({ slides, stats }: HeroSearchProps) {
+export function HeroSearch({ slides }: HeroSearchProps) {
   const { t, language } = useLanguage();
   const [current, setCurrent] = useState(0);
   const hasSlides = slides.length > 0;
@@ -121,22 +116,6 @@ export function HeroSearch({ slides, stats }: HeroSearchProps) {
                 Procurement <span aria-hidden="true">→</span>
               </Link>
             </div>
-
-            {/* Inline stat strip — live KPI data, hidden when none is configured */}
-            {stats.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/[0.12] pt-4 sm:mt-7 sm:gap-x-6 sm:pt-5">
-                {stats.map((metric) => {
-                  const label = pickText(metric.label_en, metric.label_hi, language);
-                  const value = metric.value != null ? formatNumber(metric.value, language) : metric.value_text ?? '—';
-                  return (
-                    <div key={metric.metric_key} className="flex items-baseline gap-1.5">
-                      <span className="text-sm font-black text-white">{value}</span>
-                      <span className="text-[11px] font-medium text-white/70">{label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </div>
 

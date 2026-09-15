@@ -32,14 +32,14 @@ export default async function NoticeDetailPage({ params }: { params: { slug: str
       <BreadcrumbJsonLd
         items={[
           { name: 'Notifications', url: '/notifications' },
-          { name: 'Notices', url: '/notifications/notices' },
+          { name: 'Notices', url: '/notifications?communication_type=notice' },
           { name: item.title_en, url: item.public_url },
         ]}
       />
       <DetailLayout
         crumbs={[
           { label: 'Notifications', href: '/notifications' },
-          { label: 'Notices', href: '/notifications/notices' },
+          { label: 'Notices', href: '/notifications?communication_type=notice#listing' },
           { label: item.title_en },
         ]}
         aside={<CommunicationAside item={item} />}
