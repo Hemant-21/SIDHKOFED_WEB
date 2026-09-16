@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import { Eye, Crosshair, Leaf, CheckCircle2 } from 'lucide-react';
 import { buildMetadata } from '@/lib/seo';
-import { getListSafe, getOneSafe } from '@/lib/api/server';
+import { getListSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type { Commodity } from '@/lib/types/api';
-import type { WebsiteMetricsResponse } from '@/lib/types/content';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
 import { SectionHeading } from '@/components/ui/section-heading';
@@ -12,7 +11,6 @@ import { CooperativeStructure } from '@/components/content/cooperative-structure
 import { GovernanceToggle } from '@/components/content/governance-toggle';
 import { ContactCta } from '@/components/content/contact-cta';
 import { CoverImage } from '@/components/content/cover-image';
-import { WebsiteMetricGrid } from '@/components/dashboard/website-metric-card';
 import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const metadata: Metadata = buildMetadata({
@@ -64,13 +62,10 @@ const OBJECTIVES = [
 ];
 
 export default async function AboutPage() {
-  const [{ items: commodities }, websiteMetrics] = await Promise.all([
-    getListSafe<Commodity>(`${PUBLIC_ENDPOINTS.masters}/commodities`, {
-      query: { page_size: 100 },
-      revalidate: 3600,
-    }),
-    getOneSafe<WebsiteMetricsResponse>(PUBLIC_ENDPOINTS.websiteMetrics('about_us')),
-  ]);
+  const { items: commodities } = await getListSafe<Commodity>(`${PUBLIC_ENDPOINTS.masters}/commodities`, {
+    query: { page_size: 100 },
+    revalidate: 3600,
+  });
 
   return (
     <>
@@ -95,12 +90,6 @@ export default async function AboutPage() {
               Reg. No. 02/H.Q./2021
             </span>
           </div>
-          {/* Stage 6: dynamic Website Metrics (placement=about_us) replace the former
-              hardcoded, English-only STATS row. Per spec, an empty/unpublished
-              placement renders nothing here — this band can show zero stats until an
-              editor publishes About Us metrics; that is an accepted, spec-mandated
-              outcome (graceful omission), not a bug. */}
-          <WebsiteMetricGrid metrics={websiteMetrics?.metrics ?? []} variant="band" />
         </Container>
       </div>
 

@@ -428,66 +428,10 @@ export interface Leader {
   display_order: number | null;
 }
 
-// ── Operational Reports ──────────────────────────────────────────────────────
-// Live-calculated replacement for the retired Dashboard Reports (`DashboardReport`/
-// `DashboardMetric`) concept. See `GET /public/operational-reports` and
-// `GET /public/operational-reports/:key` — no auth, restricted to public-eligible
-// measures, calculated for the current financial year, no filters.
-export interface OperationalReportPeriod {
-  mode: string;
-  start: string;
-  end: string;
-}
-export interface OperationalMeasureCompleteness {
-  known: number;
-  missing: number;
-  undated: number;
-}
-export interface PublicOperationalMeasure {
-  measure_key: string;
-  label_en: string;
-  label_hi: string | null;
-  unit: string | null;
-  value: number | null;
-  note_en: string;
-  note_hi: string | null;
-  completeness: OperationalMeasureCompleteness | null;
-}
-export interface PublicOperationalReport {
-  report_key: string;
-  title_en: string;
-  title_hi: string | null;
-  resolved_period: OperationalReportPeriod;
-  measures: PublicOperationalMeasure[];
-}
-/** Shape of `GET /public/operational-reports` (`data` unwraps to `{ reports }`). */
-export interface OperationalReportsResponse {
-  reports: PublicOperationalReport[];
-}
-
-// ── Website Metrics (Stage 6) ──────────────────────────────────────────────────
-// Distinct from `DashboardMetric` above: these come from the Website Metrics module
-// (curated snapshots published per placement — `homepage` | `about_us`), not the
-// Dashboard/Reports module. See `GET /public/website-metrics?placement=...`.
-export interface WebsiteMetricPeriod {
-  mode: string;
-  start: string | null;
-  end: string | null;
-}
-export interface PublicWebsiteMetric {
-  metric_key: string;
-  label_en: string;
-  label_hi: string | null;
-  value: number;
-  unit: string | null;
-  period: WebsiteMetricPeriod;
-  as_of_date: string | null;
-  disclosure_note_en: string;
-  disclosure_note_hi: string | null;
-}
-export interface WebsiteMetricsResponse {
-  metrics: PublicWebsiteMetric[];
-}
+// Operational Reports (the six-report live-calculated dashboard) and Website Metrics (curated
+// per-placement figures) were both replaced by the Reports dashboard (Task 6/7) — see
+// `src/lib/types/reports.ts` and `/impact/dashboard`. Removed as dead code once nothing in this
+// app called `/public/operational-reports` or `/public/website-metrics` anymore.
 
 // ── Search ───────────────────────────────────────────────────────────────────
 export const SEARCH_CONTENT_TYPES = [

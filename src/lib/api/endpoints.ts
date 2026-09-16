@@ -26,16 +26,12 @@ export const PUBLIC_ENDPOINTS = {
   digitalServices: '/public/digital-services',
   leadership: '/public/leadership',
 
-  // Operational Reports — live-calculated replacement for the retired
-  // `/public/dashboard*` (DashboardReport/DashboardMetric) routes. Returns the six
-  // operational reports restricted to public-eligible measures, current financial
-  // year, no filters. Use `detailPath(operationalReports, key)` for the single-report
-  // variant (`GET /public/operational-reports/:key`).
-  operationalReports: '/public/operational-reports',
-
-  // Website Metrics (Stage 6) — curated public figures per placement, distinct from
-  // the Dashboard module above (different backend source: Website Metric snapshots).
-  websiteMetrics: (placement: string) => `/public/website-metrics?placement=${placement}`,
+  // Reports (replaces the Operational Reports / Website Metrics public dashboard above) — reads
+  // only from immutable, approved FY `ReportPublication` snapshots, never a live query.
+  //   reportYears        — every FY with isPublished/isCurrentFinancialYear/publishedAt.
+  //   reportsForYear(l)  — the approved Programme/District/Commodity bundle for FY label `l`.
+  reportYears: '/public/reports/years',
+  reportsForYear: (label: string) => `/public/reports/${encodeURIComponent(label)}`,
 
   // Masters (for filter dropdowns)
   masters: '/public/masters', // /{key}

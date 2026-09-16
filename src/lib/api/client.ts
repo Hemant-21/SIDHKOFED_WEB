@@ -56,3 +56,13 @@ export async function postOne<T, B = unknown>(path: string, body: B): Promise<T>
     throw normalize(err);
   }
 }
+
+/** GET a public endpoint → unwrapped `data` (e.g. switching the FY selector on the reports dashboard). */
+export async function getOneClient<T>(path: string): Promise<T> {
+  try {
+    const { data } = await publicClient.get<SuccessResponse<T>>(path);
+    return data.data;
+  } catch (err) {
+    throw normalize(err);
+  }
+}

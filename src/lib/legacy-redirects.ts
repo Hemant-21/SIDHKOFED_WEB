@@ -91,6 +91,48 @@ export const LEGACY_REDIRECTS = {
     // (published_at desc) — page numbers don't line up under the new scope/order.
     preservePage: false,
   },
+  'activities/institutional-events': {
+    path: '/activities',
+    fixedParams: { event_category: 'institutional-activities' },
+    passthroughKeys: ['search', 'event_status', 'district', 'year'],
+    // Same scope (the category maps to the exact same event-type set the old route hardcoded)
+    // and same ordering (-start_date) as before — page numbers still line up.
+    preservePage: true,
+  },
+  'activities/workshops-awareness': {
+    path: '/activities',
+    fixedParams: { event_category: 'workshops-awareness' },
+    passthroughKeys: ['search', 'event_status', 'district', 'year'],
+    // Same scope (the category maps to the exact same event-type set the old route hardcoded)
+    // and same ordering (-start_date) as before — page numbers still line up.
+    preservePage: true,
+  },
+  'procurement/upcoming': {
+    path: '/procurement',
+    fixedParams: { upcoming: 'true' },
+    passthroughKeys: ['search', 'commodity', 'district'],
+    // Same scope (date_from=today) and same ordering (effective_date) as before — page numbers
+    // still line up.
+    preservePage: true,
+  },
+  'impact/training-beneficiaries': {
+    path: '/activities',
+    fixedParams: { event_category: 'trainings', event_type: 'training' },
+    passthroughKeys: ['search', 'district', 'year'],
+    // Same scope (event_type=training) and same ordering (-start_date) as before — page numbers
+    // still line up. Same destination as the retired `activities/trainings` route above.
+    preservePage: true,
+  },
+  documents: {
+    path: '/publications',
+    fixedParams: {},
+    passthroughKeys: ['search', 'document_type', 'year'],
+    // Intentional narrowing from every Document regardless of section to only the Publications
+    // section (Notifications-section documents are no longer reachable from this URL — they live
+    // under /notifications), and the old route's `commodity` filter has no destination equivalent
+    // so it is dropped — page numbers don't line up under the new scope.
+    preservePage: false,
+  },
 } as const satisfies Record<string, LegacyRedirectSpec>;
 
 export type LegacyRedirectKey = keyof typeof LEGACY_REDIRECTS;

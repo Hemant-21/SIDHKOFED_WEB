@@ -9,11 +9,9 @@ import type {
   DocumentSummary,
   TenderSummary,
   Leader,
-  WebsiteMetricsResponse,
 } from '@/lib/types/content';
 import { Container } from '@/components/ui/container';
 import { HeroSearch } from '@/components/home/hero-search';
-import { WebsiteMetricGrid } from '@/components/dashboard/website-metric-card';
 import { QuickLinks } from '@/components/home/quick-links';
 import { TrainingTimeline } from '@/components/home/training-timeline';
 import { ProgrammeCard } from '@/components/cards/programme-card';
@@ -29,8 +27,7 @@ import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [websiteMetrics, heroGallery, leaders, programmes, notices, tenders, trainings, galleryEvents] = await Promise.all([
-    getOneSafe<WebsiteMetricsResponse>(PUBLIC_ENDPOINTS.websiteMetrics('homepage')),
+  const [heroGallery, leaders, programmes, notices, tenders, trainings, galleryEvents] = await Promise.all([
     getOneSafe<GalleryDetail>(detailPath(PUBLIC_ENDPOINTS.galleries, 'hero-slides')),
     getListSafe<Leader>(PUBLIC_ENDPOINTS.leadership, { query: { page_size: 12 } }),
     getListSafe<ProgrammeSummary>(PUBLIC_ENDPOINTS.programmes, { query: { show_on_homepage: true, page_size: 6 } }),
@@ -99,8 +96,7 @@ export default async function HomePage() {
           outranks citizen tasks; CMS-driven via the Leadership module */}
       <LeadersSection leaders={leaders.items} />
 
-      {/* 5. About editorial — 2-col, with the Website Metrics "Key figures" grid
-          folded in below (moved from its own homepage section, next to the hero) */}
+      {/* 5. About editorial — 2-col */}
       <section className="bg-muted/40">
         <Container className="py-14">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
@@ -138,11 +134,6 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          {websiteMetrics && websiteMetrics.metrics.length > 0 && (
-            <div className="mt-10 border-t border-border pt-10">
-              <WebsiteMetricGrid metrics={websiteMetrics.metrics} />
-            </div>
-          )}
         </Container>
       </section>
 

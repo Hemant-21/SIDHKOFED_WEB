@@ -1,71 +1,14 @@
-import type { Metadata } from 'next';
-import { getListSafe } from '@/lib/api/server';
-import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
-import type { DocumentSummary } from '@/lib/types/content';
-import { buildMetadata } from '@/lib/seo';
-import { PAGE_SIZE, toPage, qstr, getMasterOptions, yearOptions } from '@/lib/listing';
-import { ListingLayout } from '@/components/listing/listing-layout';
-import { FilterBar } from '@/components/listing/filter-bar';
-import { PaginationNav } from '@/components/listing/pagination-nav';
-import { ResultsSummary } from '@/components/listing/results-summary';
-import { ListingEmptyState } from '@/components/feedback/states';
-import { DocumentCard } from '@/components/cards/document-card';
+import { permanentRedirect } from 'next/navigation';
+import { buildLegacyRedirectUrl, type SP } from '@/lib/legacy-redirects';
 
-export const revalidate = 300;
-
-export const metadata: Metadata = buildMetadata({
-  title: 'Documents',
-  description: 'Public documents, reports, policies, guidelines and forms.',
-  path: '/documents',
-});
-
-type SP = Record<string, string | string[] | undefined>;
-
-export default async function DocumentsPage({ searchParams }: { searchParams: SP }) {
-  const page = toPage(searchParams.page);
-
-  const [list, documentTypes, commodities] = await Promise.all([
-    getListSafe<DocumentSummary>(PUBLIC_ENDPOINTS.documents, {
-      query: {
-        page,
-        page_size: PAGE_SIZE,
-        search: qstr(searchParams.search),
-        document_type: qstr(searchParams.document_type),
-        commodity: qstr(searchParams.commodity),
-        year: qstr(searchParams.year),
-        ordering: '-publication_date',
-      },
-    }),
-    getMasterOptions('document-types'),
-    getMasterOptions('commodities'),
-  ]);
-
-  return (
-    <ListingLayout
-      titleKey="page.documents.title"
-      subtitleKey="page.documents.subtitle"
-      crumb="Documents"
-      filters={
-        <FilterBar
-          selects={[
-            { key: 'document_type', multiple: true, labelKey: 'filter.type', options: documentTypes },
-            { key: 'commodity', multiple: true, labelKey: 'filter.commodity', options: commodities },
-            { key: 'year', labelKey: 'filter.year', options: yearOptions() },
-          ]}
-        />
-      }
-      summary={list.error ? null : <ResultsSummary total={list.pagination.total_items} />}
-      pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
-    >
-      {list.items.length === 0 ? (
-        <ListingEmptyState failed={list.error} filtered={Object.entries(searchParams).some(([key, value]) => key !== 'page' && Boolean(value))} />
-      ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {list.items.map((document) => (
-            <DocumentCard key={document.id} document={document} />
-          ))}
-        </div>
-      )}
-    </ListingLayout>
-  );
+/**
+ * Retired standalone listing — this unfiltered, unsectioned Documents listing duplicated
+ * `/publications` and `/notifications` combined (both list the same underlying Document entity,
+ * split by `document_section`). Consolidated onto `/publications#listing` (see
+ * `src/lib/legacy-redirects.ts` for the exact scope, passthrough and page-preservation rules for
+ * this route). Document DETAIL pages (`/documents/[slug]`) are untouched — every document card
+ * across the site still links there.
+ */
+export default function DocumentsPage({ searchParams }: { searchParams: SP }): never {
+  permanentRedirect(buildLegacyRedirectUrl('documents', searchParams));
 }
