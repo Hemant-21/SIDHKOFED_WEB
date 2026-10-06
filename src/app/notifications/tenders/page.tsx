@@ -43,10 +43,10 @@ export default async function TendersPage({ searchParams }: { searchParams: SP }
     <ListingLayout
       titleKey="page.notifications.tenders.title"
       subtitleKey="page.notifications.tenders.subtitle"
-      crumb="Tenders"
-      parentCrumbs={[{ label: 'Notifications', href: '/notifications' }]}
+      parentCrumbs={[{ labelKey: 'page.notifications.title', href: '/notifications' }]}
       filters={
         <FilterBar
+          searchPlaceholderKey="search.placeholder.tenders"
           selects={[
             { key: 'tender_type', labelKey: 'filter.type', options: tenderTypes },
             { key: 'tender_status', labelKey: 'filter.status', options: enumOptions(['open', 'closed', 'cancelled', 'awarded']) },

@@ -15,13 +15,13 @@ export function SectionHeading({
 }) {
   return (
     <div className="mb-5 flex items-end justify-between gap-4">
-      <As className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+      <As className="font-display text-xl font-bold tracking-tight text-heading sm:text-2xl">
         <span className="border-l-4 border-primary pl-3">{title}</span>
       </As>
       {viewAllHref && (
         <Link
           href={viewAllHref}
-          className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-primary hover:underline"
+          className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-link hover:underline"
         >
           {viewAllLabel ?? 'View all'}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />

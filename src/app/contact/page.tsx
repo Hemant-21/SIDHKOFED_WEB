@@ -30,7 +30,7 @@ export default async function ContactPage() {
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Contact' }]} />
+      <Breadcrumbs items={[{ labelKey: 'page.contact.title' }]} />
       <Container className="py-10">
         <header className="mb-8 max-w-2xl">
           <LocalizedHeading titleKey="page.contact.title" as="h1" />

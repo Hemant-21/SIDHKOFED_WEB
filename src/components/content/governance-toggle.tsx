@@ -1,33 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useLanguage } from '@/providers/language-provider';
+import type { TranslationKey } from '@/i18n/dictionary';
+import type { BoardKey } from '@/components/content/org-structure-section';
 
-type BoardRow = { role: string; note: string };
-type BoardKey = 'state' | 'district';
-
-const TABS: { key: BoardKey; label: string }[] = [
-  { key: 'state', label: 'SIDHKOFED' },
-  { key: 'district', label: 'District Union' },
-];
+type BoardRow = { roleKey: TranslationKey; noteKey: TranslationKey };
 
 export function GovernanceToggle({
   stateBoard,
   districtBoard,
+  active,
+  onChange,
 }: {
   stateBoard: BoardRow[];
   districtBoard: BoardRow[];
+  active: BoardKey;
+  onChange: (key: BoardKey) => void;
 }) {
-  const [active, setActive] = useState<BoardKey>('state');
+  const { t } = useLanguage();
   const rows = active === 'state' ? stateBoard : districtBoard;
+
+  const tabs: { key: BoardKey; labelKey: TranslationKey }[] = [
+    { key: 'state', labelKey: 'about.governance.tab.sidhkofed' },
+    { key: 'district', labelKey: 'about.governance.tab.district' },
+  ];
 
   return (
     <div>
       <div className="mb-3 inline-flex rounded-lg border border-border bg-surface p-1">
-        {TABS.map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.key}
             type="button"
-            onClick={() => setActive(tab.key)}
+            onClick={() => onChange(tab.key)}
             aria-pressed={active === tab.key}
             className={`rounded-md px-3 py-1.5 text-sm font-semibold transition-colors ${
               active === tab.key
@@ -35,20 +40,20 @@ export function GovernanceToggle({
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            {tab.label}
+            {t(tab.labelKey)}
           </button>
         ))}
       </div>
       <div className="space-y-3">
         {rows.map((item) => (
           <div
-            key={item.role}
+            key={item.roleKey}
             className="flex items-start gap-3 rounded-lg border border-border bg-surface px-4 py-3"
           >
             <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-primary" />
             <div>
-              <p className="text-sm font-semibold text-foreground">{item.role}</p>
-              <p className="text-xs text-muted-foreground">{item.note}</p>
+              <p className="text-sm font-semibold text-foreground">{t(item.roleKey)}</p>
+              <p className="text-xs text-muted-foreground">{t(item.noteKey)}</p>
             </div>
           </div>
         ))}

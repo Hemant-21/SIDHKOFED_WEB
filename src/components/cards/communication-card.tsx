@@ -27,8 +27,8 @@ export function CommunicationCard({ item }: { item: CommunicationSummary }) {
             <span className="text-xs text-muted-foreground">#{item.reference_number}</span>
           )}
         </div>
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={item.public_url} className="hover:text-primary hover:underline">
+        <h3 className="font-sans text-base font-semibold leading-snug text-heading">
+          <Link href={item.public_url} className="hover:text-link hover:underline">
             {title}
           </Link>
         </h3>

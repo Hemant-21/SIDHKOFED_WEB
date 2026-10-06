@@ -7,7 +7,7 @@ import Link from 'next/link';
 import type { SearchResult } from '@/lib/types/content';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
-import { formatDate, humanizeEnum, truncate } from '@/utils/format';
+import { formatDate, contentTypeLabel, truncate } from '@/utils/format';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CoverImage } from '@/components/content/cover-image';
@@ -24,7 +24,7 @@ export function SearchMessage({ kind }: { kind: 'prompt' | 'none' }) {
 }
 
 export function SearchResults({ results }: { results: SearchResult[] }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <ul className="space-y-4">
@@ -40,13 +40,13 @@ export function SearchResults({ results }: { results: SearchResult[] }) {
               )}
               <div className="min-w-0 flex-1">
                 <div className="mb-1 flex flex-wrap items-center gap-2">
-                  <Badge tone="primary">{humanizeEnum(result.content_type)}</Badge>
+                  <Badge tone="primary">{contentTypeLabel(result.content_type, t)}</Badge>
                   {result.publication_date && (
                     <span className="text-xs text-muted-foreground">{formatDate(result.publication_date, language)}</span>
                   )}
                 </div>
                 <h2 className="text-base font-semibold leading-snug text-foreground">
-                  <Link href={result.public_url} className="hover:text-primary hover:underline">
+                  <Link href={result.public_url} className="hover:text-link hover:underline">
                     {title}
                   </Link>
                 </h2>

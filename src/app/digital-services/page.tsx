@@ -27,7 +27,7 @@ export default async function DigitalServicesPage() {
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Digital services' }]} />
+      <Breadcrumbs items={[{ labelKey: 'page.digitalServices.title' }]} />
       <Container className="py-8">
         <header className="mb-6">
           <LocalizedHeading titleKey="page.digitalServices.title" as="h1" />

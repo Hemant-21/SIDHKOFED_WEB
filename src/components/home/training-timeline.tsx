@@ -3,22 +3,23 @@
 import Link from 'next/link';
 import type { EventSummary } from '@/lib/types/content';
 import { useLanguage } from '@/providers/language-provider';
-import { pickText } from '@/utils/bilingual';
+import { pickText, pickTextWithFallback } from '@/utils/bilingual';
+import { BilingualFallbackText } from '@/components/content/bilingual-fallback-text';
 
 function shortMonth(dateStr: string, lang: string): string {
   try {
     return new Date(dateStr).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { month: 'short' });
   } catch {
-    return '—';
+    return '-';
   }
 }
 
 export function TrainingTimeline({ events }: { events: EventSummary[] }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (events.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground">No upcoming training programmes at this time.</p>
+      <p className="text-sm text-muted-foreground">{t('home.trainings.empty')}</p>
     );
   }
 
@@ -28,6 +29,11 @@ export function TrainingTimeline({ events }: { events: EventSummary[] }) {
         const district =
           event.location_text ||
           pickText(event.district?.name_en ?? null, event.district?.name_hi ?? null, language);
+        const { text: title, isFallback: titleIsFallback } = pickTextWithFallback(
+          event.title_en,
+          event.title_hi,
+          language,
+        );
 
         return (
           <article key={event.id} className="flex gap-4">
@@ -38,8 +44,8 @@ export function TrainingTimeline({ events }: { events: EventSummary[] }) {
             </div>
             <div>
               <h3 className="text-sm font-semibold leading-snug text-foreground">
-                <Link href={event.public_url} className="hover:text-primary hover:underline">
-                  {pickText(event.title_en, event.title_hi, language)}
+                <Link href={event.public_url} className="hover:text-link hover:underline">
+                  <BilingualFallbackText text={title} isFallback={titleIsFallback} />
                 </Link>
               </h3>
               {district && (

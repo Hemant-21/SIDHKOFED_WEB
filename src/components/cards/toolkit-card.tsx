@@ -25,8 +25,8 @@ export function ToolkitCard({ toolkit }: { toolkit: ToolkitSummary }) {
       <div className="flex flex-1 items-start gap-3">
         <Wrench className="mt-0.5 h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
         <div className="min-w-0">
-          <h3 className="text-base font-semibold leading-snug text-foreground">
-            <Link href={toolkit.public_url} className="hover:text-primary hover:underline">
+          <h3 className="font-sans text-base font-semibold leading-snug text-heading">
+            <Link href={toolkit.public_url} className="hover:text-link hover:underline">
               {title}
             </Link>
           </h3>

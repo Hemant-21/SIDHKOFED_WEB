@@ -27,8 +27,8 @@ export function VideoCard({ video }: { video: Video }) {
         </span>
       </Link>
       <div className="flex flex-1 flex-col p-4">
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={video.public_url} className="hover:text-primary hover:underline">
+        <h3 className="font-sans text-base font-semibold leading-snug text-heading">
+          <Link href={video.public_url} className="hover:text-link hover:underline">
             {title}
           </Link>
         </h3>

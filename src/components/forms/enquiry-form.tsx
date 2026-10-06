@@ -1,19 +1,19 @@
 'use client';
 
 /**
- * Public enquiry submission form (procurement buyer/seller enquiry — API spec §6 Enquiries).
+ * Public enquiry submission form (procurement buyer/seller enquiry - API spec §6 Enquiries).
  * Posts directly to the existing `POST /public/enquiries` backend endpoint; no new backend
  * surface. Enquiry types are fetched server-side (SSR) and passed in as a prop so this island
  * never needs an extra client-side master-data round trip.
  *
  * CAPTCHA: the backend only requires a `captcha_token` when `CAPTCHA_PROVIDER` is not `none`
  * (see src/services/captcha.ts). No CAPTCHA provider/site-key has been selected for the web
- * portal yet, so this form does not render a widget or send a token — submission works as long
+ * portal yet, so this form does not render a widget or send a token - submission works as long
  * as the backend keeps its default `CAPTCHA_PROVIDER=none`. If that is ever changed in production
  * without a corresponding widget here, every submission will fail with a `captcha_token`
  * validation error; see the summary in this task's handoff notes.
  *
- * The honeypot field (`website`) is a real input kept off-screen — bots that fill every field
+ * The honeypot field (`website`) is a real input kept off-screen - bots that fill every field
  * blindly get caught server-side (enquiries.validators.ts rejects a non-empty value).
  */
 
@@ -58,7 +58,7 @@ export function EnquiryForm({
   commodities,
 }: {
   enquiryTypes: MasterRef[];
-  /** Optional Commodity field (Enquiry.commodity_id) — pass in only where relevant, e.g.
+  /** Optional Commodity field (Enquiry.commodity_id) - pass in only where relevant, e.g.
    *  the procurement buyer/seller enquiry page. Omitted (or empty) → no Commodity field. */
   commodities?: MasterRef[];
 }) {
@@ -100,7 +100,7 @@ export function EnquiryForm({
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.website.trim() !== '') return; // honeypot tripped — silently drop, no bot feedback
+    if (form.website.trim() !== '') return; // honeypot tripped - silently drop, no bot feedback
 
     setFormError(null);
     setFieldErrors({});
@@ -157,7 +157,7 @@ export function EnquiryForm({
     <form onSubmit={(e) => void onSubmit(e)} className="space-y-5">
       {formError ? <Alert tone="danger">{formError}</Alert> : null}
 
-      {/* Honeypot — visually hidden, never reached by keyboard/AT users. */}
+      {/* Honeypot - visually hidden, never reached by keyboard/AT users. */}
       <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden">
         <label htmlFor="enquiry-website">Website</label>
         <input
@@ -292,7 +292,7 @@ export function EnquiryForm({
         />
       </Field>
 
-      <Button type="submit" disabled={status === 'submitting'} className="w-full sm:w-auto">
+      <Button type="submit" variant="accent" disabled={status === 'submitting'} className="w-full sm:w-auto">
         {status === 'submitting' ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />

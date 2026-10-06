@@ -39,7 +39,7 @@ export default async function ToolkitDetailPage({ params }: { params: { slug: st
           { name: toolkit.title_en, url: toolkit.public_url },
         ]}
       />
-      <DetailLayout crumbs={[{ label: 'Toolkits', href: '/toolkits' }, { label: toolkit.title_en }]}>
+      <DetailLayout crumbs={[{ labelKey: 'page.toolkits.title', href: '/toolkits' }, { labelEn: toolkit.title_en, labelHi: toolkit.title_hi }]}>
         <ToolkitArticle toolkit={toolkit} summary={summary} />
       </DetailLayout>
     </>

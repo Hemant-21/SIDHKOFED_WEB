@@ -23,7 +23,7 @@ export function Pagination({
   const pages = pageWindow(page, totalPages);
 
   return (
-    <nav aria-label="Pagination" className="mt-8 flex items-center justify-center gap-1">
+    <nav aria-label={t('a11y.pagination')} className="mt-8 flex items-center justify-center gap-1">
       <button
         type="button"
         onClick={() => onPageChange(page - 1)}

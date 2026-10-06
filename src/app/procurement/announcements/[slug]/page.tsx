@@ -38,9 +38,9 @@ export default async function ProcurementDetailPage({ params }: { params: { slug
       />
       <DetailLayout
         crumbs={[
-          { label: 'Procurement', href: '/procurement' },
-          { label: 'Announcements', href: '/procurement?procurement_update_category=announcements-schedules#listing' },
-          { label: item.title_en },
+          { labelKey: 'page.procurement.title', href: '/procurement' },
+          { labelKey: 'page.procurement.announcements.title', href: '/procurement?procurement_update_category=announcements-schedules#listing' },
+          { labelEn: item.title_en, labelHi: item.title_hi },
         ]}
         aside={<ProcurementAside item={item} />}
       >

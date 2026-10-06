@@ -8,18 +8,19 @@ import { cn } from '@/utils/cn';
 import type { NavItem } from '@/config/navigation';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
+import { translate } from '@/i18n/dictionary';
 
 export function DesktopNav({ items }: { items: NavItem[] }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   return (
-    <nav aria-label="Primary" className="hidden lg:block">
+    <nav aria-label={t('a11y.primaryNav')} className="hidden nav:block">
       <ul className="flex items-center gap-1">
         {items.map((item) =>
           item.children && item.children.length > 0 ? (
             <DropdownItem key={item.key} item={item} lang={language} />
           ) : (
             <li key={item.key}>
-              <NavLink item={item} lang={language} className="inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted" activeClassName="bg-muted text-primary" />
+              <NavLink item={item} lang={language} className="inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-foreground hover:bg-muted" activeClassName="bg-muted text-link font-bold" />
             </li>
           ),
         )}
@@ -65,7 +66,7 @@ function DropdownItem({ item, lang }: { item: NavItem; lang: 'en' | 'hi' }) {
               lang={lang}
               onNavigate={() => setOpen(false)}
               className="block rounded px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-              activeClassName="text-primary"
+              activeClassName="text-link font-bold"
             />
           </li>
         ))}
@@ -78,7 +79,7 @@ function NavLink({
   item,
   lang,
   className,
-  activeClassName = 'text-primary',
+  activeClassName = 'text-link font-bold',
   onNavigate,
 }: {
   item: NavItem;
@@ -95,7 +96,7 @@ function NavLink({
     return (
       <a href={item.href} target="_blank" rel="noopener noreferrer" className={className} onClick={onNavigate}>
         {label}
-        <span className="sr-only"> (opens in a new tab)</span>
+        <span className="sr-only"> {translate(lang, 'common.opensNewTab')}</span>
       </a>
     );
   }

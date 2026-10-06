@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Noto_Sans_Devanagari } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { env } from '@/config/env';
 import { getContactSettings } from '@/lib/contact-settings';
@@ -7,22 +7,43 @@ import { AppProviders } from '@/providers/app-providers';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
-const devanagari = Noto_Sans_Devanagari({
-  subsets: ['devanagari'],
+// Self-hosted (vendored under src/fonts) rather than fetched from Google Fonts at build
+// time via next/font/google - the production host has no outbound internet access, so a
+// build-time dependency on fonts.gstatic.com would make every build there fail.
+// Each file is a variable font (wght axis), so one file covers the whole weight range.
+const notoSans = localFont({
+  src: '../fonts/noto-sans-latin.woff2',
+  variable: '--font-sans',
+  display: 'swap',
+  weight: '100 900',
+});
+const devanagari = localFont({
+  src: '../fonts/noto-sans-devanagari.woff2',
   variable: '--font-hindi',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  weight: '100 900',
+});
+const notoSerif = localFont({
+  src: '../fonts/noto-serif-latin.woff2',
+  variable: '--font-serif',
+  display: 'swap',
+  weight: '100 900',
+});
+const notoSerifDevanagari = localFont({
+  src: '../fonts/noto-serif-devanagari.woff2',
+  variable: '--font-serif-hindi',
+  display: 'swap',
+  weight: '100 900',
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
   title: {
-    default: 'SIDHKOFED — Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation',
+    default: 'SIDHKOFED - Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation',
     template: '%s · SIDHKOFED',
   },
   description:
-    'Official public portal of SIDHKOFED, the Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation — cooperative livelihoods, programmes, public documents, tenders, procurement updates and transparency.',
+    'Official public portal of SIDHKOFED, the Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation: cooperative livelihoods, programmes, public documents, tenders, procurement updates and transparency.',
   applicationName: 'SIDHKOFED',
   openGraph: {
     type: 'website',
@@ -38,16 +59,21 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0f5132',
+  // Matches --heading/--hero navy (#083D5E) - the colour that frames every page.
+  themeColor: '#083D5E',
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // Fetched once here (Next dedupes identical fetches within a request) and passed down —
+  // Fetched once here (Next dedupes identical fetches within a request) and passed down -
   // the footer is a Client Component and can't call server-only data fetchers itself.
   const contactSettings = await getContactSettings();
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${devanagari.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${notoSans.variable} ${devanagari.variable} ${notoSerif.variable} ${notoSerifDevanagari.variable}`}
+    >
       <head>
         {/* Prevent dark-mode flash before React hydrates */}
         <script

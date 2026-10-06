@@ -39,9 +39,9 @@ export default async function GalleryDetailPage({ params }: { params: { slug: st
       />
       <Breadcrumbs
         items={[
-          { label: 'Publications', href: '/publications' },
-          { label: 'Media Gallery', href: '/publications/media' },
-          { label: gallery.title_en },
+          { labelKey: 'page.publications.title', href: '/publications' },
+          { labelKey: 'page.publications.media.title', href: '/publications/media' },
+          { labelEn: gallery.title_en, labelHi: gallery.title_hi },
         ]}
       />
       <Container className="py-8">

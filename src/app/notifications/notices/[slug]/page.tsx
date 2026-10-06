@@ -38,9 +38,9 @@ export default async function NoticeDetailPage({ params }: { params: { slug: str
       />
       <DetailLayout
         crumbs={[
-          { label: 'Notifications', href: '/notifications' },
-          { label: 'Notices', href: '/notifications?communication_type=notice#listing' },
-          { label: item.title_en },
+          { labelKey: 'page.notifications.title', href: '/notifications' },
+          { labelKey: 'page.notifications.notices.title', href: '/notifications?communication_type=notice#listing' },
+          { labelEn: item.title_en, labelHi: item.title_hi },
         ]}
         aside={<CommunicationAside item={item} />}
       >

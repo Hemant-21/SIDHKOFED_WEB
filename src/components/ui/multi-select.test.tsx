@@ -36,4 +36,30 @@ describe('MultiSelect', () => {
     await user.click(screen.getByRole('button', { name: 'Apply' }));
     expect(onChange).toHaveBeenCalledWith([]);
   });
+
+  it('toggles and keeps the panel open when clicking an option by its name, not just the checkbox', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<MultiSelect {...props} value={['workshop']} onChange={onChange} />);
+    await user.click(screen.getByRole('button', { name: 'Type' }));
+    await user.click(screen.getByText('Awareness Programme'));
+    expect(screen.getByRole('checkbox', { name: 'Awareness Programme' })).toBeChecked();
+    expect(screen.getByRole('group', { name: 'Type' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Apply' }));
+    expect(onChange).toHaveBeenCalledWith(['workshop', 'awareness-programme']);
+  });
+
+  it('still closes on an outside click', async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <MultiSelect {...props} value={[]} onChange={vi.fn()} />
+        <button type="button">Outside</button>
+      </div>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Type' }));
+    expect(screen.getByRole('group', { name: 'Type' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Outside' }));
+    expect(screen.queryByRole('group', { name: 'Type' })).not.toBeInTheDocument();
+  });
 });

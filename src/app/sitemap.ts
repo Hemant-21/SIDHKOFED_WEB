@@ -15,8 +15,6 @@ interface SlugRow {
 const STATIC_ROUTES = [
   '',
   '/about',
-  '/about/vision-mission-objectives-functions',
-  '/about/organisation-governance',
   '/activities',
   '/membership',
   '/procurement',
@@ -39,6 +37,12 @@ const STATIC_ROUTES = [
   '/contact',
   '/privacy-policy',
   '/disclaimer',
+  '/sitemap',
+  '/accessibility-statement',
+  '/terms-of-use',
+  '/copyright-policy',
+  '/hyperlinking-policy',
+  '/help-feedback',
 ];
 
 const DYNAMIC_SOURCES: Array<{ endpoint: string; prefix: string }> = [

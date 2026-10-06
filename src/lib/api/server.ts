@@ -1,10 +1,10 @@
 /**
  * Server-side public API access for Server Components (SSR/ISR). Fetches the
- * Express backend directly via its absolute origin — server-to-server, so no CORS
+ * Express backend directly via its absolute origin - server-to-server, so no CORS
  * and no proxy hop. Uses the native `fetch` so Next.js can cache/revalidate (ISR).
  *
  * All responses use the single envelope (API spec §1.4); these helpers unwrap
- * `data`/`pagination` and throw a typed `ApiError` on failure. There is no auth —
+ * `data`/`pagination` and throw a typed `ApiError` on failure. There is no auth -
  * the public namespace is unauthenticated and returns published records only.
  */
 
@@ -89,7 +89,7 @@ async function getOne<T>(path: string, opts: FetchOpts = {}): Promise<T> {
 }
 
 /**
- * Fetch a single resource, returning `null` on 404 instead of throwing — for
+ * Fetch a single resource, returning `null` on 404 instead of throwing - for
  * detail pages that should render Next's `notFound()`.
  */
 export async function getOneOrNull<T>(path: string, opts: FetchOpts = {}): Promise<T | null> {
@@ -108,7 +108,7 @@ async function getList<T>(path: string, opts: FetchOpts = {}): Promise<ListResul
 }
 
 /**
- * Fetch a list but never throw — returns an empty list on any error. Useful for
+ * Fetch a list but never throw - returns an empty list on any error. Useful for
  * the homepage / non-critical sections that should degrade gracefully rather than
  * fail the whole page render.
  */
@@ -120,7 +120,7 @@ export async function getListSafe<T>(path: string, opts: FetchOpts = {}): Promis
   }
 }
 
-/** Fetch a single resource but never throw — returns `null` on any error. */
+/** Fetch a single resource but never throw - returns `null` on any error. */
 export async function getOneSafe<T>(path: string, opts: FetchOpts = {}): Promise<T | null> {
   try {
     return await getOne<T>(path, opts);

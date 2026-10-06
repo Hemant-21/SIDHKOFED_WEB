@@ -1,5 +1,5 @@
 /**
- * Public content DTO types — mirror the backend public mappers exactly (snake_case
+ * Public content DTO types - mirror the backend public mappers exactly (snake_case
  * JSON). The website only consumes these read shapes; it never constructs writes.
  * Field names are taken verbatim from `src/modules/<m>/*.dto.ts`.
  */
@@ -158,6 +158,8 @@ export interface DocumentSummary {
   slug: string;
   title_en: string;
   title_hi: string | null;
+  description_en: string | null;
+  description_hi: string | null;
   document_type: MasterRef;
   knowledge_category: MasterRef | null;
   communication_type: MasterRef | null;
@@ -172,8 +174,6 @@ export interface DocumentSummary {
   public_url: string;
 }
 export interface DocumentDetail extends DocumentSummary {
-  description_en: string | null;
-  description_hi: string | null;
   commodities: MasterRef[];
   districts: MasterRef[];
 }
@@ -429,7 +429,7 @@ export interface Leader {
 }
 
 // Operational Reports (the six-report live-calculated dashboard) and Website Metrics (curated
-// per-placement figures) were both replaced by the Reports dashboard (Task 6/7) — see
+// per-placement figures) were both replaced by the Reports dashboard (Task 6/7) - see
 // `src/lib/types/reports.ts` and `/impact/dashboard`. Removed as dead code once nothing in this
 // app called `/public/operational-reports` or `/public/website-metrics` anymore.
 

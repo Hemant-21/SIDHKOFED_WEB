@@ -11,7 +11,7 @@ import { cn } from '@/utils/cn';
 import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 
 export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const [current, setCurrent] = useState(0);
   const [downloading, setDownloading] = useState(false);
   const thumbsRef = useRef<HTMLDivElement>(null);
@@ -40,7 +40,7 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
     thumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }, [current]);
 
-  // Sequential download — each triggered from user gesture, 250ms apart so
+  // Sequential download - each triggered from user gesture, 250ms apart so
   // browsers don't block them as non-user-initiated.
   const downloadAll = useCallback(async () => {
     setDownloading(true);
@@ -62,7 +62,7 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
       <>
         <BilingualTitle en={gallery.title_en} hi={gallery.title_hi} />
         <BilingualLead en={gallery.description_en} hi={gallery.description_hi} />
-        <p className="mt-6 text-sm text-muted-foreground">No photos in this gallery yet.</p>
+        <p className="mt-6 text-sm text-muted-foreground">{t('gallery.empty')}</p>
       </>
     );
   }
@@ -86,16 +86,16 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
           className="mt-1 inline-flex shrink-0 items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
-          {downloading ? 'Downloading…' : `Download All (${total})`}
+          {downloading ? t('gallery.downloading') : t('gallery.downloadAll', { count: total })}
         </button>
       </div>
 
       {/* Main viewer */}
-      <div className="group relative mt-6 overflow-hidden rounded-xl bg-black" style={{ aspectRatio: '16/9' }}>
+      <div className="group relative mt-6 overflow-hidden rounded-md bg-black" style={{ aspectRatio: '16/9' }}>
         <Image
           key={current}
           src={activeSrc}
-          alt={caption || gallery.title_en}
+          alt={caption || pickText(gallery.title_en, gallery.title_hi, language)}
           fill
           sizes="(max-width: 1024px) 100vw, 900px"
           className="object-contain"
@@ -114,7 +114,7 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
           download={activeImage.media.file_name}
           rel="noopener"
           className="absolute left-3 top-3 rounded-full bg-black/60 p-2 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100 focus-visible:opacity-100"
-          title="Download this photo"
+          title={t('gallery.downloadPhoto')}
         >
           <Download className="h-4 w-4" aria-hidden="true" />
         </a>
@@ -124,7 +124,7 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
           <button
             onClick={prev}
             className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-2 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-white"
-            aria-label="Previous photo"
+            aria-label={t('gallery.previousPhoto')}
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -135,7 +135,7 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
           <button
             onClick={next}
             className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/60 p-2 text-white opacity-0 transition-opacity hover:bg-black/80 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-white"
-            aria-label="Next photo"
+            aria-label={t('gallery.nextPhoto')}
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -154,11 +154,11 @@ export function GalleryDetailView({ gallery }: { gallery: GalleryDetail }) {
         <div
           ref={thumbsRef}
           role="listbox"
-          aria-label="Gallery thumbnails"
+          aria-label={t('gallery.thumbnails')}
           className="mt-3 flex gap-2 overflow-x-auto scroll-smooth pb-2"
         >
           {images.map((img, i) => {
-            const thumbAlt = pickText(img.caption_en, img.caption_hi, language) || `Photo ${i + 1}`;
+            const thumbAlt = pickText(img.caption_en, img.caption_hi, language) || t('gallery.photoNumber', { number: i + 1 });
             return (
               <button
                 key={img.id}

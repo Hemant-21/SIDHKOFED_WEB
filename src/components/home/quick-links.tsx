@@ -1,40 +1,40 @@
+'use client';
+
 import Link from 'next/link';
-import { GraduationCap, Package, Handshake, FileText, Bell, MonitorSmartphone } from 'lucide-react';
+import { GraduationCap, Handshake, FileText, MonitorSmartphone } from 'lucide-react';
 import { Container } from '@/components/ui/container';
+import { useLanguage } from '@/providers/language-provider';
+import type { TranslationKey } from '@/i18n/dictionary';
 
 const ICON_CLASS = 'h-5 w-5 text-primary';
 
-const LINKS = [
-  { icon: <GraduationCap className={ICON_CLASS} aria-hidden="true" />, label: 'Training Programmes', href: '/activities?event_category=trainings&event_type=training#listing' },
-  { icon: <Package className={ICON_CLASS} aria-hidden="true" />, label: 'Procurement', href: '/procurement' },
-  { icon: <Handshake className={ICON_CLASS} aria-hidden="true" />, label: 'Buyer Enquiry', href: '/procurement/enquiry' },
-  { icon: <FileText className={ICON_CLASS} aria-hidden="true" />, label: 'Forms & Formats', href: '/publications?knowledge_category=acts-and-rules&document_type=form#listing' },
-  { icon: <Bell className={ICON_CLASS} aria-hidden="true" />, label: 'Notices', href: '/notifications?communication_type=notice#listing' },
-  { icon: <MonitorSmartphone className={ICON_CLASS} aria-hidden="true" />, label: 'Digital Services', href: '/digital-services' },
+const LINKS: { icon: React.ReactNode; labelKey: TranslationKey; href: string }[] = [
+  { icon: <GraduationCap className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.training', href: '/activities?event_category=trainings&event_type=training#listing' },
+  { icon: <Handshake className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.buyerEnquiry', href: '/procurement/enquiry' },
+  { icon: <FileText className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.forms', href: '/publications?knowledge_category=training-resources#listing' },
+  { icon: <MonitorSmartphone className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.digitalServices', href: '/digital-services' },
 ];
 
 export function QuickLinks() {
+  const { t } = useLanguage();
   return (
-    <section aria-label="Quick access">
+    <section aria-label={t('home.quickAccess.title')}>
       <Container className="py-14">
         <div className="mb-6">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Fast Pathways
-          </p>
-          <h2 className="mt-1 text-2xl font-bold text-foreground">Quick Access</h2>
+          <h2 className="font-display text-2xl font-bold text-heading">{t('home.quickAccess.title')}</h2>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="group relative rounded-lg border border-border bg-surface p-5 transition-all hover:border-primary hover:shadow-sm"
+              className="group flex items-center gap-3 rounded-md border border-border bg-surface p-4 transition-colors hover:border-link"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 {link.icon}
-              </div>
-              <p className="mt-3 text-sm font-semibold text-foreground group-hover:text-primary">
-                {link.label}
+              </span>
+              <p className="text-sm font-semibold text-heading group-hover:text-link">
+                {t(link.labelKey)}
               </p>
             </Link>
           ))}

@@ -2,7 +2,7 @@
  * Bilingual content selection (codex §10). Editorial records carry `*_en`
  * (primary, usually required) and optional `*_hi`. Manual Hindi takes priority;
  * when Hindi is missing the English value is shown as a fallback. The backend does
- * not machine-translate in Phase 1, so we never fabricate Hindi — we only surface
+ * not machine-translate in Phase 1, so we never fabricate Hindi - we only surface
  * `translation_source` so the UI can label automatic content if it ever appears.
  */
 
@@ -41,4 +41,21 @@ export function pickField<T extends Record<string, unknown>>(
 /** Whether a record's effective Hindi content is an automatic/missing translation. */
 export function isAutoTranslated(translationSource: string | null | undefined, lang: Language): boolean {
   return lang === 'hi' && translationSource === 'automatic';
+}
+
+/**
+ * Like `pickText`, but also reports when the result silently fell back to English
+ * because no Hindi value existed - lets a caller mark the mixed-language text
+ * instead of presenting it as if it were native Hindi content.
+ */
+export function pickTextWithFallback(
+  en: string | null | undefined,
+  hi: string | null | undefined,
+  lang: Language,
+): { text: string; isFallback: boolean } {
+  if (lang === 'hi') {
+    const hasHi = Boolean(hi && hi.trim().length > 0);
+    return { text: (hasHi ? hi : en) ?? '', isFallback: !hasHi && Boolean(en && en.trim()) };
+  }
+  return { text: (en && en.trim().length > 0 ? en : hi) ?? '', isFallback: false };
 }

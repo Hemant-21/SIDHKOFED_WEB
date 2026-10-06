@@ -28,6 +28,12 @@ export const PRIMARY_NAV: NavItem[] = [
     href: '/membership',
   },
   {
+    key: 'notifications',
+    labelEn: 'Notices',
+    labelHi: 'सूचनाएँ',
+    href: '/notifications',
+  },
+  {
     key: 'procurement',
     labelEn: 'Procurement',
     labelHi: 'खरीद',
@@ -44,12 +50,6 @@ export const PRIMARY_NAV: NavItem[] = [
     labelEn: 'Publications',
     labelHi: 'प्रकाशन',
     href: '/publications',
-  },
-  {
-    key: 'notifications',
-    labelEn: 'Notifications',
-    labelHi: 'सूचनाएं',
-    href: '/notifications',
   },
 ];
 
@@ -74,5 +74,14 @@ export const FOOTER_NAV = {
     { key: 'f-digital', labelEn: 'Digital Services', labelHi: 'डिजिटल सेवाएं', href: '/digital-services' },
     { key: 'f-privacy', labelEn: 'Privacy Policy', labelHi: 'गोपनीयता नीति', href: '/privacy-policy' },
     { key: 'f-disclaimer', labelEn: 'Disclaimer', labelHi: 'अस्वीकरण', href: '/disclaimer' },
+  ],
+  // GIGW-mandated policy links - a fifth footer column so the existing three stay uncluttered.
+  policies: [
+    { key: 'f-accessibility', labelEn: 'Accessibility Statement', labelHi: 'सुगम्यता वक्तव्य', href: '/accessibility-statement' },
+    { key: 'f-sitemap', labelEn: 'Sitemap', labelHi: 'साइटमैप', href: '/sitemap' },
+    { key: 'f-terms', labelEn: 'Terms of Use', labelHi: 'उपयोग की शर्तें', href: '/terms-of-use' },
+    { key: 'f-copyright', labelEn: 'Copyright Policy', labelHi: 'कॉपीराइट नीति', href: '/copyright-policy' },
+    { key: 'f-hyperlinking', labelEn: 'Hyperlinking Policy', labelHi: 'हाइपरलिंकिंग नीति', href: '/hyperlinking-policy' },
+    { key: 'f-help', labelEn: 'Help and Feedback', labelHi: 'सहायता और प्रतिक्रिया', href: '/help-feedback' },
   ],
 };

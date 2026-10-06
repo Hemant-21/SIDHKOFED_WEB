@@ -39,7 +39,7 @@ export function SearchInput({
           if (e.key === 'Enter' && onSubmit) onSubmit();
         }}
         placeholder={placeholder}
-        className="h-11 w-full rounded-md border border-input bg-surface pl-9 pr-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background"
+        className="h-11 w-full rounded-md border border-input bg-surface pl-9 pr-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background"
       />
     </div>
   );

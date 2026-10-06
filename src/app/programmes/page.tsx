@@ -38,8 +38,7 @@ export default async function ProgrammesPage({ searchParams }: { searchParams: S
     <ListingLayout
       titleKey="page.programmes.title"
       subtitleKey="page.programmes.subtitle"
-      crumb="Programmes"
-      filters={<FilterBar selects={[{ key: 'year', labelKey: 'filter.year', options: yearOptions() }]} />}
+      filters={<FilterBar searchPlaceholderKey="search.placeholder.programmes" selects={[{ key: 'year', labelKey: 'filter.year', options: yearOptions() }]} />}
       summary={<ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >

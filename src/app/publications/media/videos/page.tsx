@@ -31,10 +31,9 @@ export default async function VideosListPage({ searchParams }: { searchParams: S
     <ListingLayout
       titleKey="page.publications.media.videos.title"
       subtitleKey="page.publications.media.videos.subtitle"
-      crumb="Videos"
       parentCrumbs={[
-        { label: 'Publications', href: '/publications' },
-        { label: 'Media Gallery', href: '/publications/media' },
+        { labelKey: 'page.publications.title', href: '/publications' },
+        { labelKey: 'page.publications.media.title', href: '/publications/media' },
       ]}
       summary={list.error ? null : <ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}

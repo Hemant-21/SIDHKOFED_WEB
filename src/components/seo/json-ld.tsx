@@ -43,7 +43,7 @@ export function OrganizationJsonLd() {
       data={{
         '@context': 'https://schema.org',
         '@type': 'GovernmentOrganization',
-        name: 'SIDHKOFED — Jharkhand Cooperative Federation',
+        name: 'SIDHKOFED - Jharkhand Cooperative Federation',
         url: env.siteUrl,
         areaServed: 'Jharkhand, India',
       }}

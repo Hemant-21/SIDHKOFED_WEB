@@ -1,6 +1,6 @@
 'use client';
 
-// Root error boundary (renders for unexpected runtime/render errors — the "500"
+// Root error boundary (renders for unexpected runtime/render errors - the "500"
 // experience). Must be a Client Component per Next.js.
 import { useEffect } from 'react';
 import { Container } from '@/components/ui/container';

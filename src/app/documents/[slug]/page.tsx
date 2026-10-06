@@ -35,7 +35,7 @@ export default async function DocumentDetailPage({ params }: { params: { slug: s
         ]}
       />
       <DetailLayout
-        crumbs={[{ label: 'Documents', href: '/documents' }, { label: document.title_en }]}
+        crumbs={[{ labelKey: 'page.documents.title', href: '/documents' }, { labelEn: document.title_en, labelHi: document.title_hi }]}
         aside={<DocumentAside document={document} />}
       >
         <DocumentArticle document={document} />

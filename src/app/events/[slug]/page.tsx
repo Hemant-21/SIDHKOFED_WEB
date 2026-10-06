@@ -44,7 +44,7 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
         ]}
       />
       <DetailLayout
-        crumbs={[{ label: 'Events', href: '/events' }, { label: event.title_en }]}
+        crumbs={[{ labelKey: 'page.events.title', href: '/events' }, { labelEn: event.title_en, labelHi: event.title_hi }]}
         aside={<EventAside event={event} />}
       >
         <EventArticle event={event} />

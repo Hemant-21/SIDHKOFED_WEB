@@ -39,7 +39,7 @@ export default async function ProgrammeDetailPage({ params }: { params: { slug: 
         ]}
       />
       <DetailLayout
-        crumbs={[{ label: 'Programmes', href: '/programmes' }, { label: programme.title_en }]}
+        crumbs={[{ labelKey: 'page.programmes.title', href: '/programmes' }, { labelEn: programme.title_en, labelHi: programme.title_hi }]}
         aside={hasAside ? <ProgrammeAside programme={programme} /> : undefined}
       >
         <ProgrammeArticle programme={programme} />

@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useQueryParams } from '@/hooks/use-query-params';
 import { useLanguage } from '@/providers/language-provider';
 import { SEARCH_CONTENT_TYPES } from '@/lib/types/content';
-import { humanizeEnum } from '@/utils/format';
+import { contentTypeLabel } from '@/utils/format';
 import { SearchInput } from '@/components/ui/search-input';
 import { Select } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -45,7 +45,7 @@ export function SearchForm() {
         value={get('content_type')}
         onChange={(v) => setParams({ content_type: v || null })}
         placeholder={t('common.all')}
-        options={SEARCH_CONTENT_TYPES.map((c) => ({ value: c, label: humanizeEnum(c) }))}
+        options={SEARCH_CONTENT_TYPES.map((c) => ({ value: c, label: contentTypeLabel(c, t) }))}
         className="sm:w-52"
       />
       <Button type="submit" className="sm:h-10">

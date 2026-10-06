@@ -1,11 +1,11 @@
 /**
- * Public Report Publications types — mirrors the backend's `reports.types.ts` /
+ * Public Report Publications types - mirrors the backend's `reports.types.ts` /
  * `publications.public.service.ts` (Sidhkofed-Website). Wire shape is camelCase (a deliberate
  * difference from the snake_case `content.ts` types, matching the backend's own convention for
- * this module — see that module's header comments for why).
+ * this module - see that module's header comments for why).
  *
- * These are read straight from an immutable, approved `ReportPublication` snapshot — never a live
- * query — so every field here is exactly what was reviewed and published, nothing recalculated.
+ * These are read straight from an immutable, approved `ReportPublication` snapshot - never a live
+ * query - so every field here is exactly what was reviewed and published, nothing recalculated.
  */
 
 export type ReportKey = 'programme_report' | 'district_activity_coverage' | 'commodity_report';

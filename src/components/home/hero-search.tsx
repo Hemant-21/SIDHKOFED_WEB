@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/providers/language-provider';
-import { buttonClasses } from '@/components/ui/button';
+import { pickText } from '@/utils/bilingual';
+import { cn } from '@/utils/cn';
 import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
+import { Container } from '@/components/ui/container';
 import { HeroSearchBar } from './hero-search-bar';
 import type { GalleryImage } from '@/lib/types/content';
 
@@ -14,195 +16,208 @@ interface HeroSearchProps {
   slides: GalleryImage[];
 }
 
+const ROTATE_MS = 7000;
+
+const controlButton =
+  'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-accent focus-visible:ring-offset-2';
+
 export function HeroSearch({ slides }: HeroSearchProps) {
   const { t, language } = useLanguage();
   const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focusWithin, setFocusWithin] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  // A slide image that fails to decode (corrupt/mislabeled source file, or an
+  // optimizer error at a width variant only some viewports request) otherwise leaves
+  // a bare broken <img> showing its raw filename as alt text. Track failures per
+  // slide id and fall back to the static hero image instead.
+  const [failedSlideIds, setFailedSlideIds] = useState<Set<string>>(new Set());
+  const markSlideFailed = useCallback(
+    (id: string) => setFailedSlideIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id))),
+    [],
+  );
   const hasSlides = slides.length > 0;
   const isCarousel = slides.length > 1;
-  const currentSlide = slides[current] ?? null;
+  const total = slides.length;
+  const autoRotating = isCarousel && !paused && !reducedMotion && !hovered && !focusWithin;
 
   const next = useCallback(() => setCurrent((i) => (i + 1) % slides.length), [slides.length]);
   const prev = useCallback(() => setCurrent((i) => (i - 1 + slides.length) % slides.length), [slides.length]);
 
+  // Honour the reduced-motion preference outright - no auto-rotation at all, regardless
+  // of the pause toggle's state.
   useEffect(() => {
-    if (!isCarousel) return;
-    const id = setInterval(next, 5000);
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(mq.matches);
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (!autoRotating) return;
+    const id = setInterval(next, ROTATE_MS);
     return () => clearInterval(id);
-  }, [isCarousel, next]);
+  }, [autoRotating, next]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (!isCarousel) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prev();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      next();
+    }
+  };
+
+  const headlineLines = t('home.hero.headline').split('\n');
 
   return (
-    <div className="mx-auto max-w-screen-xl">
-      {/* Mobile hero image band — the institutional image must not disappear below `lg`,
-          where the diagonal right panel is hidden. Reuses the same slide/fallback source. */}
-      <div className="relative h-48 w-full overflow-hidden sm:h-64 lg:hidden">
-        <Image
-          src={currentSlide ? mediaUrl(currentSlide.media, 'hero') : '/hero-cooperative.png'}
-          alt={
-            currentSlide
-              ? currentSlide.media.alt_text || currentSlide.caption_en || currentSlide.media.title || ''
-              : 'Cooperative value chains — Jharkhand tribal communities'
-          }
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-          unoptimized={Boolean(currentSlide && isLocalMediaUrl(mediaUrl(currentSlide.media, 'hero')))}
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
-      </div>
+    <Container className="grid grid-cols-1 items-center gap-8 py-6 sm:py-8 lg:grid-cols-[4fr_8fr] lg:items-stretch lg:gap-12 lg:py-0">
+      {/* ── TEXT COLUMN - never changes when a slide changes. Carries its own
+          vertical padding at lg+ (the row itself has none there) so the
+          stretched carousel next to it fills the row's full height edge-to-
+          edge, instead of being inset by padding that only the text needs. ── */}
+      <div className="max-w-xl lg:py-10">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-hero-muted sm:mb-4">
+          {t('home.hero.eyebrow')}
+        </p>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <h1
+          className="font-display text-3xl font-semibold leading-[1.12] text-hero-foreground sm:text-4xl lg:text-[44px]"
+          lang={language}
+        >
+          {headlineLines.map((line, i) => (
+            <span key={i} className="block text-balance">
+              {line}
+            </span>
+          ))}
+        </h1>
 
-        {/* ── LEFT PANEL ── */}
-        <div className="relative flex items-center overflow-hidden px-5 py-12 sm:px-10 sm:py-16 lg:px-16 lg:py-24 xl:px-20">
+        <p className="mt-4 text-base leading-relaxed text-hero-muted lg:text-lg" lang={language}>
+          {t('home.hero.sub')}
+        </p>
 
-          {/* Accent bar — far left edge */}
-          <div className="absolute inset-y-0 left-0 w-[3px] bg-accent" />
-
-          {/* Dot grid texture */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.065) 1px, transparent 1px)',
-              backgroundSize: '22px 22px',
-            }}
-          />
-
-          {/* Decorative concentric circles — hidden on mobile, visible on lg+ */}
-          <div className="pointer-events-none absolute -bottom-24 -right-24 hidden h-80 w-80 rounded-full border border-white/[0.06] lg:block" />
-          <div className="pointer-events-none absolute -bottom-10 -right-10 hidden h-52 w-52 rounded-full border border-white/[0.09] lg:block" />
-
-          <div className="relative z-10 max-w-xl">
-            {/* Eyebrow */}
-            <p className="mb-4 text-[10px] font-semibold uppercase tracking-widest text-white/50 sm:mb-5 sm:text-xs">
-              Jharkhand Cooperative Federation
-            </p>
-
-            {/* Headline — two punchy pairs */}
-            <h1
-              className="text-3xl font-black leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.5rem]"
-              lang={language}
-            >
-              From Forest<br />
-              <span className="text-accent">to Market.</span>
-            </h1>
-
-            {/* Accent rule separating the two headline pairs */}
-            <div className="my-3 h-[2px] w-8 rounded-full bg-accent/50 sm:my-4 sm:w-10" />
-
-            <p className="text-2xl font-black leading-[1.08] tracking-tight text-white/75 sm:text-3xl lg:text-[2.75rem]">
-              From Village<br />to Value.
-            </p>
-
-            {/* Tagline */}
-            <p className="mt-5 text-sm leading-relaxed text-white/65 sm:mt-6 sm:text-base lg:max-w-sm" lang={language}>
-              {t('site.tagline')}
-            </p>
-
-            {/* Search — the primary, task-oriented action */}
-            <div className="mt-6 max-w-sm sm:mt-7">
-              <HeroSearchBar />
-            </div>
-
-            {/* Secondary CTAs */}
-            <div className="mt-4 flex flex-wrap gap-3">
-              <Link href="/activities" className={buttonClasses('accent', 'lg')}>
-                Explore Activities
-              </Link>
-              <Link
-                href="/procurement"
-                className="inline-flex items-center gap-2 rounded-lg border border-white/25 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Procurement <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Link
+            href="/activities"
+            className="inline-flex h-12 items-center justify-center rounded-sm bg-white px-6 text-sm font-semibold text-hero transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-accent focus-visible:ring-offset-2"
+          >
+            {t('home.hero.cta.activities')}
+          </Link>
+          <Link
+            href="/procurement"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-sm bg-accent-action px-6 text-sm font-semibold text-accent-action-foreground transition-colors hover:bg-accent-action/90 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-accent focus-visible:ring-offset-2"
+          >
+            {t('home.hero.cta.procurement')} <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          </Link>
         </div>
 
-        {/* ── RIGHT PANEL — deeper diagonal, crossfade carousel ── */}
-        <div
-          className="relative hidden lg:block"
-          style={{ clipPath: 'polygon(13% 0%, 100% 0%, 100% 100%, 0% 100%)' }}
-        >
-          {hasSlides ? (
-            <>
-              {slides.map((slide, i) => (
-                <div
-                  key={slide.id}
-                  className="absolute inset-0 transition-opacity duration-700"
-                  style={{ opacity: i === current ? 1 : 0 }}
-                  aria-hidden={i !== current}
-                >
+        <div className="mt-5 max-w-sm">
+          <HeroSearchBar />
+        </div>
+      </div>
+
+      {/* ── PHOTO CAROUSEL ── */}
+      <section
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={t('home.hero.carousel.label')}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocusCapture={() => setFocusWithin(true)}
+        onBlurCapture={() => setFocusWithin(false)}
+        onKeyDown={onKeyDown}
+        className="relative aspect-[4/3] w-full overflow-hidden rounded-md md:aspect-video lg:aspect-auto lg:h-auto lg:self-stretch"
+      >
+        {hasSlides ? (
+          slides.map((slide, i) => {
+            const slideFailed = failedSlideIds.has(slide.id);
+            const isActive = i === current;
+            const caption = pickText(slide.caption_en, slide.caption_hi, language);
+            const alt = slide.media.alt_text || caption || slide.media.title || '';
+            return (
+              <div
+                key={slide.id}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} / ${total}`}
+                aria-hidden={!isActive}
+                className={cn(
+                  'absolute inset-0 transition-opacity duration-700',
+                  isActive ? 'opacity-100' : 'invisible opacity-0',
+                )}
+              >
+                {slideFailed ? (
+                  <Image src="/hero-cooperative.png" alt={alt} fill className="object-cover" />
+                ) : (
                   <Image
                     src={mediaUrl(slide.media, 'hero')}
-                    alt={slide.media.alt_text || slide.caption_en || slide.media.title || ''}
+                    alt={alt}
                     fill
                     className="object-cover"
                     priority={i === 0}
-                    sizes="(max-width: 1280px) 50vw, 640px"
+                    sizes="(max-width: 1024px) 100vw, 66vw"
                     unoptimized={isLocalMediaUrl(mediaUrl(slide.media, 'hero'))}
+                    onError={() => markSlideFailed(slide.id)}
                   />
-                </div>
-              ))}
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <Image
+            src="/hero-cooperative.png"
+            alt={t('home.hero.fallbackAlt')}
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
 
-              {/* Caption */}
-              {slides[current]?.caption_en && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-4 pb-12 pt-8">
-                  <p className="text-sm font-medium text-white">{slides[current].caption_en}</p>
-                </div>
-              )}
+        {/* Control bar */}
+        {hasSlides && (
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-3 bg-foreground px-3 py-1 text-white dark:bg-background sm:px-4">
+            <div className="flex min-w-0 items-center gap-2 text-xs">
+              <span className="shrink-0 font-medium tabular-nums">
+                {current + 1} / {total}
+              </span>
+              {(() => {
+                const caption = pickText(slides[current]?.caption_en, slides[current]?.caption_hi, language);
+                return caption ? (
+                  <span className="hidden min-w-0 truncate text-white/90 md:inline">{caption}</span>
+                ) : null;
+              })()}
+            </div>
 
-              {/* Prev / Next arrows */}
-              {isCarousel && (
-                <>
-                  <button
-                    onClick={prev}
-                    aria-label="Previous slide"
-                    className="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-black/30 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/50"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={next}
-                    aria-label="Next slide"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/30 p-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/50"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-
-                  {/* Dot indicators */}
-                  <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
-                    {slides.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrent(i)}
-                        aria-label={`Go to slide ${i + 1}`}
-                        className="h-1.5 rounded-full transition-all duration-300"
-                        style={{
-                          width: i === current ? '1.5rem' : '0.375rem',
-                          backgroundColor: i === current ? 'white' : 'rgba(255,255,255,0.45)',
-                        }}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </>
-          ) : (
-            <Image
-              src="/hero-cooperative.png"
-              alt="Cooperative value chains — Jharkhand tribal communities"
-              fill
-              className="object-cover"
-              priority
-            />
-          )}
-
-          {/* Gradient at the diagonal edge for depth */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-primary/30 via-transparent to-transparent" />
-        </div>
-
-      </div>
-    </div>
+            {isCarousel && (
+              <div className="flex shrink-0 items-center gap-1">
+                <button type="button" onClick={prev} aria-label={t('home.hero.slide.previous')} className={controlButton}>
+                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaused((p) => !p)}
+                  aria-label={paused || reducedMotion ? t('home.hero.slide.play') : t('home.hero.slide.pause')}
+                  aria-pressed={paused}
+                  className={controlButton}
+                >
+                  {paused || reducedMotion ? (
+                    <Play className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Pause className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </button>
+                <button type="button" onClick={next} aria-label={t('home.hero.slide.next')} className={controlButton}>
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+    </Container>
   );
 }

@@ -10,7 +10,7 @@ import { CoverImage } from '@/components/content/cover-image';
 import { Badge } from '@/components/ui/badge';
 
 export function InstitutionCard({ institution }: { institution: InstitutionSummary }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const name = pickText(institution.name_en, institution.name_hi, language);
 
   return (
@@ -24,8 +24,8 @@ export function InstitutionCard({ institution }: { institution: InstitutionSumma
           </span>
         )}
         <div className="min-w-0">
-          <h3 className="truncate text-base font-semibold text-foreground">
-            <Link href={institution.public_url} className="hover:text-primary hover:underline">
+          <h3 className="truncate font-sans text-base font-semibold text-heading">
+            <Link href={institution.public_url} className="hover:text-link hover:underline">
               {name}
             </Link>
           </h3>
@@ -43,11 +43,11 @@ export function InstitutionCard({ institution }: { institution: InstitutionSumma
             href={institution.website_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-link hover:underline"
           >
             <Globe className="h-3.5 w-3.5" aria-hidden="true" />
-            Website
-            <span className="sr-only">(opens in a new tab)</span>
+            {t('common.website')}
+            <span className="sr-only"> {t('common.opensNewTab')}</span>
           </a>
         )}
       </div>

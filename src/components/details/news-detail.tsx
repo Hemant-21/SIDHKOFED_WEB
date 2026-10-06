@@ -47,7 +47,7 @@ export function NewsArticle({ news }: { news: NewsDetail }) {
         <p className="mt-8 inline-flex items-center gap-1.5 rounded-md border border-border bg-muted/40 px-3 py-2 text-sm">
           <CalendarRange className="h-4 w-4 text-primary" aria-hidden="true" />
           {t('detail.sourceEvent')}:{' '}
-          <Link href={news.source_event.public_url} className="font-medium text-primary hover:underline">
+          <Link href={news.source_event.public_url} className="font-medium text-link hover:underline">
             {pickText(news.source_event.title_en, news.source_event.title_hi, language)}
           </Link>
         </p>

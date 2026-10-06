@@ -3,6 +3,7 @@
 import { useLanguage } from '@/providers/language-provider';
 import { Container } from '@/components/ui/container';
 import { SectionHeading } from '@/components/ui/section-heading';
+import type { TranslationKey } from '@/i18n/dictionary';
 
 /**
  * Homepage section wrapper. Renders nothing when `show` is false so empty backend
@@ -16,7 +17,7 @@ export function HomeSection({
   bare = false,
   children,
 }: {
-  titleKey: string;
+  titleKey: TranslationKey;
   viewAllHref?: string;
   show: boolean;
   bare?: boolean;

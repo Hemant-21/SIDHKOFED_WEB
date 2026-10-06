@@ -12,12 +12,12 @@ import { OfficeContactCard } from '@/components/content/office-contact-card';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Buyer / Seller / Storage Enquiry',
-  description: 'Contact SIDHKOFED for procurement and storage enquiries — MFP and cooperative commodities.',
+  description: 'Contact SIDHKOFED for procurement and storage enquiries - MFP and cooperative commodities.',
   path: '/procurement/enquiry',
 });
 
 /**
- * Only these three enquiry-type slugs belong on the Buyer/Seller/Storage Enquiry page — the
+ * Only these three enquiry-type slugs belong on the Buyer/Seller/Storage Enquiry page - the
  * master list also seeds General/Membership/Partnership enquiry types, which belong on the
  * general `/contact` page instead (masters.ts → ENQUIRY_TYPES; slugs are server-generated and
  * immutable, so matching on them is stable even if an admin edits the display name).
@@ -26,7 +26,7 @@ const PROCUREMENT_ENQUIRY_TYPE_SLUGS = new Set(['buyer-enquiry', 'seller-enquiry
 
 export default async function ProcurementEnquiryPage() {
   // Enquiry types + commodities are fetched server-side (SSR) so the client form never needs
-  // its own master-data round trips. Cached for an hour — both master lists change rarely.
+  // its own master-data round trips. Cached for an hour - both master lists change rarely.
   const [{ items: allEnquiryTypes }, { items: commodities }, contactSettings] = await Promise.all([
     getListSafe<MasterRef>(`${PUBLIC_ENDPOINTS.masters}/enquiry-types`, {
       query: { page_size: 100 },
@@ -43,7 +43,12 @@ export default async function ProcurementEnquiryPage() {
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Procurement', href: '/procurement' }, { label: 'Buyer / Seller / Storage Enquiry' }]} />
+      <Breadcrumbs
+        items={[
+          { labelKey: 'page.procurement.title', href: '/procurement' },
+          { labelKey: 'page.procurement.enquiry.title' },
+        ]}
+      />
       <Container className="py-10">
         <header className="mb-8 max-w-2xl">
           <LocalizedHeading titleKey="page.procurement.enquiry.title" as="h1" />

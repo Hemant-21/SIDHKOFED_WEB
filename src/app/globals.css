@@ -3,91 +3,156 @@
 @tailwind utilities;
 
 /*
- * Public-website design tokens — HSL CSS variables shared with the admin design
+ * Public-website design tokens - HSL CSS variables shared with the admin design
  * system (one semantic palette: primary/surface/muted/danger…). Both light and dark
  * themes are supported (see the `html.dark` overrides below and `ThemeToggle`).
- * Never use raw hex in components — consume tokens so both themes stay correct.
+ * Never use raw hex in components - consume tokens so both themes stay correct.
  *
  * `--font-size-scale` powers the accessibility text-size controls (codex §6/§7):
  * the controls bump this variable and the root font-size scales with it.
  */
 @layer base {
   :root {
-    --background: 152 24% 97%;
-    --foreground: 222 22% 12%;
+    /* Page background (#FBFAF6) / body text (#1B2228) per the approved SIDHKOFED palette. */
+    --background: 48 38% 97%;
+    --foreground: 208 19% 13%;
 
     --surface: 0 0% 100%;
-    --surface-foreground: 222 22% 12%;
+    --surface-foreground: 208 19% 13%;
 
-    --muted: 150 20% 92%;
-    --muted-foreground: 215 16% 38%;
+    /* Occasional alternate section band (#F4F1E8) - softened stone, distinct from --muted,
+       which stays a neutral subtle fill for chips/disabled states rather than a page-section
+       colour. */
+    --surface-alt: 45 35% 93%;
+    --surface-alt-foreground: 208 19% 13%;
 
-    --border: 154 18% 84%;
-    --input: 154 18% 81%;
-    --ring: 158 64% 32%;
+    --muted: 45 20% 92%;
+    --muted-foreground: 211 12% 34%;
 
-    /* SIDHKOFED cooperative green primary. */
-    --primary: 158 64% 24%;
+    --border: 45 20% 85%;
+    --input: 45 18% 80%;
+    --ring: 203 90% 38%;
+
+    /* Primary / link / action (#0B5A8A). */
+    --primary: 203 85% 29%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 151 24% 91%;
-    --secondary-foreground: 222 22% 18%;
+    /* Supporting brand colour / footer (#1D6647). */
+    --secondary: 155 56% 26%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Warm earthen accent for highlights / calls to action. */
-    --accent: 28 88% 45%;
-    --accent-foreground: 0 0% 100%;
+    /* Decorative orange (#E8612C) - not a text-safe background; see --accent-action for
+       orange buttons that carry white text. */
+    --accent: 17 80% 54%;
+    --accent-foreground: 208 19% 13%;
 
-    --success: 150 60% 30%;
+    /* Orange action background with white text (#B4451A). */
+    --accent-action: 17 75% 40%;
+    --accent-action-foreground: 0 0% 100%;
+
+    /* Strong headings / utility bar (#083D5E). */
+    --heading: 203 84% 20%;
+    --heading-foreground: 0 0% 100%;
+
+    /* Hero band (#083D5E) - solid navy background for the homepage hero. */
+    --hero: 203 84% 20%;
+    --hero-foreground: 0 0% 100%;
+    --hero-muted: 205 38% 90%;
+
+    /* Inline link colour (#0B5A8A) - used for links and active nav items instead
+       of --primary, so link semantics stay distinct from primary action fills. */
+    --link: 203 85% 29%;
+
+    /* Deep navy footer band (#062B43) - footer only, distinct from --secondary/--heading. */
+    --footer: 204 84% 14%;
+    --footer-foreground: 0 0% 100%;
+
+    /* Optional olive accent (#6B6629). */
+    --olive: 55 45% 29%;
+    --olive-foreground: 0 0% 100%;
+
+    --success: 142 65% 28%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 35 92% 38%;
+    --warning: 38 92% 38%;
     --warning-foreground: 0 0% 100%;
 
-    --danger: 0 72% 44%;
+    --danger: 0 72% 42%;
     --danger-foreground: 0 0% 100%;
 
-    --info: 211 80% 40%;
+    /* Kept a distinct hue (indigo) from --primary blue so info states remain visually
+       distinguishable from ordinary links/actions. */
+    --info: 245 65% 48%;
     --info-foreground: 0 0% 100%;
 
-    --radius: 0.875rem;
+    /* 8px base -> lg 8px / md 6px (cards) / sm 4px (buttons), per the restrained-corners spec. */
+    --radius: 0.5rem;
 
     --font-size-scale: 1;
   }
 
   html.dark {
-    --background: 222 22% 10%;
-    --foreground: 210 20% 93%;
+    --background: 208 22% 9%;
+    --foreground: 45 20% 94%;
 
-    --surface: 222 22% 13%;
-    --surface-foreground: 210 20% 90%;
+    --surface: 208 20% 13%;
+    --surface-foreground: 45 15% 92%;
 
-    --muted: 222 15% 18%;
-    --muted-foreground: 215 15% 58%;
+    --surface-alt: 208 18% 17%;
+    --surface-alt-foreground: 45 15% 92%;
 
-    --border: 222 15% 22%;
-    --input: 222 15% 20%;
-    --ring: 158 55% 45%;
+    --muted: 208 15% 20%;
+    --muted-foreground: 211 10% 65%;
 
-    --primary: 158 55% 42%;
+    --border: 208 15% 24%;
+    --input: 208 15% 22%;
+    --ring: 203 80% 58%;
+
+    /* Bumped from 203 75% 48% - that value gave white text only ~3.5:1 contrast
+       against it (fails WCAG AA). 208 80% 40% gives ~5.5:1. */
+    --primary: 208 80% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 222 15% 18%;
-    --secondary-foreground: 210 20% 88%;
+    --secondary: 155 45% 38%;
+    --secondary-foreground: 0 0% 100%;
 
-    --accent: 28 75% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 17 75% 58%;
+    --accent-foreground: 208 22% 9%;
 
-    --success: 150 50% 42%;
-    --success-foreground: 0 0% 100%;
+    /* Matches the light-mode value (#B4451A) - gives white text ~5.5:1 contrast. */
+    --accent-action: 17 75% 40%;
+    --accent-action-foreground: 0 0% 100%;
 
-    --warning: 35 85% 50%;
-    --warning-foreground: 0 0% 100%;
+    --heading: 203 70% 62%;
+    --heading-foreground: 208 25% 8%;
+
+    /* Hero band (#0C2B42) - darker navy for dark mode. */
+    --hero: 205 69% 15%;
+    --hero-foreground: 45 20% 94%;
+    --hero-muted: 205 30% 84%;
+
+    --link: 208 71% 62%;
+
+    /* Deep navy footer band (#0A1C2A) - dark-mode footer only. */
+    --footer: 206 62% 10%;
+    --footer-foreground: 45 20% 94%;
+
+    --olive: 55 40% 45%;
+    --olive-foreground: 208 22% 9%;
+
+    /* Lightened from 142 55% 42% - that value gave --success text only borderline
+       contrast (~4.3:1) against the dark badge tints/section surfaces it sits on. */
+    --success: 142 50% 60%;
+    --success-foreground: 208 22% 9%;
+
+    --warning: 38 85% 50%;
+    --warning-foreground: 208 22% 9%;
 
     --danger: 0 65% 55%;
     --danger-foreground: 0 0% 100%;
 
-    --info: 211 70% 52%;
-    --info-foreground: 0 0% 100%;
+    --info: 245 65% 68%;
+    --info-foreground: 208 22% 9%;
   }
 
   html {
@@ -95,29 +160,192 @@
     font-size: calc(100% * var(--font-size-scale));
   }
 
+  /* Large desktop monitors (1600px+) otherwise leave the fixed-width container
+     floating in a sea of empty page and text reading small relative to the
+     viewport. Bump the default scale to 1.25x at this breakpoint only -
+     mobile/tablet/small-laptop are unaffected. 1600px is also where the header
+     switches from the hamburger menu to the full nav (see desktop-nav.tsx /
+     mobile-nav.tsx / the 'nav' breakpoint in tailwind.config.ts) - below it,
+     the hamburger has room to collapse instead of clipping against the larger
+     text. */
+  @media (min-width: 1600px) {
+    html {
+      font-size: calc(125% * var(--font-size-scale));
+    }
+  }
+
+  /* Noto Sans/Serif Devanagari render visually smaller than the Latin faces at the
+     same declared size, so Hindi mode needs larger text to read as equivalent to
+     English. A root-level font-size bump (tried earlier) isn't the right tool for
+     that: html's font-size is the `rem` base for *everything* - spacing, padding,
+     gaps, icon sizes - not just text, so bumping it made Hindi pages visibly more
+     spread out than their English counterparts rather than just larger-reading.
+     Instead, remap each Tailwind text-size utility actually used on the site
+     scoped to Hindi only, by this one multiplier - this touches font-size alone,
+     so layout/spacing stays byte-for-byte identical between languages. */
+  html[lang='hi'] {
+    --hi-text-scale: 1.15;
+  }
+  /* xs–2xl also get a generous unitless line-height: Tailwind pairs each
+     text-* size with a fixed line-height (e.g. text-xs is 0.75rem font-size in
+     a 1rem line box) sized for the original font-size. Bumping only font-size
+     leaves that line box too tight for Devanagari matras, which sit above the
+     glyph - same clipping problem as the headings below, just on body/label
+     text (utility bar, eyebrows, nav) instead of h1–h3. Headings (3xl/4xl/6xl)
+     are handled via padding-top instead, since the hero h1 pairs its size with
+     its own custom leading-[1.12] that a line-height override here would
+     clobber. */
+  html[lang='hi'] .text-xs {
+    font-size: calc(0.75rem * var(--hi-text-scale));
+    line-height: 1.5;
+  }
+  html[lang='hi'] .text-sm {
+    font-size: calc(0.875rem * var(--hi-text-scale));
+    line-height: 1.5;
+  }
+  html[lang='hi'] .text-base {
+    font-size: calc(1rem * var(--hi-text-scale));
+    line-height: 1.5;
+  }
+  html[lang='hi'] .text-lg {
+    font-size: calc(1.125rem * var(--hi-text-scale));
+    line-height: 1.4;
+  }
+  html[lang='hi'] .text-xl {
+    font-size: calc(1.25rem * var(--hi-text-scale));
+    line-height: 1.4;
+  }
+  html[lang='hi'] .text-2xl {
+    font-size: calc(1.5rem * var(--hi-text-scale));
+    line-height: 1.4;
+  }
+  html[lang='hi'] .text-3xl {
+    font-size: calc(1.875rem * var(--hi-text-scale));
+  }
+  html[lang='hi'] .text-4xl {
+    font-size: calc(2.25rem * var(--hi-text-scale));
+  }
+  html[lang='hi'] .text-6xl {
+    font-size: calc(3.75rem * var(--hi-text-scale));
+  }
+  html[lang='hi'] .text-\[11px\] {
+    font-size: calc(11px * var(--hi-text-scale));
+    line-height: 1.5;
+  }
+
+  /* Responsive text-size variants (sm:/lg: prefixes) compile to their own class
+     names scoped to their own breakpoint - the plain-class rules above don't
+     match them, so each one actually used on the site needs the same remap,
+     wrapped in the matching breakpoint to stay in sync with Tailwind's. */
+  @media (min-width: 640px) {
+    html[lang='hi'] .sm\:text-xs {
+      font-size: calc(0.75rem * var(--hi-text-scale));
+      line-height: 1.5;
+    }
+    html[lang='hi'] .sm\:text-xl {
+      font-size: calc(1.25rem * var(--hi-text-scale));
+      line-height: 1.4;
+    }
+    html[lang='hi'] .sm\:text-2xl {
+      font-size: calc(1.5rem * var(--hi-text-scale));
+      line-height: 1.4;
+    }
+    html[lang='hi'] .sm\:text-3xl {
+      font-size: calc(1.875rem * var(--hi-text-scale));
+    }
+    html[lang='hi'] .sm\:text-4xl {
+      font-size: calc(2.25rem * var(--hi-text-scale));
+    }
+  }
+  @media (min-width: 1024px) {
+    html[lang='hi'] .lg\:text-lg {
+      font-size: calc(1.125rem * var(--hi-text-scale));
+    }
+    html[lang='hi'] .lg\:text-\[44px\] {
+      font-size: calc(44px * var(--hi-text-scale));
+    }
+  }
+
+  html[lang='hi'] h1,
+  html[lang='hi'] h2,
+  html[lang='hi'] h3 {
+    line-height: 1.3;
+    /* Devanagari matras/diacritics sit above the main glyph and can get visually
+       clipped at the top of the line box at these larger Hindi sizes - a little
+       breathing room above prevents that without disturbing the line-height used
+       for spacing below. In `em`, so it tracks each heading's own (bumped)
+       font-size automatically as --hi-text-scale above changes. */
+    padding-top: 0.3em;
+  }
+
   * {
     border-color: hsl(var(--border));
   }
 
   body {
-    background:
-      radial-gradient(circle at 8% 0%, hsl(var(--primary) / 0.06), transparent 28rem),
-      hsl(var(--background));
+    background: hsl(var(--background));
     color: hsl(var(--foreground));
+    font-size: 1rem;
+    line-height: 1.6;
     font-feature-settings: 'rlig' 1, 'calt' 1;
     text-rendering: optimizeLegibility;
   }
 
-  /* Hindi content uses a Devanagari-capable stack and handles text expansion. */
-  [lang='hi'] {
-    font-family: var(--font-hindi), var(--font-sans), system-ui, sans-serif;
-    line-height: 1.7;
+  /* Hero, page titles and major section headings use the serif display stack;
+     body/nav/buttons/tables/cards stay on the sans stack (see tailwind.config.ts). */
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-serif), var(--font-serif-hindi), Georgia, serif;
   }
 
-  /* Visible keyboard focus everywhere (WCAG 2.4.7). */
+  /* Hindi content uses a Devanagari-capable stack, a taller line height for conjunct
+     clarity, and allows layouts to grow rather than clipping translation expansion.
+     Body text line-height is capped at 1.8 (headings get their own, tighter 1.3 above). */
+  [lang='hi'] {
+    font-family: var(--font-hindi), var(--font-sans), system-ui, sans-serif;
+    line-height: 1.8;
+  }
+
+  [lang='hi'] h1,
+  [lang='hi'] h2,
+  [lang='hi'] h3,
+  [lang='hi'].font-display {
+    font-family: var(--font-serif-hindi), var(--font-hindi), Georgia, serif;
+  }
+
+  /* Devanagari has no case distinction - applying letter-spaced uppercase transforms
+     (eyebrows, badges, nav) to it garbles the glyphs and adds meaningless spacing. */
+  [lang='hi'] .uppercase {
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  /* ...but a Latin acronym explicitly marked `lang="en"` inside Hindi UI (EN badge,
+     PDF/DOCX file-type labels, language codes) is real uppercase text, not Devanagari
+     mis-transformed - keep it uppercase. */
+  [lang='hi'] [lang='en'].uppercase,
+  [lang='hi'] [lang='en'] .uppercase {
+    text-transform: uppercase;
+  }
+
+  /* At 1280px the desktop nav's 8 items + utility controls are tight even in English;
+     Hindi labels run longer and can wrap or overflow at that width, so nav links use a
+     slightly smaller size in Hindi rather than reflowing the header. */
+  [lang='hi'] nav[aria-label='Primary'] a {
+    font-size: 0.875rem;
+  }
+
+  /* Visible keyboard focus everywhere (WCAG 2.4.7). A single-colour outline can
+     disappear against a similarly-coloured surface (the blue header, green footer,
+     orange CTAs), so this pairs the ring with a light halo that shows through on any
+     background, light or dark. */
   :focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px hsl(var(--surface) / 0.85);
+    border-radius: 2px;
   }
 
   /* Respect reduced-motion preference (WCAG 2.3.3). */
@@ -174,7 +402,7 @@
     list-style: revert;
   }
   .prose-content a {
-    color: hsl(var(--primary));
+    color: hsl(var(--link));
     text-decoration: underline;
   }
   .prose-content table {

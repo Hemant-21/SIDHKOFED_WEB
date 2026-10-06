@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Clock, IndianRupee, Megaphone, Award, Handshake, Folder } from 'lucide-react';
+import { IndianRupee, Megaphone, Award, Handshake, Folder } from 'lucide-react';
 import { getListSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type { ProcurementSummary } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { PAGE_SIZE, toPage, qstr, getMasterOptions, yearOptions } from '@/lib/listing';
-import { FilterBar } from '@/components/listing/filter-bar';
+import { FilterBar, type FilterSelect } from '@/components/listing/filter-bar';
 import { PaginationNav } from '@/components/listing/pagination-nav';
 import { ResultsSummary } from '@/components/listing/results-summary';
 import { CategoryCards, type CategoryCardDef } from '@/components/listing/category-cards';
+import { CategoryBrowseHeading, CategoryListingHeader } from '@/components/listing/category-listing-header';
 import { LocalizedHero } from '@/components/listing/localized-heading';
 import { ListingEmptyState } from '@/components/feedback/states';
 import { ProcurementCard } from '@/components/cards/procurement-card';
-import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
 import { PageFaqSection } from '@/components/content/page-faq-section';
 
@@ -36,8 +36,11 @@ const CATEGORY_ICONS: Record<string, ReactNode> = {
   achievements: <Award className={ICON_CLASS} aria-hidden="true" />,
 };
 
-/** The Timing filter's one real option; FilterBar always prepends its own "All" placeholder. */
+/** The Timing filter's one real option; FilterBar always prepends its own "All" placeholder.
+ *  Mirrors the `page.procurement.timingUpcomingOnly` dictionary key - a server component can't
+ *  call `t()`, so the Hindi label is spelled out here too. */
 const TIMING_OPTIONS = [{ value: 'true', name_en: 'Upcoming only', name_hi: 'केवल आगामी' }];
+
 
 export default async function ProcurementPage({ searchParams }: { searchParams: SP }) {
   const page = toPage(searchParams.page);
@@ -67,7 +70,7 @@ export default async function ProcurementPage({ searchParams }: { searchParams: 
     getMasterOptions('districts'),
   ]);
 
-  // Procurement update types per category — powers both the card descriptions and the type
+  // Procurement update types per category - powers both the card descriptions and the type
   // filter's options (only rendered once a category is selected).
   const typesByCategory = new Map(
     await Promise.all(
@@ -81,22 +84,16 @@ export default async function ProcurementPage({ searchParams }: { searchParams: 
   const procurementTypes = selectedCategory ? (typesByCategory.get(selectedCategory) ?? []) : [];
 
   const categoryCards: CategoryCardDef[] = [
-    {
-      icon: <Clock className={ICON_CLASS} aria-hidden="true" />,
-      titleKey: 'page.procurement.upcoming.title',
-      descriptionKey: 'page.procurement.upcoming.subtitle',
-      href: '/procurement?upcoming=true#listing',
-    },
     ...procurementCategories.map((c): CategoryCardDef => {
       const types = typesByCategory.get(c.value) ?? [];
-      const en = types.length ? types.map((t) => t.name_en).join(', ') : 'No update types yet.';
-      const hi = types.length ? types.map((t) => t.name_hi ?? t.name_en).join(', ') : undefined;
+      const hasTypes = types.length > 0;
+      const en = types.map((t) => t.name_en).join(', ');
+      const hi = types.map((t) => t.name_hi ?? t.name_en).join(', ');
       return {
         icon: CATEGORY_ICONS[c.value] ?? <Folder className={ICON_CLASS} aria-hidden="true" />,
-        titleKey: '',
-        descriptionKey: '',
         title: { en: c.name_en, hi: c.name_hi },
-        description: { en, hi },
+        description: hasTypes ? { en, hi } : undefined,
+        descriptionKey: hasTypes ? undefined : 'common.noSubtypesYet',
         href: `/procurement?procurement_update_category=${c.value}#listing`,
       };
     }),
@@ -110,44 +107,43 @@ export default async function ProcurementPage({ searchParams }: { searchParams: 
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Procurement' }]} />
+      {/* Page header - same band style as /publications. The "Submit Enquiry" CTA is the
+          one terracotta action on this screen. */}
+      <LocalizedHero
+        titleKey="page.procurement.title"
+        subtitleKey="page.procurement.subtitle"
+        breadcrumb={[{ labelKey: 'page.procurement.title' }]}
+        cta={{ labelKey: 'page.procurement.enquiry.cta', href: '/procurement/enquiry' }}
+      />
 
-      {/* Page header — same band style as /publications */}
-      <LocalizedHero titleKey="page.procurement.title" subtitleKey="page.procurement.subtitle" />
-
-      {/* Browse by Category — master-driven, ordered by display_order (Upcoming/Enquiry stay as fixed non-category shortcuts) */}
+      {/* Browse by Category - master-driven, ordered by display_order (Enquiry stays as a fixed non-category shortcut) */}
       <div className="border-b border-border bg-muted/40">
         <Container className="py-8">
-          <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-            <span className="border-l-4 border-primary pl-3">Browse by Category</span>
-          </h2>
+          <CategoryBrowseHeading />
           <CategoryCards categories={categoryCards} />
         </Container>
       </div>
 
-      {/* Full listing — same-page filters; the cards above set the same query params */}
+      {/* Full listing - same-page filters; the cards above set the same query params */}
       <Container id="listing" className="scroll-mt-24 py-8">
-        <header className="mb-6">
-          <h2 className="text-xl font-bold text-foreground">
-            {selectedCategoryOption ? selectedCategoryOption.name_en : 'All Procurement Updates'}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {selectedCategoryOption
-              ? `Filter ${selectedCategoryOption.name_en.toLowerCase()} by type, timing, commodity, district and year, or browse another category above.`
-              : 'Browse all procurement updates or filter by timing, type, commodity, district and year, or pick a category above.'}
-          </p>
-        </header>
+        <CategoryListingHeader
+          selected={selectedCategoryOption}
+          allLabelKey="page.procurement.allUpdates"
+          filterHintKey="page.procurement.filterHint"
+          browseHintKey="page.procurement.browseHint"
+        />
         <div className="mb-2">
           <FilterBar
+            searchPlaceholderKey="search.placeholder.procurement"
             selects={[
               { key: 'upcoming', labelKey: 'filter.timing', options: TIMING_OPTIONS },
               ...(selectedCategory
-                ? [{ key: 'procurement_update_type', multiple: true, labelKey: 'filter.type', options: procurementTypes }]
+                ? [{ key: 'procurement_update_type', multiple: true, labelKey: 'filter.type', options: procurementTypes } satisfies FilterSelect]
                 : []),
               { key: 'commodity', multiple: true, labelKey: 'filter.commodity', options: commodities },
               { key: 'district', multiple: true, labelKey: 'filter.district', options: districts },
               { key: 'year', labelKey: 'filter.year', options: yearOptions() },
-            ]}
+            ] satisfies FilterSelect[]}
           />
         </div>
         {!list.error && <ResultsSummary total={list.pagination.total_items} />}

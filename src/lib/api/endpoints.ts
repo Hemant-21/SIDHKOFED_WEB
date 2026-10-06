@@ -1,5 +1,5 @@
 /**
- * Public endpoint map — the single source of truth for the public API surface the
+ * Public endpoint map - the single source of truth for the public API surface the
  * website consumes. These are exactly the routes mounted by the backend under
  * `/api/v1/public/*` (see backend `src/routes/index.ts`). The website never calls
  * an admin or auth endpoint.
@@ -26,10 +26,10 @@ export const PUBLIC_ENDPOINTS = {
   digitalServices: '/public/digital-services',
   leadership: '/public/leadership',
 
-  // Reports (replaces the Operational Reports / Website Metrics public dashboard above) — reads
+  // Reports (replaces the Operational Reports / Website Metrics public dashboard above) - reads
   // only from immutable, approved FY `ReportPublication` snapshots, never a live query.
-  //   reportYears        — every FY with isPublished/isCurrentFinancialYear/publishedAt.
-  //   reportsForYear(l)  — the approved Programme/District/Commodity bundle for FY label `l`.
+  //   reportYears        - every FY with isPublished/isCurrentFinancialYear/publishedAt.
+  //   reportsForYear(l)  - the approved Programme/District/Commodity bundle for FY label `l`.
   reportYears: '/public/reports/years',
   reportsForYear: (label: string) => `/public/reports/${encodeURIComponent(label)}`,
 
@@ -39,7 +39,7 @@ export const PUBLIC_ENDPOINTS = {
   // Search
   search: '/public/search',
 
-  // Public enquiry submission (POST only — no public list; API spec §6 Enquiries).
+  // Public enquiry submission (POST only - no public list; API spec §6 Enquiries).
   enquiries: '/public/enquiries',
 
   // Curated public settings groups (settings.public.controller.ts allow-list).

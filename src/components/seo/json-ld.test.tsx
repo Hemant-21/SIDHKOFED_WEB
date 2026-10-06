@@ -7,7 +7,7 @@ import { ArticleJsonLd, FaqJsonLd } from './json-ld';
  * malicious title/answer must NOT be able to break out of the <script> block.
  * The serializer escapes `<`, `>`, `&` (and U+2028/U+2029) to unicode escapes.
  */
-describe('JSON-LD serializer — script-tag breakout defense', () => {
+describe('JSON-LD serializer - script-tag breakout defense', () => {
   it('escapes a </script> breakout attempt in a headline', () => {
     const html = renderToStaticMarkup(
       <ArticleJsonLd headline={'</script><script>alert(1)</script>'} url="/news/x" />,

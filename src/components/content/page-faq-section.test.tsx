@@ -45,11 +45,11 @@ describe('PageFaqSection', () => {
       items: [faq(1), faq(2)],
       pagination: { page: 1, page_size: 100, total_items: 2, total_pages: 1 },
     });
-    const section = await PageFaqSection({ pageKey: 'home', title: 'Common Questions' });
+    const section = await PageFaqSection({ pageKey: 'home', titleKey: 'home.section.faq' });
     withLang(section as ReactElement);
     expect(screen.getByText('Common Questions')).toBeInTheDocument();
     expect(screen.getByText('Question 1?')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /View all FAQs/i })).toHaveAttribute('href', '/faqs');
+    expect(screen.getByRole('link', { name: /View All FAQs/i })).toHaveAttribute('href', '/faqs');
   });
 
   it('paginates through multiple pages when the backend reports more than one', async () => {

@@ -8,7 +8,7 @@ import { truncate } from '@/utils/format';
 import { Card } from '@/components/ui/card';
 import { CoverImage } from '@/components/content/cover-image';
 
-/** Digital service link card — always opens the external service in a new tab. */
+/** Digital service link card - always opens the external service in a new tab. */
 export function DigitalServiceCard({ service }: { service: DigitalService }) {
   const { t, language } = useLanguage();
   const name = pickText(service.title_en, service.title_hi, language);
@@ -30,7 +30,7 @@ export function DigitalServiceCard({ service }: { service: DigitalService }) {
           </span>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="flex items-center gap-1 text-base font-semibold text-foreground">
+          <h3 className="flex items-center gap-1 font-sans text-base font-semibold text-heading">
             {name}
             <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
             <span className="sr-only">({t('common.opensNewTab')})</span>

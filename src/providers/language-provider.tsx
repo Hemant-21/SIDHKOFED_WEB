@@ -12,7 +12,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { env } from '@/config/env';
-import { translate, type Language } from '@/i18n/dictionary';
+import { translate, type Language, type TranslationKey, type TranslationParams } from '@/i18n/dictionary';
 
 const LANG_KEY = 'sidhkofed.lang';
 const SCALE_KEY = 'sidhkofed.fontScale';
@@ -24,7 +24,7 @@ interface LanguageContextValue {
   language: Language;
   setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
-  t: (key: string) => string;
+  t: (key: TranslationKey, params?: TranslationParams) => string;
   fontScale: number;
   increaseFont: () => void;
   decreaseFont: () => void;
@@ -70,7 +70,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       language,
       setLanguage,
       toggleLanguage,
-      t: (key: string) => translate(language, key),
+      t: (key: TranslationKey, params?: TranslationParams) => translate(language, key, params),
       fontScale,
       increaseFont,
       decreaseFont,

@@ -42,7 +42,7 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
           { name: news.title_en, url: news.public_url },
         ]}
       />
-      <DetailLayout crumbs={[{ label: 'News', href: '/news' }, { label: news.title_en }]}>
+      <DetailLayout crumbs={[{ labelKey: 'page.news.title', href: '/news' }, { labelEn: news.title_en, labelHi: news.title_hi }]}>
         <NewsArticle news={news} />
       </DetailLayout>
     </>

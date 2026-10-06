@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/card';
 import { Badge, HighlightBadge, StatusBadge } from '@/components/ui/badge';
 
 export function ProcurementCard({ item }: { item: ProcurementSummary }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const title = pickText(item.title_en, item.title_hi, language);
   const summary = pickText(item.summary_en, item.summary_hi, language);
   const location =
@@ -30,8 +30,8 @@ export function ProcurementCard({ item }: { item: ProcurementSummary }) {
           <StatusBadge status={item.status} />
           <HighlightBadge type={item.highlight_type} />
         </div>
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={item.public_url} className="hover:text-primary hover:underline">
+        <h3 className="font-sans text-base font-semibold leading-snug text-heading">
+          <Link href={item.public_url} className="hover:text-link hover:underline">
             {title}
           </Link>
         </h3>
@@ -43,7 +43,7 @@ export function ProcurementCard({ item }: { item: ProcurementSummary }) {
               {item.unit ? ` / ${item.unit}` : ''}
             </span>
           )}
-          {item.effective_date && <span>w.e.f. {formatDate(item.effective_date, language)}</span>}
+          {item.effective_date && <span>{t('procurement.effectiveFrom', { date: formatDate(item.effective_date, language) })}</span>}
           {location && (
             <span className="flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5" aria-hidden="true" />

@@ -43,9 +43,9 @@ export default async function InstitutionsPage({ searchParams }: { searchParams:
     <ListingLayout
       titleKey="page.institutions.title"
       subtitleKey="page.institutions.subtitle"
-      crumb="Institutions"
       filters={
         <FilterBar
+          searchPlaceholderKey="search.placeholder.institutions"
           selects={[
             { key: 'institution_type', labelKey: 'filter.institutionType', options: institutionTypes },
             { key: 'district', labelKey: 'filter.district', options: districts },

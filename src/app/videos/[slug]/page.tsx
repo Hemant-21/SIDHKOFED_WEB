@@ -39,9 +39,9 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
       />
       <Breadcrumbs
         items={[
-          { label: 'Publications', href: '/publications' },
-          { label: 'Media Gallery', href: '/publications/media' },
-          { label: video.title_en },
+          { labelKey: 'page.publications.title', href: '/publications' },
+          { labelKey: 'page.publications.media.title', href: '/publications/media' },
+          { labelEn: video.title_en, labelHi: video.title_hi },
         ]}
       />
       <Container className="py-8">

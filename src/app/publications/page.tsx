@@ -7,14 +7,14 @@ import type { DocumentSummary } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { PAGE_SIZE, toPage, qstr, getMasterOptions, yearOptions } from '@/lib/listing';
 import { CategoryCards, type CategoryCardDef } from '@/components/listing/category-cards';
-import { FilterBar } from '@/components/listing/filter-bar';
+import { CategoryBrowseHeading, CategoryListingHeader } from '@/components/listing/category-listing-header';
+import { FilterBar, type FilterSelect } from '@/components/listing/filter-bar';
 import { PaginationNav } from '@/components/listing/pagination-nav';
 import { ResultsSummary } from '@/components/listing/results-summary';
 import { ListingEmptyState } from '@/components/feedback/states';
 import { DocumentCard } from '@/components/cards/document-card';
-import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
-import { SectionHeading } from '@/components/ui/section-heading';
+import { LocalizedHero } from '@/components/listing/localized-heading';
 import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const revalidate = 300;
@@ -41,7 +41,7 @@ const CATEGORY_ICONS: Record<string, ReactNode> = {
 };
 
 /** Media Gallery is a separate content type (galleries/videos, not a knowledge-category-scoped
- *  Document listing) with its own dedicated page — kept as a static extra card alongside the
+ *  Document listing) with its own dedicated page - kept as a static extra card alongside the
  *  master-driven knowledge-category cards, same treatment as Tenders on /notifications. */
 const MEDIA_CARD: CategoryCardDef = {
   icon: <ImageIcon className={ICON_CLASS} aria-hidden="true" />,
@@ -69,7 +69,7 @@ export default async function PublicationsPage({ searchParams }: { searchParams:
     getMasterOptions('knowledge-categories'),
   ]);
 
-  // Document types per knowledge category — powers both the card descriptions and the type
+  // Document types per knowledge category - powers both the card descriptions and the type
   // filter's options (mirrors /activities' event-types-per-event-category).
   const typesByCategory = new Map(
     await Promise.all(
@@ -85,14 +85,14 @@ export default async function PublicationsPage({ searchParams }: { searchParams:
   const publicationCategories: CategoryCardDef[] = [
     ...knowledgeCategories.map((c) => {
       const types = typesByCategory.get(c.value) ?? [];
-      const en = types.length ? types.map((t) => t.name_en).join(', ') : 'No document types yet.';
-      const hi = types.length ? types.map((t) => t.name_hi ?? t.name_en).join(', ') : undefined;
+      const hasTypes = types.length > 0;
+      const en = types.map((t) => t.name_en).join(', ');
+      const hi = types.map((t) => t.name_hi ?? t.name_en).join(', ');
       return {
         icon: CATEGORY_ICONS[c.value] ?? <Folder className={ICON_CLASS} aria-hidden="true" />,
-        titleKey: '',
-        descriptionKey: '',
         title: { en: c.name_en, hi: c.name_hi },
-        description: { en, hi },
+        description: hasTypes ? { en, hi } : undefined,
+        descriptionKey: hasTypes ? undefined : ('common.noSubtypesYet' as const),
         href: `/publications?knowledge_category=${c.value}#listing`,
       };
     }),
@@ -101,53 +101,45 @@ export default async function PublicationsPage({ searchParams }: { searchParams:
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Publications' }]} />
-
       {/* Page header */}
-      <div className="bg-primary">
-        <Container className="py-10 sm:py-14">
-          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Publications</h1>
-          <p className="mt-2 max-w-2xl text-base text-white/70">
-            Acts, rules, SOPs, annual reports, training materials and official forms from SIDHKOFED.
-          </p>
-        </Container>
-      </div>
+      <LocalizedHero
+        titleKey="page.publications.title"
+        subtitleKey="page.publications.subtitle"
+        breadcrumb={[{ labelKey: 'page.publications.title' }]}
+      />
 
-      {/* Category nav cards — master-driven, ordered by display_order */}
+      {/* Category nav cards - master-driven, ordered by display_order */}
       <div className="bg-muted/40 border-b border-border">
         <Container className="py-8">
-          <SectionHeading title="Browse by Category" />
+          <CategoryBrowseHeading />
           <CategoryCards categories={publicationCategories} />
         </Container>
       </div>
 
-      {/* Full listing — same-page filters; category cards above set the same knowledge_category param */}
+      {/* Full listing - same-page filters; category cards above set the same knowledge_category param */}
       <Container id="listing" className="scroll-mt-24 py-8">
-        <header className="mb-6">
-          <h2 className="text-xl font-bold text-foreground">
-            {selectedCategoryOption ? selectedCategoryOption.name_en : 'All Publications'}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {selectedCategoryOption
-              ? `Filter ${selectedCategoryOption.name_en.toLowerCase()} by document type, or browse another category above.`
-              : 'Browse the complete document library or filter by document type, or pick a category above.'}
-          </p>
-        </header>
+        <CategoryListingHeader
+          selected={selectedCategoryOption}
+          allLabelKey="page.publications.allPublications"
+          filterHintKey="page.publications.filterHint"
+          browseHintKey="page.publications.browseHint"
+        />
         <div className="mb-2">
           <FilterBar
+            searchPlaceholderKey="search.placeholder.publications"
             selects={[
               ...(selectedCategory
-                ? [{ key: 'document_type', multiple: true, labelKey: 'filter.documentType', options: documentTypes }]
+                ? [{ key: 'document_type', multiple: true, labelKey: 'filter.documentType', options: documentTypes } satisfies FilterSelect]
                 : []),
               { key: 'year', labelKey: 'filter.year', options: yearOptions() },
-            ]}
+            ] satisfies FilterSelect[]}
           />
         </div>
         {!list.error && <ResultsSummary total={list.pagination.total_items} />}
         {list.items.length === 0 ? (
           <ListingEmptyState failed={list.error} filtered={Object.entries(searchParams).some(([key, value]) => key !== 'page' && Boolean(value))} />
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {list.items.map((document) => (
               <DocumentCard key={document.id} document={document} />
             ))}

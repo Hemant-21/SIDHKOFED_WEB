@@ -44,7 +44,7 @@ export default async function InstitutionDetailPage({ params }: { params: { slug
         ]}
       />
       <DetailLayout
-        crumbs={[{ label: 'Institutions', href: '/institutions' }, { label: institution.name_en }]}
+        crumbs={[{ labelKey: 'page.institutions.title', href: '/institutions' }, { labelEn: institution.name_en, labelHi: institution.name_hi }]}
         aside={hasContact ? <InstitutionAside institution={institution} /> : undefined}
       >
         <InstitutionArticle institution={institution} />

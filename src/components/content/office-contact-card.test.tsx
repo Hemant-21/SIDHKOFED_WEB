@@ -56,7 +56,7 @@ describe('OfficeContactCard', () => {
       'mailto:sidhokanhofed@gmail.com',
     );
     expect(screen.getByText('Monday – Saturday, 10:00 AM – 5:00 PM')).toBeInTheDocument();
-    expect(screen.getByText('View on map').closest('a')).toHaveAttribute(
+    expect(screen.getByText('View on Map').closest('a')).toHaveAttribute(
       'href',
       'https://maps.app.goo.gl/hUMpwZStpAnDRwZs8',
     );

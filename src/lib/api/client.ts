@@ -2,7 +2,7 @@
  * Client-side public API access for interactive islands (filters, pagination,
  * search). A single axios instance points at the browser-facing base path, which
  * Next.js rewrites same-origin to the backend (so the public CORS allow-list and
- * the HttpOnly admin cookie are never involved). No auth — public namespace only.
+ * the HttpOnly admin cookie are never involved). No auth - public namespace only.
  */
 
 'use client';

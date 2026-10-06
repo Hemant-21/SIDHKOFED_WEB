@@ -1,10 +1,10 @@
 'use client';
 
 /**
- * Office contact info card — reused by `/contact` and `/procurement/enquiry`. Renders
+ * Office contact info card - reused by `/contact` and `/procurement/enquiry`. Renders
  * live data from Settings → Contact (`GET /public/settings/contact`, `getContactSettings()`),
  * never hardcoded. Each field is hidden individually when blank (the CMS field hasn't been
- * filled in yet), and the whole card renders nothing when every field is blank — an honest
+ * filled in yet), and the whole card renders nothing when every field is blank - an honest
  * empty state rather than a card full of empty rows.
  */
 
@@ -12,6 +12,7 @@ import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { useLanguage } from '@/providers/language-provider';
 import { ExternalLink } from '@/components/ui/external-link';
 import type { PublicContactSettings } from '@/lib/types/settings';
+import type { TranslationKey } from '@/i18n/dictionary';
 
 export function OfficeContactCard({
   settings,
@@ -19,7 +20,7 @@ export function OfficeContactCard({
 }: {
   settings: PublicContactSettings | null;
   /** i18n key used when Settings → Contact has no Office Name set yet. */
-  fallbackHeadingKey: string;
+  fallbackHeadingKey: TranslationKey;
 }) {
   const { t } = useLanguage();
   if (!settings) return null;
@@ -52,7 +53,7 @@ export function OfficeContactCard({
         {phone !== '' ? (
           <li className="flex items-center gap-3">
             <Phone className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-            <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} className="hover:text-primary hover:underline">
+            <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} className="hover:text-link hover:underline">
               <span className="sr-only">{t('contact.phone')}: </span>
               {phone}
             </a>
@@ -61,7 +62,7 @@ export function OfficeContactCard({
         {email !== '' ? (
           <li className="flex items-center gap-3">
             <Mail className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-            <a href={`mailto:${email}`} className="hover:text-primary hover:underline">
+            <a href={`mailto:${email}`} className="hover:text-link hover:underline">
               <span className="sr-only">{t('contact.email')}: </span>
               {email}
             </a>
@@ -81,7 +82,7 @@ export function OfficeContactCard({
         <ExternalLink
           href={mapUrl}
           newTabLabel={t('common.opensNewTab')}
-          className="mt-5 text-sm text-primary hover:underline"
+          className="mt-5 text-sm text-link hover:underline"
         >
           {t('contact.map')}
         </ExternalLink>

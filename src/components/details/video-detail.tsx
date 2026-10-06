@@ -1,9 +1,12 @@
 'use client';
 
 import type { Video } from '@/lib/types/content';
+import { useLanguage } from '@/providers/language-provider';
+import { pickText } from '@/utils/bilingual';
 import { BilingualTitle, BilingualLead } from '@/components/content/bilingual';
 
 export function VideoDetailView({ video }: { video: Video }) {
+  const { language } = useLanguage();
   return (
     <div className="mx-auto max-w-3xl">
       <BilingualTitle en={video.title_en} hi={video.title_hi} />
@@ -12,7 +15,7 @@ export function VideoDetailView({ video }: { video: Video }) {
       <div className="mt-6 aspect-video w-full overflow-hidden rounded-lg bg-black">
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${video.youtube_id}`}
-          title={video.title_en}
+          title={pickText(video.title_en, video.title_hi, language)}
           className="h-full w-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

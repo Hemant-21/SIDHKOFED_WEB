@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "audit:i18n": "node scripts/audit-i18n.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.1",
@@ -39,6 +40,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.35",
     "jsdom": "^24.1.0",
+    "playwright": "^1.63.0",
     "postcss": "^8.4.39",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.6",

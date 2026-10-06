@@ -37,9 +37,9 @@ export default async function TenderDetailPage({ params }: { params: { slug: str
       />
       <DetailLayout
         crumbs={[
-          { label: 'Notifications', href: '/notifications' },
-          { label: 'Tenders', href: '/notifications/tenders' },
-          { label: tender.title_en },
+          { labelKey: 'page.notifications.title', href: '/notifications' },
+          { labelKey: 'page.notifications.tenders.title', href: '/notifications/tenders' },
+          { labelEn: tender.title_en, labelHi: tender.title_hi },
         ]}
         aside={<TenderAside tender={tender} />}
       >

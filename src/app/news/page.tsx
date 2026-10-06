@@ -38,8 +38,7 @@ export default async function NewsPage({ searchParams }: { searchParams: SP }) {
     <ListingLayout
       titleKey="page.news.title"
       subtitleKey="page.news.subtitle"
-      crumb="News"
-      filters={<FilterBar selects={[{ key: 'year', labelKey: 'filter.year', options: yearOptions() }]} />}
+      filters={<FilterBar searchPlaceholderKey="search.placeholder.news" selects={[{ key: 'year', labelKey: 'filter.year', options: yearOptions() }]} />}
       summary={<ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >

@@ -47,9 +47,9 @@ export default async function EventsPage({ searchParams }: { searchParams: SP })
     <ListingLayout
       titleKey="page.events.title"
       subtitleKey="page.events.subtitle"
-      crumb="Events"
       filters={
         <FilterBar
+          searchPlaceholderKey="search.placeholder.events"
           selects={[
             { key: 'event_type', labelKey: 'filter.type', options: eventTypes },
             {

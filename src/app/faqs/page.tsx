@@ -24,7 +24,7 @@ export const metadata: Metadata = buildMetadata({
 type SP = Record<string, string | string[] | undefined>;
 
 /**
- * The complete FAQ directory — every eligible public FAQ, paginated, with search. No category
+ * The complete FAQ directory - every eligible public FAQ, paginated, with search. No category
  * filter (categories are gone); page assignment doesn't affect this listing at all, since /faqs
  * intentionally shows FAQs regardless of which main pages (if any) they're also assigned to.
  */
@@ -43,8 +43,8 @@ export default async function FaqsPage({ searchParams }: { searchParams: SP }) {
     <ListingLayout
       titleKey="page.faqs.title"
       subtitleKey="page.faqs.subtitle"
-      crumb="FAQs"
-      filters={<FilterBar />}
+      crumbKey="nav.faqsShort"
+      filters={<FilterBar searchPlaceholderKey="search.placeholder.faqs" />}
       summary={<ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}
     >

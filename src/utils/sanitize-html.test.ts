@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { sanitizeHtml, stripTags } from './sanitize-html';
 
-describe('sanitizeHtml — XSS defense', () => {
+describe('sanitizeHtml - XSS defense', () => {
   it('removes <script> blocks', () => {
     const clean = sanitizeHtml('<p>ok</p><script>alert(1)</script>');
     expect(clean).toContain('<p>ok</p>');
@@ -15,11 +15,11 @@ describe('sanitizeHtml — XSS defense', () => {
     expect(sanitizeHtml('<svg onload="alert(1)"></svg>').toLowerCase()).not.toContain('onload');
   });
 
-  it('neutralizes javascript: URIs — quoted', () => {
+  it('neutralizes javascript: URIs - quoted', () => {
     expect(sanitizeHtml('<a href="javascript:evil()">x</a>')).not.toContain('javascript:');
   });
 
-  it('neutralizes javascript: URIs — UNQUOTED (regex sanitizer bypass)', () => {
+  it('neutralizes javascript: URIs - UNQUOTED (regex sanitizer bypass)', () => {
     expect(sanitizeHtml('<a href=javascript:alert(1)>x</a>')).not.toContain('javascript:');
   });
 

@@ -11,6 +11,12 @@ const config: Config = {
   darkMode: ['class'],
   theme: {
     extend: {
+      screens: {
+        /* Primary nav + larger text only fit comfortably from 1600px up (see
+           desktop-nav.tsx / mobile-nav.tsx) — below that the header collapses
+           to the hamburger menu instead of clipping. */
+        nav: '1600px',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -24,6 +30,8 @@ const config: Config = {
         surface: {
           DEFAULT: 'hsl(var(--surface))',
           foreground: 'hsl(var(--surface-foreground))',
+          alt: 'hsl(var(--surface-alt))',
+          'alt-foreground': 'hsl(var(--surface-alt-foreground))',
         },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
@@ -36,6 +44,26 @@ const config: Config = {
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
+          action: 'hsl(var(--accent-action))',
+          'action-foreground': 'hsl(var(--accent-action-foreground))',
+        },
+        heading: {
+          DEFAULT: 'hsl(var(--heading))',
+          foreground: 'hsl(var(--heading-foreground))',
+        },
+        hero: {
+          DEFAULT: 'hsl(var(--hero))',
+          foreground: 'hsl(var(--hero-foreground))',
+          muted: 'hsl(var(--hero-muted))',
+        },
+        link: 'hsl(var(--link))',
+        footer: {
+          DEFAULT: 'hsl(var(--footer))',
+          foreground: 'hsl(var(--footer-foreground))',
+        },
+        olive: {
+          DEFAULT: 'hsl(var(--olive))',
+          foreground: 'hsl(var(--olive-foreground))',
         },
         success: {
           DEFAULT: 'hsl(var(--success))',
@@ -62,6 +90,8 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         hindi: ['var(--font-hindi)', 'var(--font-sans)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'var(--font-serif-hindi)', 'Georgia', 'serif'],
+        'serif-hindi': ['var(--font-serif-hindi)', 'var(--font-hindi)', 'Georgia', 'serif'],
       },
       maxWidth: {
         container: '80rem',

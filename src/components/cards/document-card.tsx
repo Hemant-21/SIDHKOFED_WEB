@@ -1,77 +1,73 @@
 'use client';
 
 import Link from 'next/link';
-import { FileText, Download, Eye } from 'lucide-react';
+import { FileText, CalendarClock, Paperclip } from 'lucide-react';
 import type { DocumentSummary } from '@/lib/types/content';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
-import { formatDate } from '@/utils/format';
+import { formatDate, formatFileSize, formatFileType, truncate } from '@/utils/format';
 import { Card } from '@/components/ui/card';
 import { Badge, HighlightBadge } from '@/components/ui/badge';
 
 /**
- * Document card. Public documents open in a new tab for preview and offer a
- * separate download action (codex §4.5). Downloads/previews use the backend
- * `file.file_url`; no download tracking.
+ * Document card for listings. No Preview/Download actions here - the whole card
+ * links to the document's own detail page, which has both (codex §4.5); keeping
+ * list rows to a single action avoids repeating two buttons per row.
+ *
+ * Layout mirrors TenderCard (icon + badges + title + icon-led meta row) so the two
+ * card types sit uniformly side by side in the homepage governance band and anywhere
+ * else they're mixed. The communication-type badge is shown alongside the document
+ * type since /notifications now lists notices, office orders and public announcements
+ * together - it's the thing that tells those apart at a glance.
  */
 export function DocumentCard({ document }: { document: DocumentSummary }) {
   const { t, language } = useLanguage();
   const title = pickText(document.title_en, document.title_hi, language);
-  const fileUrl = document.file?.file_url;
+  const description = pickText(document.description_en, document.description_hi, language);
+  const fileType = formatFileType(document.file?.mime_type);
+  const fileSize = formatFileSize(document.file?.file_size);
+  const fileMeta = [fileType, fileSize].filter(Boolean).join(' · ');
+  const communicationTypeName = document.communication_type
+    ? pickText(document.communication_type.name_en, document.communication_type.name_hi, language)
+    : undefined;
+  const documentTypeName = pickText(document.document_type.name_en, document.document_type.name_hi, language);
 
   return (
-    <Card className="flex h-full flex-col p-4">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <Badge tone="primary">{pickText(document.document_type.name_en, document.document_type.name_hi, language)}</Badge>
-        {document.knowledge_category && (
-          <Badge tone="neutral">
-            {pickText(document.knowledge_category.name_en, document.knowledge_category.name_hi, language)}
-          </Badge>
-        )}
-        <HighlightBadge type={document.highlight_type} />
-      </div>
-
-      <div className="flex flex-1 items-start gap-3">
-        <FileText className="mt-0.5 h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
-        <div className="min-w-0">
-          <h3 className="text-base font-semibold leading-snug text-foreground">
-            <Link href={document.public_url} className="hover:text-primary hover:underline">
-              {title}
-            </Link>
-          </h3>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {document.publication_date && (
-              <>
-                {t('common.publishedOn')} {formatDate(document.publication_date, language)}
-              </>
-            )}
-            {document.language && <span className="uppercase"> · {document.language}</span>}
-          </p>
+    <Card className="flex min-h-[148px] gap-4 p-4">
+      <FileText className="mt-0.5 h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
+      <div className="flex min-w-0 flex-1 flex-col justify-center">
+        <div className="mb-1.5 flex flex-wrap items-center gap-2">
+          {communicationTypeName && <Badge tone="primary">{communicationTypeName}</Badge>}
+          {documentTypeName !== communicationTypeName && <Badge>{documentTypeName}</Badge>}
+          <HighlightBadge type={document.highlight_type} />
+        </div>
+        <h3 className="font-sans text-base font-semibold leading-snug text-heading">
+          <Link href={document.public_url} className="hover:text-link hover:underline">
+            {title}
+          </Link>
+        </h3>
+        {description && <p className="mt-1 text-sm text-muted-foreground">{truncate(description, 150)}</p>}
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          {document.publication_date && (
+            <span className="flex items-center gap-1">
+              <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
+              {t('common.publishedOn')} {formatDate(document.publication_date, language)}
+            </span>
+          )}
+          {fileMeta && (
+            <span className="flex items-center gap-1">
+              <Paperclip className="h-3.5 w-3.5" aria-hidden="true" />
+              <span lang="en">{fileMeta}</span>
+              {document.language && (
+                <span lang="en" className="uppercase">
+                  {' '}
+                  · {document.language}
+                </span>
+              )}
+            </span>
+          )}
         </div>
       </div>
-
-      {fileUrl && (
-        <div className="mt-4 flex items-center gap-2">
-          <a
-            href={fileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-md border border-input px-3 py-1.5 text-xs font-medium hover:bg-muted"
-          >
-            <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-            {t('common.preview')}
-            <span className="sr-only">({t('common.opensNewTab')})</span>
-          </a>
-          <a
-            href={fileUrl}
-            download
-            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            <Download className="h-3.5 w-3.5" aria-hidden="true" />
-            {t('common.download')}
-          </a>
-        </div>
-      )}
     </Card>
   );
 }

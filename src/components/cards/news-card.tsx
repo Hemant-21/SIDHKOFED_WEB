@@ -30,8 +30,8 @@ export function NewsCard({ news }: { news: NewsSummary }) {
             </span>
           )}
         </div>
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={news.public_url} className="hover:text-primary hover:underline">
+        <h3 className="font-display text-base font-semibold leading-snug text-heading">
+          <Link href={news.public_url} className="hover:text-link hover:underline">
             {title}
           </Link>
         </h3>

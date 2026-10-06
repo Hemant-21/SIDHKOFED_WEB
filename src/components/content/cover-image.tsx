@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import { ImageOff } from 'lucide-react';
 import { cn } from '@/utils/cn';
@@ -27,8 +30,13 @@ export function CoverImage({
   variant?: MediaVariantName;
 }) {
   const wrapper = cn('relative overflow-hidden bg-muted', rounded && 'rounded-md', className);
+  // A failed decode (corrupt/mislabeled source file, or an optimizer error on an
+  // unreachable host) otherwise leaves a bare broken <img>, which can paint solid
+  // black under object-fit: cover with no intrinsic size. Fall back to the same
+  // placeholder used for missing media instead.
+  const [failed, setFailed] = useState(false);
 
-  if (!media?.url) {
+  if (!media?.url || failed) {
     return (
       <div className={cn(wrapper, 'flex items-center justify-center')} aria-hidden="true">
         <ImageOff className="h-8 w-8 text-muted-foreground/50" />
@@ -50,6 +58,7 @@ export function CoverImage({
         priority={priority}
         className="object-cover"
         unoptimized={isLocalMediaUrl(src)}
+        onError={() => setFailed(true)}
       />
     </div>
   );

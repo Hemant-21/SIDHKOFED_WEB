@@ -58,10 +58,31 @@ export function yearOptions(back = 6): FilterOption[] {
   return Array.from({ length: back }, (_, i) => String(current - i)).map((v) => ({ value: v, name_en: v }));
 }
 
-/** Map fixed enum values to filter options (labels come from i18n via the API humanizer fallback). */
+/**
+ * Known status/enum values mapped to their Hindi label, mirroring the `badge.status.*`
+ * dictionary entries so a filter dropdown's wording matches the badge shown on each card.
+ * This runs server-side (no access to the client's language), so Hindi has to be a static
+ * lookup rather than a `t()` call - unrecognised values just get an English-only option.
+ */
+const ENUM_LABEL_HI: Record<string, string> = {
+  scheduled: 'निर्धारित',
+  upcoming: 'आगामी',
+  ongoing: 'चालू',
+  completed: 'पूर्ण',
+  postponed: 'स्थगित',
+  cancelled: 'रद्द',
+  open: 'खुला',
+  closed: 'बंद',
+  awarded: 'प्रदत्त',
+  active: 'सक्रिय',
+  upcoming_period: 'आगामी अवधि',
+};
+
+/** Map fixed enum values to filter options, with Hindi labels for known values (see `ENUM_LABEL_HI`). */
 export function enumOptions(values: string[]): FilterOption[] {
   return values.map((v) => ({
     value: v,
     name_en: v.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    name_hi: ENUM_LABEL_HI[v],
   }));
 }

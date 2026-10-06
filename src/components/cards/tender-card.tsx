@@ -10,22 +10,22 @@ import { Card } from '@/components/ui/card';
 import { Badge, HighlightBadge, StatusBadge } from '@/components/ui/badge';
 
 export function TenderCard({ tender }: { tender: TenderSummary }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const title = pickText(tender.title_en, tender.title_hi, language);
   const summary = pickText(tender.summary_en, tender.summary_hi, language);
 
   return (
-    <Card className="flex gap-4 p-4">
+    <Card className="flex min-h-[148px] gap-4 p-4">
       <FileSignature className="mt-0.5 h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
-      <div className="min-w-0 flex-1">
+      <div className="flex min-w-0 flex-1 flex-col justify-center">
         <div className="mb-1.5 flex flex-wrap items-center gap-2">
           <Badge tone="primary">{pickText(tender.tender_type.name_en, tender.tender_type.name_hi, language)}</Badge>
           <StatusBadge status={tender.tender_status} />
           <HighlightBadge type={tender.highlight_type} />
           {tender.tender_number && <span className="text-xs text-muted-foreground">#{tender.tender_number}</span>}
         </div>
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={tender.public_url} className="hover:text-primary hover:underline">
+        <h3 className="font-sans text-base font-semibold leading-snug text-heading">
+          <Link href={tender.public_url} className="hover:text-link hover:underline">
             {title}
           </Link>
         </h3>
@@ -34,7 +34,7 @@ export function TenderCard({ tender }: { tender: TenderSummary }) {
           {tender.submission_deadline && (
             <span className="flex items-center gap-1">
               <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
-              Deadline: {formatDate(tender.submission_deadline, language)}
+              {t('detail.submissionDeadline')}: {formatDate(tender.submission_deadline, language)}
             </span>
           )}
           {tender.gem_url && (
@@ -42,10 +42,10 @@ export function TenderCard({ tender }: { tender: TenderSummary }) {
               href={tender.gem_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+              className="inline-flex items-center gap-1 font-medium text-link hover:underline"
             >
               GeM <ExternalLink className="h-3 w-3" aria-hidden="true" />
-              <span className="sr-only">(opens in a new tab)</span>
+              <span className="sr-only"> {t('common.opensNewTab')}</span>
             </a>
           )}
         </div>

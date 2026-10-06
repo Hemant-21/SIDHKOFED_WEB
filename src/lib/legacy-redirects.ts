@@ -1,14 +1,14 @@
 /**
  * Centralized mapping for the legacy standalone listing routes being consolidated onto the
  * four hub listing pages (Activities/Publications/Notifications/Procurement). Each old
- * `page.tsx` under these paths is now a thin `permanentRedirect()` built from this table —
+ * `page.tsx` under these paths is now a thin `permanentRedirect()` built from this table -
  * see the seven route files under `src/app/**\/page.tsx` that import `buildLegacyRedirectUrl`.
  *
  * Per-route behaviour:
  * - `fixedParams` is the route's scope. It ALWAYS wins: any incoming query value for the same
  *   key (e.g. `?event_category=workshops` on the trainings route) is discarded, not merged.
  * - `passthroughKeys` is an allow-list of incoming params forwarded unchanged onto the
- *   destination (using the same param name — none of these seven routes need name remapping,
+ *   destination (using the same param name - none of these seven routes need name remapping,
  *   since the destination hub pages already accept identical query keys). Anything not
  *   allow-listed is dropped, so an unrelated view-switch param (e.g. `?category=tenders`) never
  *   leaks through.
@@ -16,7 +16,7 @@
  *   legacy route's own (documented per-entry below); otherwise `page` is dropped so a preserved
  *   page number can't point at the wrong content under a different scope/order.
  * - The redirect target always lands on the destination's `#listing` in-page section, since the
- *   old route *was* a dedicated listing page — this matches how the hub pages' own category
+ *   old route *was* a dedicated listing page - this matches how the hub pages' own category
  *   cards link to `#listing`.
  */
 export type SP = Record<string, string | string[] | undefined>;
@@ -38,7 +38,7 @@ export const LEGACY_REDIRECTS = {
     fixedParams: { event_category: 'trainings', event_type: 'training' },
     passthroughKeys: ['search', 'event_status', 'district', 'year'],
     // Same scope (event_type=training, identical to the old route's fixed type) and same
-    // ordering (-start_date) as before — page numbers still line up.
+    // ordering (-start_date) as before - page numbers still line up.
     preservePage: true,
   },
   'publications/reports-research': {
@@ -52,7 +52,7 @@ export const LEGACY_REDIRECTS = {
     path: '/publications',
     fixedParams: { knowledge_category: 'training-resources' },
     passthroughKeys: ['search', 'year'],
-    // Same category (whole category — deliberately NOT narrowed to document_type=training-material)
+    // Same category (whole category - deliberately NOT narrowed to document_type=training-material)
     // and same ordering (-publication_date).
     preservePage: true,
   },
@@ -61,7 +61,7 @@ export const LEGACY_REDIRECTS = {
     fixedParams: { knowledge_category: 'training-resources', document_type: 'guideline,manuals' },
     passthroughKeys: ['search', 'year'],
     // Relabelled from two now-retired knowledge categories (policies-and-guidelines,
-    // sops-and-manuals) onto one active category + type filter — scope isn't equivalent, so old
+    // sops-and-manuals) onto one active category + type filter - scope isn't equivalent, so old
     // page numbers don't line up with the new result set.
     preservePage: false,
   },
@@ -70,7 +70,7 @@ export const LEGACY_REDIRECTS = {
     fixedParams: { knowledge_category: 'acts-and-rules', document_type: 'form' },
     passthroughKeys: ['search', 'year'],
     // Ordering changes from the old route's display_order to the destination's -publication_date
-    // (a deliberate consolidation onto Publications' native ordering, not silently replicated) —
+    // (a deliberate consolidation onto Publications' native ordering, not silently replicated) -
     // page numbers don't line up under the new order.
     preservePage: false,
   },
@@ -79,7 +79,7 @@ export const LEGACY_REDIRECTS = {
     fixedParams: { communication_type: 'notice' },
     passthroughKeys: ['search', 'year'],
     // Data source changes from OfficialCommunication (-issue_date) to Documents
-    // (-publication_date) — different scope and ordering, so page numbers don't line up.
+    // (-publication_date) - different scope and ordering, so page numbers don't line up.
     preservePage: false,
   },
   'procurement/announcements': {
@@ -88,7 +88,7 @@ export const LEGACY_REDIRECTS = {
     passthroughKeys: ['search', 'procurement_update_type', 'commodity', 'district', 'year'],
     // Intentional narrowing from all procurement update types to just Announcements &
     // Schedules, and ordering changes from -effective_date to the destination's native ordering
-    // (published_at desc) — page numbers don't line up under the new scope/order.
+    // (published_at desc) - page numbers don't line up under the new scope/order.
     preservePage: false,
   },
   'activities/institutional-events': {
@@ -96,7 +96,7 @@ export const LEGACY_REDIRECTS = {
     fixedParams: { event_category: 'institutional-activities' },
     passthroughKeys: ['search', 'event_status', 'district', 'year'],
     // Same scope (the category maps to the exact same event-type set the old route hardcoded)
-    // and same ordering (-start_date) as before — page numbers still line up.
+    // and same ordering (-start_date) as before - page numbers still line up.
     preservePage: true,
   },
   'activities/workshops-awareness': {
@@ -104,14 +104,14 @@ export const LEGACY_REDIRECTS = {
     fixedParams: { event_category: 'workshops-awareness' },
     passthroughKeys: ['search', 'event_status', 'district', 'year'],
     // Same scope (the category maps to the exact same event-type set the old route hardcoded)
-    // and same ordering (-start_date) as before — page numbers still line up.
+    // and same ordering (-start_date) as before - page numbers still line up.
     preservePage: true,
   },
   'procurement/upcoming': {
     path: '/procurement',
     fixedParams: { upcoming: 'true' },
     passthroughKeys: ['search', 'commodity', 'district'],
-    // Same scope (date_from=today) and same ordering (effective_date) as before — page numbers
+    // Same scope (date_from=today) and same ordering (effective_date) as before - page numbers
     // still line up.
     preservePage: true,
   },
@@ -119,7 +119,7 @@ export const LEGACY_REDIRECTS = {
     path: '/activities',
     fixedParams: { event_category: 'trainings', event_type: 'training' },
     passthroughKeys: ['search', 'district', 'year'],
-    // Same scope (event_type=training) and same ordering (-start_date) as before — page numbers
+    // Same scope (event_type=training) and same ordering (-start_date) as before - page numbers
     // still line up. Same destination as the retired `activities/trainings` route above.
     preservePage: true,
   },
@@ -128,9 +128,9 @@ export const LEGACY_REDIRECTS = {
     fixedParams: {},
     passthroughKeys: ['search', 'document_type', 'year'],
     // Intentional narrowing from every Document regardless of section to only the Publications
-    // section (Notifications-section documents are no longer reachable from this URL — they live
+    // section (Notifications-section documents are no longer reachable from this URL - they live
     // under /notifications), and the old route's `commodity` filter has no destination equivalent
-    // so it is dropped — page numbers don't line up under the new scope.
+    // so it is dropped - page numbers don't line up under the new scope.
     preservePage: false,
   },
 } as const satisfies Record<string, LegacyRedirectSpec>;
@@ -138,7 +138,7 @@ export const LEGACY_REDIRECTS = {
 export type LegacyRedirectKey = keyof typeof LEGACY_REDIRECTS;
 
 /** Take the first value of a repeated query key, discarding the rest. Same explicit
- *  take-first convention as `qstr()` in `src/lib/listing.ts` — Next's `searchParams` already
+ *  take-first convention as `qstr()` in `src/lib/listing.ts` - Next's `searchParams` already
  *  collapses a repeated key (`?x=1&x=2`) into a `string[]`, and we deliberately keep only the
  *  first value rather than merging, so behaviour is documented instead of an accidental
  *  first-wins default. */

@@ -60,9 +60,9 @@ export function ProgrammeArticle({ programme }: { programme: ProgrammeDetail }) 
       <BilingualBody en={programme.description_en} hi={programme.description_hi} />
 
       <Block title={t('detail.overview')} en={programme.objectives_en} hi={programme.objectives_hi} />
-      <Block title="Eligibility" en={programme.eligibility_en} hi={programme.eligibility_hi} />
-      <Block title="Benefits" en={programme.benefits_en} hi={programme.benefits_hi} />
-      <Block title="How to apply" en={programme.application_process_en} hi={programme.application_process_hi} />
+      <Block title={t('detail.eligibility')} en={programme.eligibility_en} hi={programme.eligibility_hi} />
+      <Block title={t('detail.benefits')} en={programme.benefits_en} hi={programme.benefits_hi} />
+      <Block title={t('detail.howToApply')} en={programme.application_process_en} hi={programme.application_process_hi} />
     </>
   );
 }

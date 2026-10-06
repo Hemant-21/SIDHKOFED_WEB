@@ -3,7 +3,7 @@
 /**
  * Event detail view (bilingual, client island). Renders common event fields,
  * validated dynamic fields, post-completion outcomes, and links to programmes,
- * commodities, institutions, documents, galleries and any derived news — all
+ * commodities, institutions, documents, galleries and any derived news - all
  * backend-driven (codex §4.1). Galleries are shown as thumbnails inline; the
  * public API exposes no standalone gallery route, so they are not linked out.
  */
@@ -23,12 +23,16 @@ import { Chips } from '@/components/content/chips';
 import { DocumentLinks } from '@/components/content/document-links';
 
 /** Render primitive dynamic field values; skip nested objects/null. */
-function dynamicRows(values: Record<string, unknown>): Array<{ label: string; value: string }> {
+function dynamicRows(
+  values: Record<string, unknown>,
+  yesLabel: string,
+  noLabel: string,
+): Array<{ label: string; value: string }> {
   return Object.entries(values)
     .filter(([, v]) => v !== null && v !== undefined && typeof v !== 'object')
     .map(([k, v]) => ({
       label: humanizeEnum(k),
-      value: typeof v === 'boolean' ? (v ? 'Yes' : 'No') : String(v),
+      value: typeof v === 'boolean' ? (v ? yesLabel : noLabel) : String(v),
     }));
 }
 
@@ -73,10 +77,10 @@ export function EventArticle({ event }: { event: EventDetail }) {
       <BilingualLead en={event.summary_en} hi={event.summary_hi} />
       <BilingualBody en={event.description_en} hi={event.description_hi} />
 
-      {dynamicRows(event.dynamic_values).length > 0 && (
+      {dynamicRows(event.dynamic_values, t('common.yes'), t('common.no')).length > 0 && (
         <div className="mt-8">
           <DetailSection title={t('detail.overview')}>
-            <MetaList items={dynamicRows(event.dynamic_values)} />
+            <MetaList items={dynamicRows(event.dynamic_values, t('common.yes'), t('common.no'))} />
           </DetailSection>
         </div>
       )}
@@ -138,7 +142,7 @@ export function EventAside({ event }: { event: EventDetail }) {
               <li key={n.id}>
                 <Link
                   href={n.public_url}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-link hover:underline"
                 >
                   <Newspaper className="h-4 w-4 shrink-0" aria-hidden="true" />
                   {n.title_en}

@@ -64,7 +64,7 @@ export function InstitutionAside({ institution }: { institution: InstitutionDeta
         {institution.contact_phone && (
           <li className="flex items-center gap-2">
             <Phone className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            <a href={`tel:${institution.contact_phone}`} className="hover:text-primary hover:underline">
+            <a href={`tel:${institution.contact_phone}`} className="hover:text-link hover:underline">
               {institution.contact_phone}
             </a>
           </li>
@@ -72,7 +72,7 @@ export function InstitutionAside({ institution }: { institution: InstitutionDeta
         {institution.contact_email && (
           <li className="flex items-center gap-2">
             <Mail className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            <a href={`mailto:${institution.contact_email}`} className="hover:text-primary hover:underline">
+            <a href={`mailto:${institution.contact_email}`} className="hover:text-link hover:underline">
               {institution.contact_email}
             </a>
           </li>
@@ -84,7 +84,7 @@ export function InstitutionAside({ institution }: { institution: InstitutionDeta
               href={institution.website_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-primary hover:underline"
+              className="font-medium text-link hover:underline"
             >
               {t('detail.visitWebsite')}
               <span className="sr-only">({t('common.opensNewTab')})</span>

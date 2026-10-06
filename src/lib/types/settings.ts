@@ -1,5 +1,5 @@
 /**
- * Public settings — mirrors the curated subset the backend exposes via
+ * Public settings - mirrors the curated subset the backend exposes via
  * `GET /public/settings/:group` (settings.public.controller.ts). Only the `contact` group is
  * exposed today; each field mirrors a key in the backend's `SETTINGS_CATALOG`
  * (settings.catalog.ts) and is admin-editable via Settings → Contact in the CMS.

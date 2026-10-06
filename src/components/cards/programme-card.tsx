@@ -3,15 +3,20 @@
 import Link from 'next/link';
 import type { ProgrammeSummary } from '@/lib/types/content';
 import { useLanguage } from '@/providers/language-provider';
-import { pickText } from '@/utils/bilingual';
+import { pickText, pickTextWithFallback } from '@/utils/bilingual';
 import { truncate } from '@/utils/format';
 import { Card } from '@/components/ui/card';
 import { CoverImage } from '@/components/content/cover-image';
 import { Badge, HighlightBadge } from '@/components/ui/badge';
+import { BilingualFallbackText } from '@/components/content/bilingual-fallback-text';
 
 export function ProgrammeCard({ programme }: { programme: ProgrammeSummary }) {
   const { language } = useLanguage();
-  const title = pickText(programme.title_en, programme.title_hi, language);
+  const { text: title, isFallback: titleIsFallback } = pickTextWithFallback(
+    programme.title_en,
+    programme.title_hi,
+    language,
+  );
   const summary = pickText(programme.summary_en, programme.summary_hi, language);
 
   return (
@@ -24,9 +29,9 @@ export function ProgrammeCard({ programme }: { programme: ProgrammeSummary }) {
           {programme.short_code && <Badge tone="primary">{programme.short_code}</Badge>}
           <HighlightBadge type={programme.highlight_type} />
         </div>
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={programme.public_url} className="hover:text-primary hover:underline">
-            {title}
+        <h3 className="font-display text-base font-semibold leading-snug text-heading">
+          <Link href={programme.public_url} className="hover:text-link hover:underline">
+            <BilingualFallbackText text={title} isFallback={titleIsFallback} />
           </Link>
         </h3>
         {summary && <p className="mt-1.5 text-sm text-muted-foreground">{truncate(summary, 130)}</p>}

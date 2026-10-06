@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Breadcrumbs } from '@/components/ui/breadcrumb';
 import { Container } from '@/components/ui/container';
 import { LocalizedHeading, LocalizedText } from './localized-heading';
+import type { TranslationKey } from '@/i18n/dictionary';
 
 /**
  * Shared shell for every public listing page: breadcrumb trail, bilingual page
@@ -12,24 +13,25 @@ import { LocalizedHeading, LocalizedText } from './localized-heading';
 export function ListingLayout({
   titleKey,
   subtitleKey,
-  crumb,
+  crumbKey = titleKey,
   parentCrumbs,
   filters,
   summary,
   children,
   pagination,
 }: {
-  titleKey: string;
-  subtitleKey?: string;
-  crumb: string;
+  titleKey: TranslationKey;
+  subtitleKey?: TranslationKey;
+  /** Dictionary key for the current (final) breadcrumb; defaults to `titleKey`. */
+  crumbKey?: TranslationKey;
   /** Optional parent breadcrumbs that precede the current crumb. */
-  parentCrumbs?: { label: string; href?: string }[];
+  parentCrumbs?: { labelKey: TranslationKey; href?: string }[];
   filters?: ReactNode;
   summary?: ReactNode;
   children: ReactNode;
   pagination?: ReactNode;
 }) {
-  const breadcrumbItems = [...(parentCrumbs ?? []), { label: crumb }];
+  const breadcrumbItems = [...(parentCrumbs ?? []), { labelKey: crumbKey }];
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} />

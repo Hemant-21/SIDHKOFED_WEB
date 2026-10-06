@@ -4,15 +4,12 @@ import Link from 'next/link';
 import { Inbox } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/providers/language-provider';
+import type { TranslationKey } from '@/i18n/dictionary';
 
 export function ListingEmptyState({ failed = false, filtered = false }: { failed?: boolean; filtered?: boolean }) {
-  const { language } = useLanguage();
-  if (failed) return <EmptyState
-    title={language === 'hi' ? 'सामग्री लोड नहीं हो सकी' : 'Content could not be loaded'}
-    body={language === 'hi' ? 'कृपया पृष्ठ को रीफ़्रेश करके दोबारा कोशिश करें।' : 'Please refresh the page and try again.'} />;
-  if (filtered) return <EmptyState
-    title={language === 'hi' ? 'कोई परिणाम नहीं मिला' : 'No matching results'}
-    body={language === 'hi' ? 'दूसरे विकल्प चुनें या फ़िल्टर हटाएँ।' : 'Try other selections or clear the filters.'} />;
+  const { t } = useLanguage();
+  if (failed) return <EmptyState title={t('state.loadFailed.title')} body={t('state.loadFailed.body')} />;
+  if (filtered) return <EmptyState title={t('state.noMatches.title')} body={t('state.noMatches.body')} />;
   return <EmptyState />;
 }
 
@@ -26,6 +23,13 @@ export function EmptyState({ title, body }: { title?: string; body?: string }) {
       <p className="mt-1 max-w-md text-sm text-muted-foreground">{body ?? t('state.empty.body')}</p>
     </div>
   );
+}
+
+/** `EmptyState`, but resolving dictionary keys - for server-component call sites
+ *  that can't call `t()` themselves. */
+export function LocalizedEmptyState({ titleKey, bodyKey }: { titleKey: TranslationKey; bodyKey: TranslationKey }) {
+  const { t } = useLanguage();
+  return <EmptyState title={t(titleKey)} body={t(bodyKey)} />;
 }
 
 /** Centered "go home" block used by 404. */

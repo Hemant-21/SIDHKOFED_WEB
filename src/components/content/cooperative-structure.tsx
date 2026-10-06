@@ -1,3 +1,7 @@
+'use client';
+
+import { useLanguage } from '@/providers/language-provider';
+
 function Connector() {
   return (
     <div className="flex justify-center py-0.5">
@@ -9,42 +13,39 @@ function Connector() {
 }
 
 export function CooperativeStructure() {
+  const { t } = useLanguage();
   return (
     <div className="w-full max-w-sm">
 
-      {/* Tier 1 — Apex */}
-      <div className="rounded-xl bg-primary px-5 py-4 text-center">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">
-          01 · Apex — State Level
+      {/* Tier 1 - Apex */}
+      <div className="rounded-md bg-primary px-5 py-4 text-center">
+        <p className="text-xs font-bold uppercase tracking-widest text-hero-muted">
+          {t('about.cooperativeStructure.apex.level')}
         </p>
-        <p className="mt-1 text-base font-black text-white">SIDHKOFED</p>
-        <p className="mt-0.5 text-xs text-white/60">
-          Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation
-        </p>
+        <p className="mt-1 text-base font-black text-white">{t('about.cooperativeStructure.apex.name')}</p>
+        <p className="mt-0.5 text-xs text-white/90">{t('about.cooperativeStructure.apex.desc')}</p>
       </div>
 
       <Connector />
 
-      {/* Tier 2 — District */}
-      <div className="rounded-xl border border-primary/25 bg-primary/10 px-5 py-4 text-center">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-primary/60">
-          02 · District Level
+      {/* Tier 2 - District */}
+      <div className="rounded-md border border-primary/25 bg-primary/10 px-5 py-4 text-center">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+          {t('about.cooperativeStructure.district.level')}
         </p>
-        <p className="mt-1 text-base font-bold text-foreground">District Cooperative Unions</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">24 districts across Jharkhand</p>
+        <p className="mt-1 text-base font-bold text-foreground">{t('about.cooperativeStructure.district.name')}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{t('about.cooperativeStructure.district.desc')}</p>
       </div>
 
       <Connector />
 
-      {/* Tier 3 — Panchayat */}
-      <div className="rounded-xl border border-accent/30 bg-accent/10 px-5 py-4 text-center">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-accent/70">
-          03 · Panchayat Level
+      {/* Tier 3 - Panchayat */}
+      <div className="rounded-md border border-accent/30 bg-accent/10 px-5 py-4 text-center">
+        <p className="text-xs font-bold uppercase tracking-widest text-accent-action">
+          {t('about.cooperativeStructure.panchayat.level')}
         </p>
-        <p className="mt-1 text-base font-bold text-foreground">
-          Multipurpose Cooperative Societies (MPCS)
-        </p>
-        <p className="mt-0.5 text-xs text-muted-foreground">4,454 MPCS (LAMPS / PACS)</p>
+        <p className="mt-1 text-base font-bold text-foreground">{t('about.cooperativeStructure.panchayat.name')}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{t('about.cooperativeStructure.panchayat.desc')}</p>
       </div>
 
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 /** Procurement update detail (bilingual). One operation for rates, announcements,
- *  schedules, centres and trade opportunities; display is informational only — no
+ *  schedules, centres and trade opportunities; display is informational only - no
  *  procurement transactions (codex §4.8). */
 
 import Link from 'next/link';
@@ -56,7 +56,7 @@ export function ProcurementAside({ item }: { item: ProcurementDetail }) {
             {
               label: t('detail.relatedProgrammes'),
               value: item.programme ? (
-                <Link href={`/programmes/${item.programme.slug}`} className="text-primary hover:underline">
+                <Link href={`/programmes/${item.programme.slug}`} className="text-link hover:underline">
                   {pickText(item.programme.title_en, item.programme.title_hi, language)}
                 </Link>
               ) : null,

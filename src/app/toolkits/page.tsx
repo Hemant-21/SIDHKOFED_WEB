@@ -52,9 +52,9 @@ export default async function ToolkitsPage({ searchParams }: { searchParams: SP 
     <ListingLayout
       titleKey="page.toolkits.title"
       subtitleKey="page.toolkits.subtitle"
-      crumb="Toolkits"
       filters={
         <FilterBar
+          searchPlaceholderKey="search.placeholder.toolkits"
           selects={[
             { key: 'commodity', labelKey: 'filter.commodity', options: commodities },
             { key: 'programme', labelKey: 'filter.programme', options: programmes },

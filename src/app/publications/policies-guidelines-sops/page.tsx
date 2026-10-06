@@ -2,7 +2,7 @@ import { permanentRedirect } from 'next/navigation';
 import { buildLegacyRedirectUrl, type SP } from '@/lib/legacy-redirects';
 
 /**
- * Retired standalone listing — consolidated onto `/publications?knowledge_category=
+ * Retired standalone listing - consolidated onto `/publications?knowledge_category=
  * training-resources&document_type=guideline,manuals#listing`. The old route's two source
  * knowledge categories (`policies-and-guidelines`, `sops-and-manuals`) are retired in the CMS
  * taxonomy (see `content-classification.ts` in the CMS repo); `training-resources` is the

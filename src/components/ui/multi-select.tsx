@@ -26,11 +26,20 @@ export function MultiSelect({ value, onChange, options, label, id, placeholder, 
   useEffect(() => { setOpen(false); }, [selectionKey]);
   useEffect(() => {
     if (!open) return;
-    const dismiss = (event: PointerEvent) => {
+    // A checkbox's label forwards clicks on its text to the checkbox itself, which moves focus
+    // there - but browsers don't reliably set `relatedTarget` on the resulting blur event, so a
+    // blur-based dismiss handler can close the panel on that forwarded focus change. Watching
+    // document-level pointerdown/focusin and checking their own (reliable) target instead avoids
+    // that: both stay silent for any interaction that lands inside the panel.
+    const dismiss = (event: PointerEvent | FocusEvent) => {
       if (!root.current?.contains(event.target as Node)) setOpen(false);
     };
     document.addEventListener('pointerdown', dismiss);
-    return () => document.removeEventListener('pointerdown', dismiss);
+    document.addEventListener('focusin', dismiss);
+    return () => {
+      document.removeEventListener('pointerdown', dismiss);
+      document.removeEventListener('focusin', dismiss);
+    };
   }, [open]);
 
   // Retain selections from shared links even if a master has since been deactivated.
@@ -38,7 +47,6 @@ export function MultiSelect({ value, onChange, options, label, id, placeholder, 
   const names = value.map((v) => choices.find((o) => o.value === v)?.label ?? v);
   return (
     <div ref={root} className={cn('relative flex flex-col gap-1', className)}
-      onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setOpen(false); }}
       onKeyDown={(event) => {
         if (event.key === 'Escape' && open) { event.preventDefault(); setOpen(false); trigger.current?.focus(); }
       }}>

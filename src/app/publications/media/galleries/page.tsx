@@ -38,10 +38,9 @@ export default async function GalleriesListPage({ searchParams }: { searchParams
     <ListingLayout
       titleKey="page.publications.media.galleries.title"
       subtitleKey="page.publications.media.galleries.subtitle"
-      crumb="Photo Galleries"
       parentCrumbs={[
-        { label: 'Publications', href: '/publications' },
-        { label: 'Media Gallery', href: '/publications/media' },
+        { labelKey: 'page.publications.title', href: '/publications' },
+        { labelKey: 'page.publications.media.title', href: '/publications/media' },
       ]}
       summary={list.error ? null : <ResultsSummary total={list.pagination.total_items} />}
       pagination={<PaginationNav page={list.pagination.page} totalPages={list.pagination.total_pages} />}

@@ -16,6 +16,7 @@ import { SearchInput } from '@/components/ui/search-input';
 import { Select } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Button } from '@/components/ui/button';
+import type { TranslationKey } from '@/i18n/dictionary';
 
 export interface FilterOption {
   value: string;
@@ -29,7 +30,7 @@ export interface FilterSelect {
   /** Query-string key, e.g. `event_type`. */
   key: string;
   /** i18n key for the field label, e.g. `filter.type`. */
-  labelKey: string;
+  labelKey: TranslationKey;
   options: FilterOption[];
 }
 
@@ -40,7 +41,7 @@ export function FilterBar({
 }: {
   selects?: FilterSelect[];
   searchable?: boolean;
-  searchPlaceholderKey?: string;
+  searchPlaceholderKey?: TranslationKey;
 }) {
   const { get, setParams, clearParams, searchParams } = useQueryParams();
   const { t, language } = useLanguage();
@@ -90,8 +91,8 @@ export function FilterBar({
             value={get(s.key).split(',').filter(Boolean)}
             onChange={(values) => setParams({ [s.key]: values.join(',') || null })}
             placeholder={t('common.all')}
-            applyLabel={language === 'hi' ? 'लागू करें' : 'Apply'}
-            clearLabel={language === 'hi' ? 'सभी हटाएँ' : 'Clear selection'}
+            applyLabel={t('filter.apply')}
+            clearLabel={t('filter.clearSelection')}
             options={s.options.map((o) => ({ value: o.value, label: pickText(o.name_en, o.name_hi ?? null, language) }))}
             className="md:w-56"
           />
@@ -125,17 +126,15 @@ export function FilterBar({
         )}
       </div>
       {selects.some((s) => s.multiple) && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          {language === 'hi' ? 'एक फ़िल्टर में कई विकल्प चुन सकते हैं। परिणाम हर लागू फ़िल्टर से मेल खाते हैं।' : 'Choose one or more options per filter. Results match every applied filter.'}
-        </p>
+        <p className="mt-3 text-xs text-muted-foreground">{t('filter.multiHint')}</p>
       )}
       {hasActive && (
-        <div aria-label={language === 'hi' ? 'लागू फ़िल्टर' : 'Applied filters'} className="mt-3 flex flex-wrap gap-2">
+        <div aria-label={t('filter.appliedFilters')} className="mt-3 flex flex-wrap gap-2">
           {selects.flatMap((s) => get(s.key).split(',').filter(Boolean).map((value) => {
             const option = s.options.find((o) => o.value === value);
             const label = option ? pickText(option.name_en, option.name_hi ?? null, language) : value;
             return <button key={`${s.key}-${value}`} type="button"
-              aria-label={`${language === 'hi' ? 'हटाएँ' : 'Remove'} ${t(s.labelKey)}: ${label}`}
+              aria-label={t('filter.removeOption', { label: t(s.labelKey), value })}
               onClick={() => setParams({ [s.key]: get(s.key).split(',').filter((v) => v !== value).join(',') || null })}
               className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs text-primary hover:bg-primary/10">
               {t(s.labelKey)}: {label} <span aria-hidden="true">×</span>

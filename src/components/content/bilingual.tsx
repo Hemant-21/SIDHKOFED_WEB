@@ -41,13 +41,13 @@ export function BilingualBody({ en, hi }: { en: string | null | undefined; hi: s
   return <RichText html={html} lang={language} className="mt-6" />;
 }
 
-/** Inline auto-translation notice (codex §10) — only shows for labelled automatic Hindi. */
+/** Inline auto-translation notice (codex §10) - only shows for labelled automatic Hindi. */
 export function TranslationNotice({ source }: { source: string | null | undefined }) {
   const { language, t } = useLanguage();
   if (!(language === 'hi' && source === 'automatic')) return null;
   return (
     <p className="mt-2 inline-flex rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-      {t('translation.automatic')} · स्वचालित अनुवाद
+      {t('translation.automatic')}
     </p>
   );
 }

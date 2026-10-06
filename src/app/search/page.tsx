@@ -37,7 +37,7 @@ export default async function SearchPage({ searchParams }: { searchParams: SP })
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Search' }]} />
+      <Breadcrumbs items={[{ labelKey: 'search.title' }]} />
       <Container className="py-8">
         <header className="mb-6">
           <LocalizedHeading titleKey="search.title" as="h1" />

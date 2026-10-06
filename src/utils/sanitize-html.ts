@@ -2,12 +2,12 @@
  * Production-grade HTML sanitizer for CMS rich-text bodies (Phase 17.1 security
  * remediation). Backed by DOMPurify via `isomorphic-dompurify`, so the SAME
  * allow-list runs in Server Components (jsdom) and in client components (native
- * DOM) — the website renders editorial bodies in client components so the
+ * DOM) - the website renders editorial bodies in client components so the
  * language toggle can switch content without a refetch (see bilingual.tsx).
  *
  * Hard rules (deny-by-default):
  *   - Only the explicitly approved tags/attributes survive.
- *   - URL schemes are restricted to http(s), mailto and tel — `javascript:`,
+ *   - URL schemes are restricted to http(s), mailto and tel - `javascript:`,
  *     `vbscript:` and `data:` are rejected.
  *   - No inline event handlers, no inline styles, no SVG/MathML, no
  *     <script>/<style>/<iframe>/<object>/<embed>/<form>/<link>/<meta>/<base>.
@@ -15,7 +15,7 @@
  *     nofollow" so editor-authored links cannot leak the opener or referrer.
  *
  * This is the ONLY sanitizer in the website. Do not add a second one and do not
- * inline ad-hoc HTML stripping elsewhere — call `sanitizeHtml`/`stripTags`.
+ * inline ad-hoc HTML stripping elsewhere - call `sanitizeHtml`/`stripTags`.
  */
 import DOMPurify from 'isomorphic-dompurify';
 
@@ -64,7 +64,7 @@ const SANITIZE_CONFIG = {
   ALLOW_DATA_ATTR: false,
   ALLOW_ARIA_ATTR: true,
   ALLOW_UNKNOWN_PROTOCOLS: false,
-  USE_PROFILES: { html: true }, // HTML only — never SVG or MathML
+  USE_PROFILES: { html: true }, // HTML only - never SVG or MathML
 };
 
 /** Schemes that must never appear in a URL attribute, even after DOMPurify. */
@@ -123,7 +123,7 @@ function decodeEntities(text: string): string {
 }
 
 /**
- * Reduce HTML to collapsed plain text. Used where HTML is not allowed — meta
+ * Reduce HTML to collapsed plain text. Used where HTML is not allowed - meta
  * descriptions and JSON-LD text values. Sanitizes first (defence in depth), then
  * removes tags and decodes entities so the result is real text for those
  * already-escaped contexts.

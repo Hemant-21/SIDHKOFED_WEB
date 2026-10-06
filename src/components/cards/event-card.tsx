@@ -26,8 +26,8 @@ export function EventCard({ event }: { event: EventSummary }) {
           <StatusBadge status={event.event_status} />
           <HighlightBadge type={event.highlight_type} />
         </div>
-        <h3 className="text-base font-semibold leading-snug text-foreground">
-          <Link href={event.public_url} className="hover:text-primary hover:underline">
+        <h3 className="font-display text-base font-semibold leading-snug text-heading">
+          <Link href={event.public_url} className="hover:text-link hover:underline">
             {title}
           </Link>
         </h3>

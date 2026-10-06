@@ -6,7 +6,7 @@ import { useLanguage } from '@/providers/language-provider';
 import { SearchInput } from '@/components/ui/search-input';
 
 /**
- * Hero-embedded search box. Deliberately NOT `<SearchForm>` — that component's
+ * Hero-embedded search box. Deliberately NOT `<SearchForm>` - that component's
  * `useQueryParams` hook rewrites the *current* route's query string, which on the
  * homepage would produce `/?q=...` instead of navigating to `/search?q=...`.
  */
@@ -40,7 +40,7 @@ export function HeroSearchBar() {
       />
       <button
         type="submit"
-        className="inline-flex h-11 shrink-0 items-center justify-center rounded-md bg-accent px-5 text-sm font-semibold text-white transition-colors hover:bg-accent/90"
+        className="inline-flex h-11 shrink-0 items-center justify-center rounded-sm bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
       >
         {t('nav.search')}
       </button>

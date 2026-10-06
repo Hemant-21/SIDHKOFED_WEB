@@ -1,13 +1,13 @@
 'use client';
 
 /** Toolkit detail view (bilingual). Shows toolkit items with distribution basis and
- *  an aggregated, public distribution summary — summary figures only, never
+ *  an aggregated, public distribution summary - summary figures only, never
  *  beneficiary-level data (codex §4.3). */
 
 import type { ToolkitDetail, ToolkitDistributionSummary } from '@/lib/types/content';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
-import { formatNumber, humanizeEnum } from '@/utils/format';
+import { formatNumber, distributionBasisLabel } from '@/utils/format';
 import { Badge } from '@/components/ui/badge';
 import { BilingualTitle, BilingualLead, BilingualBody } from '@/components/content/bilingual';
 
@@ -18,7 +18,7 @@ export function ToolkitArticle({
   toolkit: ToolkitDetail;
   summary: ToolkitDistributionSummary | null;
 }) {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <>
@@ -37,15 +37,15 @@ export function ToolkitArticle({
 
       {toolkit.items.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 text-lg font-semibold text-foreground">Toolkit items</h2>
+          <h2 className="mb-3 text-lg font-semibold text-foreground">{t('detail.toolkitItems')}</h2>
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full text-left text-sm">
               <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
                 <tr>
-                  <th scope="col" className="px-4 py-2 font-medium">Item</th>
-                  <th scope="col" className="px-4 py-2 font-medium">Basis</th>
-                  <th scope="col" className="px-4 py-2 font-medium">Unit</th>
-                  <th scope="col" className="px-4 py-2 font-medium">Qty / unit</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('reports.toolkit.col.item')}</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('detail.basis')}</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('detail.unit')}</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('detail.quantityPerUnit')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -54,10 +54,11 @@ export function ToolkitArticle({
                     <td className="px-4 py-2 font-medium text-foreground">
                       {pickText(item.name_en, item.name_hi, language)}
                     </td>
-                    <td className="px-4 py-2 text-muted-foreground">{humanizeEnum(item.distribution_basis)}</td>
-                    <td className="px-4 py-2 text-muted-foreground">{item.unit ?? '—'}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{distributionBasisLabel(item.distribution_basis, t)}</td>
+
+                    <td className="px-4 py-2 text-muted-foreground">{item.unit ?? '-'}</td>
                     <td className="px-4 py-2 text-muted-foreground">
-                      {item.default_quantity_per_unit ?? '—'}
+                      {item.default_quantity_per_unit ?? '-'}
                     </td>
                   </tr>
                 ))}
@@ -69,19 +70,19 @@ export function ToolkitArticle({
 
       {summary && summary.items.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-1 text-lg font-semibold text-foreground">Distribution summary</h2>
+          <h2 className="mb-1 text-lg font-semibold text-foreground">{t('detail.distributionSummary')}</h2>
           {summary.total_participants_covered !== null && (
             <p className="mb-3 text-sm text-muted-foreground">
-              Participants covered: <strong>{formatNumber(summary.total_participants_covered, language)}</strong>
+              {t('detail.participantsCovered')} <strong>{formatNumber(summary.total_participants_covered, language)}</strong>
             </p>
           )}
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full text-left text-sm">
               <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
                 <tr>
-                  <th scope="col" className="px-4 py-2 font-medium">Item</th>
-                  <th scope="col" className="px-4 py-2 font-medium">Unit</th>
-                  <th scope="col" className="px-4 py-2 font-medium">Total distributed</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('reports.toolkit.col.item')}</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('detail.unit')}</th>
+                  <th scope="col" className="px-4 py-2 font-medium">{t('detail.totalDistributed')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -90,8 +91,8 @@ export function ToolkitArticle({
                     <td className="px-4 py-2 font-medium text-foreground">
                       {pickText(item.name_en, item.name_hi ?? null, language)}
                     </td>
-                    <td className="px-4 py-2 text-muted-foreground">{item.unit ?? '—'}</td>
-                    <td className="px-4 py-2 text-muted-foreground">{formatNumber(item.total_quantity, language) || '—'}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{item.unit ?? '-'}</td>
+                    <td className="px-4 py-2 text-muted-foreground">{formatNumber(item.total_quantity, language) || '-'}</td>
                   </tr>
                 ))}
               </tbody>

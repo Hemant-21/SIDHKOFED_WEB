@@ -7,7 +7,7 @@ import { FileText, Eye, Download } from 'lucide-react';
 import type { DocumentDetail } from '@/lib/types/content';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
-import { formatDate } from '@/utils/format';
+import { formatDate, formatFileSize, formatFileType } from '@/utils/format';
 import { Badge } from '@/components/ui/badge';
 import { BilingualTitle, BilingualBody } from '@/components/content/bilingual';
 import { DetailSection } from '@/components/content/detail-layout';
@@ -37,7 +37,14 @@ export function DocumentArticle({ document }: { document: DocumentDetail }) {
             {t('common.publishedOn')} {formatDate(document.publication_date, language)}
           </>
         )}
-        {document.language && <span className="uppercase"> · {document.language}</span>}
+        {document.language && (
+          <span>
+            {' · '}
+            <span lang="en" className="uppercase">
+              {document.language}
+            </span>
+          </span>
+        )}
       </p>
 
       {fileUrl && (
@@ -45,6 +52,16 @@ export function DocumentArticle({ document }: { document: DocumentDetail }) {
           <FileText className="h-8 w-8 shrink-0 text-primary" aria-hidden="true" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-foreground">{document.file.file_name}</p>
+            {(() => {
+              const meta = [formatFileType(document.file.mime_type), formatFileSize(document.file.file_size)]
+                .filter(Boolean)
+                .join(' · ');
+              return meta ? (
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  <span lang="en">{meta}</span>
+                </p>
+              ) : null;
+            })()}
           </div>
           <a
             href={fileUrl}
