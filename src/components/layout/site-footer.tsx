@@ -2,15 +2,30 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, Mail, Phone, Clock } from 'lucide-react';
+import { MapPin, Mail, Phone, Clock, Facebook, Twitter, Youtube, Instagram, Linkedin } from 'lucide-react';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
 import { Container } from '@/components/ui/container';
 import { FOOTER_NAV } from '@/config/navigation';
-import type { PublicContactSettings } from '@/lib/types/settings';
+import type { PublicContactSettings, PublicSocialSettings } from '@/lib/types/settings';
 import type { Language, TranslationKey } from '@/i18n/dictionary';
 
-export function SiteFooter({ contactSettings }: { contactSettings: PublicContactSettings | null }) {
+/** Social platforms shown in the footer, in display order - each hides individually when blank. */
+const SOCIAL_LINKS = [
+  { key: 'social.facebook_url', label: 'Facebook', Icon: Facebook } as const,
+  { key: 'social.twitter_url', label: 'X (Twitter)', Icon: Twitter } as const,
+  { key: 'social.instagram_url', label: 'Instagram', Icon: Instagram } as const,
+  { key: 'social.youtube_url', label: 'YouTube', Icon: Youtube } as const,
+  { key: 'social.linkedin_url', label: 'LinkedIn', Icon: Linkedin } as const,
+];
+
+export function SiteFooter({
+  contactSettings,
+  socialSettings,
+}: {
+  contactSettings: PublicContactSettings | null;
+  socialSettings: PublicSocialSettings | null;
+}) {
   const { t, language } = useLanguage();
   const year = new Date().getFullYear();
   // Build-time date - a reasonable stand-in for "last updated" until a CMS setting
@@ -29,6 +44,13 @@ export function SiteFooter({ contactSettings }: { contactSettings: PublicContact
   const phone = contactSettings?.['contact.phone'].trim() ?? '';
   const email = contactSettings?.['contact.email'].trim() ?? '';
   const hours = contactSettings?.['contact.office_hours'].trim() ?? '';
+
+  // Live values from Settings → Social, same fail-safe/hide-when-blank pattern as contact.
+  const socialLinks = SOCIAL_LINKS.map(({ key, label, Icon }) => ({
+    label,
+    Icon,
+    url: socialSettings?.[key].trim() ?? '',
+  })).filter((link) => link.url !== '');
 
   return (
     <footer className="mt-16 border-t border-border bg-footer text-footer-foreground">
@@ -83,6 +105,23 @@ export function SiteFooter({ contactSettings }: { contactSettings: PublicContact
                 </li>
               ) : null}
             </ul>
+            {socialLinks.length > 0 ? (
+              <ul className="mt-4 flex items-center gap-3">
+                {socialLinks.map(({ label, Icon, url }) => (
+                  <li key={label}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${label} (${t('common.opensNewTab')})`}
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-footer-foreground/10 text-footer-foreground/85 transition hover:bg-footer-foreground/20 hover:text-footer-foreground"
+                    >
+                      <Icon className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
 
           {/* Col 2 - About */}

@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { env } from '@/config/env';
 import { getContactSettings } from '@/lib/contact-settings';
+import { getSocialSettings } from '@/lib/social-settings';
 import { AppProviders } from '@/providers/app-providers';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SiteFooter } from '@/components/layout/site-footer';
@@ -66,7 +67,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Fetched once here (Next dedupes identical fetches within a request) and passed down -
   // the footer is a Client Component and can't call server-only data fetchers itself.
-  const contactSettings = await getContactSettings();
+  const [contactSettings, socialSettings] = await Promise.all([getContactSettings(), getSocialSettings()]);
 
   return (
     <html
@@ -91,7 +92,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main id="main-content" className="flex-1">
             {children}
           </main>
-          <SiteFooter contactSettings={contactSettings} />
+          <SiteFooter contactSettings={contactSettings} socialSettings={socialSettings} />
         </AppProviders>
       </body>
     </html>
