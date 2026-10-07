@@ -15,7 +15,7 @@ const config: Config = {
         /* Primary nav + larger text only fit comfortably from 1600px up (see
            desktop-nav.tsx / mobile-nav.tsx) — below that the header collapses
            to the hamburger menu instead of clipping. */
-        nav: '1600px',
+        nav: '1300px',
       },
       colors: {
         border: 'hsl(var(--border))',

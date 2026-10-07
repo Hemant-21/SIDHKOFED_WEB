@@ -60,9 +60,7 @@ export function SiteFooter({
           {/* Col 1 - Identity + contact */}
           <div>
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
-                <Image src="/logo-sidhkofed.png" alt="SIDHKOFED" width={40} height={40} className="shrink-0 rounded-full" />
-              </span>
+              <Image src="/logo-sidhkofed.png" alt="SIDHKOFED" width={256} height={256} quality={90} className="h-16 w-16 shrink-0 object-contain" />
               <span className="text-lg font-bold" lang={language}>
                 {t('site.name')}
               </span>

@@ -37,12 +37,10 @@ export function SiteHeader() {
 
       {/* Main bar */}
       <div className="border-b-[3px] border-accent bg-surface">
-        <Container className="flex h-16 items-center justify-between gap-4">
-          {/* Brand - logo + abbreviation, never wraps or shrinks */}
-          <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label={t('site.name')}>
-            <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center dark:h-14 dark:w-14 dark:rounded-full dark:bg-white">
-              <Image src="/logo-sidhkofed.png" alt="SIDHKOFED" width={52} height={52} className="shrink-0" priority />
-            </span>
+        <Container className="flex h-16 items-center justify-between gap-4 md:h-[72px]">
+          {/* Brand - logo fills the full bar height (touches the border), never wraps or shrinks */}
+          <Link href="/" className="flex h-full shrink-0 items-center gap-3" aria-label={t('site.name')}>
+            <Image src="/logo-sidhkofed.png" alt="SIDHKOFED" width={256} height={256} quality={90} className="h-16 w-16 shrink-0 object-contain" priority />
             <span className="font-display text-xl font-semibold text-foreground" lang={language}>
               {t('site.name')}
             </span>
