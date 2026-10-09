@@ -1,5 +1,7 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { env } from '@/config/env';
 import { getListSafe, getOneSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type {
@@ -33,6 +35,11 @@ import { detailPath } from '@/lib/api/endpoints';
 import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  alternates: { canonical: env.siteUrl },
+  openGraph: { url: env.siteUrl },
+};
 
 export default async function HomePage() {
   const [heroGallery, leaders, programmes, notices, tenders, trainings, galleryEvents, partners] = await Promise.all([

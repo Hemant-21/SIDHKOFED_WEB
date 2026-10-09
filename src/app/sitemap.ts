@@ -7,6 +7,7 @@ interface SlugRow {
   slug: string;
   public_url?: string;
   published_at?: string | null;
+  updated_at?: string | null;
 }
 
 // Static + dynamic public routes. Listings are bounded to the first page (100) per
@@ -33,7 +34,6 @@ const STATIC_ROUTES = [
   '/institutions',
   '/faqs',
   '/digital-services',
-  '/search',
   '/contact',
   '/privacy-policy',
   '/disclaimer',
@@ -63,11 +63,9 @@ export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.siteUrl;
-  const now = new Date();
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
     url: `${base}${route}`,
-    lastModified: now,
     changeFrequency: 'daily',
     priority: route === '' ? 1 : 0.7,
   }));
@@ -77,7 +75,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const { items } = await getListSafe<SlugRow>(endpoint, { query: { page_size: 100 }, revalidate: 3600 });
       return items.map((row) => ({
         url: `${base}${row.public_url ?? `${prefix}/${row.slug}`}`,
-        lastModified: row.published_at ? new Date(row.published_at) : now,
+        ...(row.updated_at || row.published_at
+          ? { lastModified: new Date(row.updated_at ?? row.published_at!) }
+          : {}),
         changeFrequency: 'weekly' as const,
         priority: 0.6,
       }));

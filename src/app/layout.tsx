@@ -40,11 +40,11 @@ const notoSerifDevanagari = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
   title: {
-    default: 'SIDHKOFED - Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation',
+    default: 'SIDHKOFED - Jharkhand State Cooperative Federation',
     template: '%s · SIDHKOFED',
   },
   description:
-    'Official public portal of SIDHKOFED, the Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation: cooperative livelihoods, programmes, public documents, tenders, procurement updates and transparency.',
+    "Official Website of SIDHKOFED, Jharkhand's state cooperative federation for agriculture and minor forest produce, programmes, tenders and public information.",
   applicationName: 'SIDHKOFED',
   openGraph: {
     type: 'website',

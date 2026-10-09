@@ -43,8 +43,13 @@ export function OrganizationJsonLd() {
       data={{
         '@context': 'https://schema.org',
         '@type': 'GovernmentOrganization',
-        name: 'SIDHKOFED - Jharkhand Cooperative Federation',
+        '@id': `${env.siteUrl}/#organization`,
+        name: 'Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.',
+        alternateName: 'SIDHKOFED',
         url: env.siteUrl,
+        logo: `${env.siteUrl}/logo-sidhkofed.png`,
+        description:
+          'Jharkhand state cooperative federation supporting agriculture and minor forest produce livelihoods, programmes and market access.',
         areaServed: 'Jharkhand, India',
       }}
     />

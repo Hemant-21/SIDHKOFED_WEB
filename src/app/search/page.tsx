@@ -14,11 +14,17 @@ import { ResultsSummary } from '@/components/listing/results-summary';
 
 export const revalidate = 0; // search is always dynamic
 
-export const metadata: Metadata = buildMetadata({
-  title: 'Search',
-  description: 'Search events, news, documents, programmes, communications, tenders and more.',
-  path: '/search',
-});
+export const metadata: Metadata = {
+  ...buildMetadata({
+    title: 'Search',
+    description: 'Search events, news, documents, programmes, communications, tenders and more.',
+    path: '/search',
+  }),
+  // Internal search results create an effectively unbounded set of thin, query-driven
+  // URLs. Keep links crawlable while preventing those result pages from entering the
+  // public index.
+  robots: { index: false, follow: true },
+};
 
 type SP = Record<string, string | string[] | undefined>;
 
