@@ -38,7 +38,7 @@ import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 export const revalidate = 300;
 
 export const metadata: Metadata = buildMetadata({
-  title: { absolute: 'SIDHKOFED – Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.' },
+  title: { absolute: 'SIDHKOFED – Sidho-Kanho Agriculture & Forest Produce State Cooperative Federation Ltd., Jharkhand' },
   description:
     'Official website of SIDHKOFED, the State-level apex cooperative federation working for agriculture and minor forest produce livelihoods in Jharkhand: programmes, trainings, tenders, notices and publications.',
   path: '',
