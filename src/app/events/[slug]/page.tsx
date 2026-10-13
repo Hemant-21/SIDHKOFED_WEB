@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getOneOrNull } from '@/lib/api/server';
+import { getOneOrNull, getOneSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS, detailPath } from '@/lib/api/endpoints';
-import type { EventDetail } from '@/lib/types/content';
+import type { EventDetail, GalleryDetail } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { DetailLayout } from '@/components/content/detail-layout';
 import { EventArticle, EventAside } from '@/components/details/event-detail';
@@ -28,6 +28,12 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
   const event = await load(params.slug);
   if (!event) notFound();
 
+  // The event only carries gallery link refs (cover + count); fetch the photos for the carousel.
+  const galleryDetails = await Promise.all(
+    event.galleries.map((g) => getOneSafe<GalleryDetail>(detailPath(PUBLIC_ENDPOINTS.galleries, g.slug))),
+  );
+  const galleryImages = galleryDetails.flatMap((g) => g?.images ?? []);
+
   return (
     <>
       <EventJsonLd
@@ -47,7 +53,7 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
         crumbs={[{ labelKey: 'page.events.title', href: '/events' }, { labelEn: event.title_en, labelHi: event.title_hi }]}
         aside={<EventAside event={event} />}
       >
-        <EventArticle event={event} />
+        <EventArticle event={event} galleryImages={galleryImages} />
       </DetailLayout>
     </>
   );

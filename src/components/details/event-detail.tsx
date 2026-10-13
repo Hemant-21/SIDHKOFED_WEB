@@ -10,7 +10,8 @@
 
 import Link from 'next/link';
 import { CalendarDays, MapPin, Newspaper } from 'lucide-react';
-import type { EventDetail } from '@/lib/types/content';
+import type { EventDetail, GalleryImage } from '@/lib/types/content';
+import { EventGalleryCarousel, type CarouselSlide } from './event-gallery-carousel';
 import { useLanguage } from '@/providers/language-provider';
 import { pickText } from '@/utils/bilingual';
 import { formatDateRange, formatNumber, humanizeEnum } from '@/utils/format';
@@ -36,9 +37,15 @@ function dynamicRows(
     }));
 }
 
-export function EventArticle({ event }: { event: EventDetail }) {
+export function EventArticle({ event, galleryImages = [] }: { event: EventDetail; galleryImages?: GalleryImage[] }) {
   const { t, language } = useLanguage();
   const location = event.location_text || pickText(event.district?.name_en, event.district?.name_hi ?? null, language);
+
+  // Cover first, then the linked galleries' photos (skipping the cover if it is also a gallery photo).
+  const slides: CarouselSlide[] = [
+    ...(event.cover_media ? [{ id: 'cover', media: event.cover_media }] : []),
+    ...galleryImages.filter((img) => img.media.url !== event.cover_media?.url),
+  ];
 
   return (
     <>
@@ -64,14 +71,20 @@ export function EventArticle({ event }: { event: EventDetail }) {
         )}
       </div>
 
-      {event.cover_media && (
-        <CoverImage
-          media={event.cover_media}
-          fallbackAlt={pickText(event.title_en, event.title_hi, language)}
-          className="mt-6 aspect-[16/9] w-full"
-          sizes="(max-width: 1024px) 100vw, 720px"
-          priority
-        />
+      {slides.length > 1 ? (
+        <div className="mt-6">
+          <EventGalleryCarousel images={slides} alt={pickText(event.title_en, event.title_hi, language)} />
+        </div>
+      ) : (
+        event.cover_media && (
+          <CoverImage
+            media={event.cover_media}
+            fallbackAlt={pickText(event.title_en, event.title_hi, language)}
+            className="mt-6 aspect-[16/9] w-full"
+            sizes="(max-width: 1024px) 100vw, 720px"
+            priority
+          />
+        )
       )}
 
       <BilingualLead en={event.summary_en} hi={event.summary_hi} />
@@ -98,9 +111,10 @@ export function EventArticle({ event }: { event: EventDetail }) {
         </div>
       )}
 
-      {event.galleries.length > 0 && (
+      {event.galleries.length > 0 && galleryImages.length === 0 && (
         <div className="mt-8">
           <DetailSection title={t('detail.galleries')}>
+            {(
             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {event.galleries.map((g) => (
                 <li key={g.id} className="overflow-hidden rounded-md border border-border">
@@ -111,6 +125,7 @@ export function EventArticle({ event }: { event: EventDetail }) {
                 </li>
               ))}
             </ul>
+            )}
           </DetailSection>
         </div>
       )}
