@@ -40,7 +40,7 @@ const notoSerifDevanagari = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
   title: {
-    default: 'SIDHKOFED - Jharkhand State Cooperative Federation',
+    default: 'SIDHKOFED - Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.',
     template: '%s · SIDHKOFED',
   },
   description:

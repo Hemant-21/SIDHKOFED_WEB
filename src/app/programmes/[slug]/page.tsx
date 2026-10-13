@@ -6,7 +6,7 @@ import type { ProgrammeDetail } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { DetailLayout } from '@/components/content/detail-layout';
 import { ProgrammeArticle, ProgrammeAside } from '@/components/details/programme-detail';
-import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BreadcrumbJsonLd, ServiceJsonLd } from '@/components/seo/json-ld';
 
 export const revalidate = 300;
 
@@ -32,6 +32,13 @@ export default async function ProgrammeDetailPage({ params }: { params: { slug: 
 
   return (
     <>
+      <ServiceJsonLd
+        name={programme.title_en}
+        description={programme.summary_en}
+        serviceType="Government scheme"
+        image={programme.cover_media?.url ?? null}
+        url={programme.public_url}
+      />
       <BreadcrumbJsonLd
         items={[
           { name: 'Programmes', url: '/programmes' },

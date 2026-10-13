@@ -158,7 +158,7 @@ export function MembershipFormsSection() {
       <SectionHeading title={t('membership.forms.title')} />
       <p className="mb-6 text-sm text-muted-foreground">{t('membership.forms.body')}</p>
       <Link
-        href="/publications?knowledge_category=acts-and-rules&document_type=form#listing"
+        href="/publications?knowledge_category=forms-and-formats#listing"
         className="flex w-fit items-center gap-3 rounded-lg border border-border bg-surface px-5 py-4 transition-colors hover:border-primary/40 hover:bg-primary/5"
       >
         <FileDown className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
@@ -191,7 +191,7 @@ export function MembershipCta() {
       <p className="mb-6 text-sm text-muted-foreground">{t('membership.cta.body')}</p>
       <div className="flex flex-wrap justify-center gap-3">
         <Link
-          href="/publications?knowledge_category=acts-and-rules&document_type=form#listing"
+          href="/publications?knowledge_category=forms-and-formats#listing"
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90"
         >
           <FileDown className="h-4 w-4" aria-hidden="true" />

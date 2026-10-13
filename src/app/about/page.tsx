@@ -18,7 +18,7 @@ import { LocalizedHeading, LocalizedText, LocalizedTextInline } from '@/componen
 export const metadata: Metadata = buildMetadata({
   title: 'About SIDHKOFED',
   description:
-    'Learn about SIDHKOFED, the Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation Ltd., and its work for cooperative livelihoods across Jharkhand.',
+    'SIDHKOFED is the State-level apex cooperative federation working for the development of agriculture and minor forest produce-based livelihoods in Jharkhand - its mandate, leadership, governance and structure.',
   path: '/about',
 });
 

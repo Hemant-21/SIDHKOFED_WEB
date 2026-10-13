@@ -49,16 +49,15 @@ describe('legacy listing redirects', () => {
     const url = buildLegacyRedirectUrl('publications/policies-guidelines-sops', { page: '4' });
     const parsed = new URL(url, 'http://localhost');
     expect(parsed.searchParams.has('page')).toBe(false);
-    expect(parsed.searchParams.get('knowledge_category')).toBe('training-resources');
-    expect(parsed.searchParams.get('document_type')).toBe('guideline,manuals');
+    expect(parsed.searchParams.get('knowledge_category')).toBe('policies-guidelines-and-training-resources');
+    expect(parsed.searchParams.get('document_type')).toBe('policy,guideline,acts,bye-laws');
   });
 
-  it('maps forms-formats onto acts-and-rules with type=form and drops page (ordering changes)', () => {
+  it('maps forms-formats onto forms-and-formats and drops page (ordering changes)', () => {
     const url = buildLegacyRedirectUrl('publications/forms-formats', { page: '2', search: 'membership' });
     const parsed = new URL(url, 'http://localhost');
     expect(parsed.searchParams.has('page')).toBe(false);
-    expect(parsed.searchParams.get('knowledge_category')).toBe('acts-and-rules');
-    expect(parsed.searchParams.get('document_type')).toBe('form');
+    expect(parsed.searchParams.get('knowledge_category')).toBe('forms-and-formats');
     expect(parsed.searchParams.get('search')).toBe('membership');
   });
 
@@ -79,7 +78,7 @@ describe('legacy listing redirects', () => {
 
   it('produces bare destination + #listing when there is nothing to forward', () => {
     const url = buildLegacyRedirectUrl('publications/training-materials', {});
-    expect(url).toBe('/publications?knowledge_category=training-resources#listing');
+    expect(url).toBe('/publications?knowledge_category=policies-guidelines-and-training-resources&document_type=training-material#listing');
   });
 
   it('ignores empty-string and whitespace-only incoming values', () => {

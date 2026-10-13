@@ -14,7 +14,7 @@ export const LANGUAGE_LABELS: Record<Language, string> = {
 const en = {
   'site.name': 'SIDHKOFED',
   'site.govtOfJharkhand': 'Government of Jharkhand',
-  'site.fullName': 'Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation Ltd.',
+  'site.fullName': 'Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.',
   'home.hero.headline': 'From Forest\nto\nGlobal Markets.',
   'home.hero.eyebrow': 'Jharkhand State Cooperative Federation',
   'home.hero.sub': 'Farmer Owned Cooperative led Aggregation of Agricultural and Minor Forest Produce.',
@@ -166,12 +166,12 @@ const en = {
     'Structured training programmes for cooperative members, management committees and district societies across Jharkhand.',
 
   'home.eyebrow.knowledgeHub': 'Knowledge Hub',
-  'home.heading.knowledgeHub': 'Acts, SOPs, Reports, Training Materials and Publications',
-  'home.knowledgeHub.reports.label': 'Reports & Research',
+  'home.heading.knowledgeHub': 'Acts, SOPs, Reports, Training Resources and Publications',
+  'home.knowledgeHub.reports.label': 'Research and Reports',
   'home.knowledgeHub.reports.desc': 'Annual reports, studies and research publications',
-  'home.knowledgeHub.policies.label': 'Policies, Guidelines & SOPs',
+  'home.knowledgeHub.policies.label': 'Policies and Guidelines',
   'home.knowledgeHub.policies.desc': 'Cooperative governance and operational procedures',
-  'home.knowledgeHub.training.label': 'Training Materials',
+  'home.knowledgeHub.training.label': 'Training Resources',
   'home.knowledgeHub.training.desc': 'Commodity-wise learning and awareness resources',
   'home.knowledgeHub.forms.label': 'Forms & Formats',
   'home.knowledgeHub.forms.desc': 'Application forms and standard formats',
@@ -256,13 +256,13 @@ const en = {
 
   'about.registrationLabel': 'Reg. No. {number}',
   'about.intro.paragraph1':
-    'Sidho Kanho Agriculture and Forest Produce State Cooperative Federation Ltd. (SIDHKOFED) is the State-level apex cooperative federation working for the development of agriculture and minor forest produce-based livelihoods in Jharkhand.',
+    'Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd. (SIDHKOFED) is the State-level apex cooperative federation working for the development of agriculture and minor forest produce-based livelihoods in Jharkhand.',
   'about.intro.paragraph2':
     'Through a three-tier cooperative structure, it connects 24 District Cooperative Unions with approximately 4,454 MPCS/LAMPS across the State. Its major areas of work include capacity building, procurement, value addition, storage, marketing, digital services and livelihood promotion.',
   'about.cooperativeStructure.label': 'Cooperative Structure',
   'about.cooperativeStructure.apex.level': '01 · Apex - State Level',
   'about.cooperativeStructure.apex.name': 'SIDHKOFED',
-  'about.cooperativeStructure.apex.desc': 'Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation',
+  'about.cooperativeStructure.apex.desc': 'Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.',
   'about.cooperativeStructure.district.level': '02 · District Level',
   'about.cooperativeStructure.district.name': 'District Cooperative Unions',
   'about.cooperativeStructure.district.desc': '24 districts across Jharkhand',
@@ -467,12 +467,12 @@ const en = {
   'page.impact.trainingBeneficiaries.subtitle': 'Training reach, district coverage and beneficiary statistics.',
 
   'page.publications.title': 'Publications',
-  'page.publications.subtitle': 'Acts, rules, SOPs, annual reports, training materials and official forms from SIDHKOFED.',
-  'page.publications.reports.title': 'Reports & Research',
+  'page.publications.subtitle': 'Acts, rules, SOPs, annual reports, training resources and official forms from SIDHKOFED.',
+  'page.publications.reports.title': 'Research and Reports',
   'page.publications.reports.subtitle': 'Annual reports, research studies and impact assessments.',
   'page.publications.policies.title': 'Policies, Guidelines & SOPs',
   'page.publications.policies.subtitle': 'Policy documents, operational guidelines and standard procedures.',
-  'page.publications.training.title': 'Training Materials',
+  'page.publications.training.title': 'Training Resources',
   'page.publications.training.subtitle': 'Manuals, handbooks and training content.',
   'page.publications.forms.title': 'Forms & Formats',
   'page.publications.forms.subtitle': 'Application forms and official formats.',
@@ -520,7 +520,7 @@ const en = {
   'page.copyrightPolicy.title': 'Copyright Policy',
   'page.copyrightPolicy.subtitle': 'Ownership and reuse of content on this website.',
   'page.copyrightPolicy.body.intro':
-    'Material published on this website, including text, reports, photographs and other documents, is the property of the Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation Ltd. (SIDHKOFED), unless otherwise stated.',
+    'Material published on this website, including text, reports, photographs and other documents, is the property of the Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd. (SIDHKOFED), unless otherwise stated.',
   'page.copyrightPolicy.body.reuse.heading': 'Reuse',
   'page.copyrightPolicy.body.reuse.text':
     'Content may be reproduced for personal, educational or official reference use with due acknowledgement of SIDHKOFED as the source, unless a specific document states other licensing terms. Content may not be used in a misleading context or in a way that suggests official endorsement of a third party.',
@@ -568,7 +568,7 @@ const en = {
   'page.privacyPolicy.title': 'Privacy Policy',
   'page.privacyPolicy.subtitle': 'How SIDHKOFED collects, uses and protects your information.',
   'page.privacyPolicy.body.intro':
-    'This Privacy Policy explains how the Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation Ltd. (SIDHKOFED) website collects, uses and protects information when you visit this portal.',
+    'This Privacy Policy explains how the Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd. (SIDHKOFED) website collects, uses and protects information when you visit this portal.',
   'page.privacyPolicy.body.collect.heading': 'Information We Collect',
   'page.privacyPolicy.body.collect.text':
     'This website does not collect personal information unless you voluntarily provide it through the contact or enquiry forms. Server access logs (IP address, browser type, pages visited) are retained for security and statistical purposes only.',
@@ -593,7 +593,7 @@ const en = {
   'page.disclaimer.title': 'Disclaimer',
   'page.disclaimer.subtitle': 'Terms of use and limitations of liability for this website.',
   'page.disclaimer.body.intro':
-    'The information on this website is published by the Sidho-Kanho Birsha Murmu Krishi Evam Vanopaj Rajya Sahkari Sangh Maryadit (SIDHKOFED) for general information purposes only.',
+    'The information on this website is published by the Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd. (SIDHKOFED) for general information purposes only.',
   'page.disclaimer.body.accuracy.heading': 'Accuracy of Information',
   'page.disclaimer.body.accuracy.text':
     'While every effort is made to keep the information current and accurate, SIDHKOFED makes no warranty, express or implied, about the completeness, accuracy, reliability or suitability of the information, products or services contained on this website for any particular purpose. Any reliance you place on such information is strictly at your own risk.',
@@ -983,12 +983,12 @@ const hi: Record<TranslationKey, string> = {
     'झारखंड भर में सहकारी सदस्यों, प्रबंधन समितियों और ज़िला समितियों के लिए संरचित प्रशिक्षण कार्यक्रम।',
 
   'home.eyebrow.knowledgeHub': 'ज्ञान केंद्र',
-  'home.heading.knowledgeHub': 'अधिनियम, SOP, रिपोर्ट, प्रशिक्षण सामग्री और प्रकाशन',
-  'home.knowledgeHub.reports.label': 'रिपोर्ट और अनुसंधान',
+  'home.heading.knowledgeHub': 'अधिनियम, SOP, रिपोर्ट, प्रशिक्षण संसाधन और प्रकाशन',
+  'home.knowledgeHub.reports.label': 'अनुसंधान और रिपोर्ट',
   'home.knowledgeHub.reports.desc': 'वार्षिक रिपोर्ट, अध्ययन और शोध प्रकाशन',
-  'home.knowledgeHub.policies.label': 'नीतियाँ, दिशानिर्देश और SOP',
+  'home.knowledgeHub.policies.label': 'नीतियाँ और दिशानिर्देश',
   'home.knowledgeHub.policies.desc': 'सहकारी शासन और परिचालन प्रक्रियाएँ',
-  'home.knowledgeHub.training.label': 'प्रशिक्षण सामग्री',
+  'home.knowledgeHub.training.label': 'प्रशिक्षण संसाधन',
   'home.knowledgeHub.training.desc': 'वस्तु-वार अध्ययन और जागरूकता संसाधन',
   'home.knowledgeHub.forms.label': 'फॉर्म और प्रारूप',
   'home.knowledgeHub.forms.desc': 'आवेदन फॉर्म और मानक प्रारूप',
@@ -1370,12 +1370,12 @@ const hi: Record<TranslationKey, string> = {
   'page.impact.trainingBeneficiaries.subtitle': 'प्रशिक्षण पहुँच, जिला कवरेज और लाभार्थी आँकड़े।',
 
   'page.publications.title': 'प्रकाशन',
-  'page.publications.subtitle': 'SIDHKOFED के अधिनियम, नियम, SOP, वार्षिक रिपोर्ट, प्रशिक्षण सामग्री और आधिकारिक फॉर्म।',
-  'page.publications.reports.title': 'रिपोर्ट और अनुसंधान',
+  'page.publications.subtitle': 'SIDHKOFED के अधिनियम, नियम, SOP, वार्षिक रिपोर्ट, प्रशिक्षण संसाधन और आधिकारिक फॉर्म।',
+  'page.publications.reports.title': 'अनुसंधान और रिपोर्ट',
   'page.publications.reports.subtitle': 'वार्षिक रिपोर्ट, शोध अध्ययन और प्रभाव आकलन।',
   'page.publications.policies.title': 'नीतियाँ, दिशानिर्देश और SOP',
   'page.publications.policies.subtitle': 'नीति दस्तावेज़, परिचालन दिशानिर्देश और मानक प्रक्रियाएँ।',
-  'page.publications.training.title': 'प्रशिक्षण सामग्री',
+  'page.publications.training.title': 'प्रशिक्षण संसाधन',
   'page.publications.training.subtitle': 'मैनुअल, हैंडबुक और प्रशिक्षण सामग्री।',
   'page.publications.forms.title': 'फॉर्म और प्रारूप',
   'page.publications.forms.subtitle': 'आवेदन फॉर्म और आधिकारिक प्रारूप।',

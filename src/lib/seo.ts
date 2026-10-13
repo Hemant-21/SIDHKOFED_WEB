@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { env } from '@/config/env';
 
+/** Share-card fallback for pages without their own cover image: the SIDHKOFED emblem centred on a
+ *  1200x630 white card (public/og-default.png, kept under ~300 KB so WhatsApp/Facebook accept it). */
+export const DEFAULT_OG_IMAGE = { url: '/og-default.png', width: 1200, height: 630, alt: 'SIDHKOFED emblem' };
+
 /**
  * Build per-page metadata from backend content (codex §11: backend metadata only,
  * never fabricated). Sets canonical URL, Open Graph and Twitter cards. Titles flow
@@ -13,7 +17,8 @@ export function buildMetadata({
   image,
   type = 'website',
 }: {
-  title: string;
+  /** Plain string (gets the `· SIDHKOFED` suffix) or `{ absolute }` to skip the template. */
+  title: string | { absolute: string };
   description?: string | null;
   /** Absolute site path, e.g. `/events/lac-training`. */
   path: string;
@@ -22,14 +27,15 @@ export function buildMetadata({
 }): Metadata {
   const canonical = `${env.siteUrl}${path}`;
   const desc = description?.trim() || undefined;
-  const images = image ? [{ url: image }] : undefined;
+  const images = image ? [{ url: image }] : [DEFAULT_OG_IMAGE];
+  const plainTitle = typeof title === 'string' ? title : title.absolute;
 
   return {
     title,
     description: desc,
     alternates: { canonical },
     openGraph: {
-      title,
+      title: plainTitle,
       description: desc,
       url: canonical,
       type,
@@ -37,9 +43,9 @@ export function buildMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: plainTitle,
       description: desc,
-      images: image ? [image] : undefined,
+      images: [image ?? DEFAULT_OG_IMAGE.url],
     },
   };
 }

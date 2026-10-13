@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { env } from '@/config/env';
+import { getSocialSettings } from '@/lib/social-settings';
+import { buildMetadata } from '@/lib/seo';
 import { getListSafe, getOneSafe } from '@/lib/api/server';
 import { PUBLIC_ENDPOINTS } from '@/lib/api/endpoints';
 import type {
@@ -30,19 +31,21 @@ import { KnowledgeHub } from '@/components/home/knowledge-hub';
 import { ViewAllLink } from '@/components/home/view-all-link';
 import { CapacityBuildingBody } from '@/components/home/capacity-building-body';
 import { PartnersCarousel } from '@/components/home/partners-carousel';
-import { OrganizationJsonLd } from '@/components/seo/json-ld';
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/seo/json-ld';
 import { detailPath } from '@/lib/api/endpoints';
 import { isLocalMediaUrl, mediaUrl } from '@/utils/media-url';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  alternates: { canonical: env.siteUrl },
-  openGraph: { url: env.siteUrl },
-};
+export const metadata: Metadata = buildMetadata({
+  title: { absolute: 'SIDHKOFED – Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.' },
+  description:
+    'Official website of SIDHKOFED, the State-level apex cooperative federation working for agriculture and minor forest produce livelihoods in Jharkhand: programmes, trainings, tenders, notices and publications.',
+  path: '',
+});
 
 export default async function HomePage() {
-  const [heroGallery, leaders, programmes, notices, tenders, trainings, galleryEvents, partners] = await Promise.all([
+  const [heroGallery, leaders, programmes, notices, tenders, trainings, galleryEvents, partners, social] = await Promise.all([
     getOneSafe<GalleryDetail>(detailPath(PUBLIC_ENDPOINTS.galleries, 'hero-slides')),
     getListSafe<Leader>(PUBLIC_ENDPOINTS.leadership, { query: { page_size: 12 } }),
     getListSafe<ProgrammeSummary>(PUBLIC_ENDPOINTS.programmes, { query: { show_on_homepage: true, page_size: 6 } }),
@@ -61,7 +64,9 @@ export default async function HomePage() {
     // Already capped + ordered server-side (showOnHomepage + display_order), per the
     // CMS-configurable `homepage.featured_partners_limit` setting.
     getListSafe<InstitutionSummary>(PUBLIC_ENDPOINTS.homePartners),
+    getSocialSettings(),
   ]);
+  const sameAs = Object.values(social ?? {}).filter((u): u is string => typeof u === 'string' && /^https?:\/\//.test(u));
 
   const galleryItems = galleryEvents.items.filter((e) => e.cover_media !== null).slice(0, 6);
 
@@ -88,7 +93,8 @@ export default async function HomePage() {
 
   return (
     <>
-      <OrganizationJsonLd />
+      <WebSiteJsonLd />
+      <OrganizationJsonLd sameAs={sameAs} />
 
       {/* 1. Hero - split layout, static text with a photo carousel, embedded search */}
       <section className="overflow-hidden bg-hero">

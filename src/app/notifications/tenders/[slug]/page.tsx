@@ -6,7 +6,7 @@ import type { TenderDetail } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { DetailLayout } from '@/components/content/detail-layout';
 import { TenderArticle, TenderAside } from '@/components/details/tender-detail';
-import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BreadcrumbJsonLd, TenderJsonLd } from '@/components/seo/json-ld';
 
 export const revalidate = 300;
 
@@ -28,6 +28,14 @@ export default async function TenderDetailPage({ params }: { params: { slug: str
 
   return (
     <>
+      <TenderJsonLd
+        name={tender.title_en}
+        description={tender.summary_en}
+        tenderNumber={tender.tender_number}
+        datePublished={tender.publish_date}
+        submissionDeadline={tender.submission_deadline}
+        url={tender.public_url}
+      />
       <BreadcrumbJsonLd
         items={[
           { name: 'Notifications', url: '/notifications' },

@@ -14,6 +14,7 @@ import {
   MembershipDirectoryFootnote,
   MembershipCta,
 } from '@/components/membership/membership-content';
+import { ServiceJsonLd } from '@/components/seo/json-ld';
 import { PageFaqSection } from '@/components/content/page-faq-section';
 
 export const revalidate = 300;
@@ -42,6 +43,12 @@ export default async function MembershipPage() {
 
   return (
     <>
+      <ServiceJsonLd
+        name="SIDHKOFED cooperative membership"
+        description="Membership of the SIDHKOFED cooperative federation - types, benefits, application process and member directory."
+        serviceType="Cooperative membership"
+        url="/membership"
+      />
       {/* ── PAGE HEADER ── */}
       <LocalizedHero
         titleKey="page.membership.title"

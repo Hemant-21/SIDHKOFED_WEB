@@ -32,6 +32,7 @@ export default async function NewsDetailPage({ params }: { params: { slug: strin
     <>
       <ArticleJsonLd
         headline={news.title_en}
+        description={news.summary_en}
         datePublished={news.news_published_at}
         image={news.cover_media?.url ?? null}
         url={news.public_url}

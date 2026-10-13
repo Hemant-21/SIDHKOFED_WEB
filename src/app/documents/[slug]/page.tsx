@@ -6,7 +6,7 @@ import type { DocumentDetail } from '@/lib/types/content';
 import { buildMetadata } from '@/lib/seo';
 import { DetailLayout } from '@/components/content/detail-layout';
 import { DocumentArticle, DocumentAside } from '@/components/details/document-detail';
-import { BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { BreadcrumbJsonLd, DocumentJsonLd } from '@/components/seo/json-ld';
 
 export const revalidate = 300;
 
@@ -28,6 +28,14 @@ export default async function DocumentDetailPage({ params }: { params: { slug: s
 
   return (
     <>
+      <DocumentJsonLd
+        name={document.title_en}
+        description={document.description_en}
+        datePublished={document.publication_date ?? document.published_at}
+        fileUrl={document.file?.file_url ?? null}
+        mimeType={document.file?.mime_type ?? null}
+        url={document.public_url}
+      />
       <BreadcrumbJsonLd
         items={[
           { name: 'Documents', url: '/documents' },

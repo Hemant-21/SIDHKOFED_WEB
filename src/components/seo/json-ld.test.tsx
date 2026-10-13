@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ArticleJsonLd, FaqJsonLd } from './json-ld';
+import { ArticleJsonLd, DocumentJsonLd, FaqJsonLd, ServiceJsonLd, TenderJsonLd } from './json-ld';
 
 /**
  * JSON-LD is injected via dangerouslySetInnerHTML with CMS-sourced values, so a
@@ -41,5 +41,27 @@ describe('JSON-LD serializer - script-tag breakout defense', () => {
     const parsed = JSON.parse(decoded);
     expect(parsed['@type']).toBe('NewsArticle');
     expect(parsed.headline).toBe('Clean title');
+  });
+});
+
+describe('JSON-LD content types', () => {
+  const parse = (html: string) => JSON.parse(html.replace(/^.*?>(.*)<\/script>$/s, '$1'));
+
+  it('emits DigitalDocument, WebPage (tender) and GovernmentService with only supplied fields', () => {
+    const doc = parse(renderToStaticMarkup(<DocumentJsonLd name="SOP" url="/documents/sop" mimeType="application/pdf" />));
+    expect(doc['@type']).toBe('DigitalDocument');
+    expect(doc.encodingFormat).toBe('application/pdf');
+    expect(doc.contentUrl).toBeUndefined();
+
+    const tender = parse(
+      renderToStaticMarkup(<TenderJsonLd name="T" url="/t" tenderNumber="N-1" submissionDeadline="2026-11-01" />),
+    );
+    expect(tender['@type']).toBe('WebPage');
+    expect(tender.identifier).toBe('N-1');
+    expect(tender.expires).toBe('2026-11-01');
+
+    const svc = parse(renderToStaticMarkup(<ServiceJsonLd name="P" url="/programmes/p" />));
+    expect(svc['@type']).toBe('GovernmentService');
+    expect(svc.provider['@id']).toMatch(/#organization$/);
   });
 });

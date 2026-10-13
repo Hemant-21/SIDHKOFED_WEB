@@ -38,6 +38,8 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
     <>
       <EventJsonLd
         name={event.title_en}
+        description={event.summary_en}
+        image={event.cover_media?.url ?? null}
         startDate={event.start_date}
         endDate={event.end_date}
         location={event.location_text}

@@ -11,7 +11,7 @@ const ICON_CLASS = 'h-5 w-5 text-primary';
 const LINKS: { icon: React.ReactNode; labelKey: TranslationKey; href: string }[] = [
   { icon: <GraduationCap className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.training', href: '/activities?event_category=trainings&event_type=training#listing' },
   { icon: <Handshake className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.buyerEnquiry', href: '/procurement/enquiry' },
-  { icon: <FileText className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.forms', href: '/publications?knowledge_category=training-resources#listing' },
+  { icon: <FileText className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.forms', href: '/publications?knowledge_category=forms-and-formats#listing' },
   { icon: <MonitorSmartphone className={ICON_CLASS} aria-hidden="true" />, labelKey: 'home.quickAccess.digitalServices', href: '/digital-services' },
 ];
 

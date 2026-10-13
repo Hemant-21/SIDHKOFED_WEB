@@ -44,6 +44,10 @@ export function SiteFooter({
   const phone = contactSettings?.['contact.phone'].trim() ?? '';
   const email = contactSettings?.['contact.email'].trim() ?? '';
   const hours = contactSettings?.['contact.office_hours'].trim() ?? '';
+  // Put the timing on its own line: "Monday – Saturday, 10:00 AM – 5:00 PM" -> days / time.
+  const commaAt = hours.indexOf(',');
+  const hoursDays = commaAt === -1 ? hours : hours.slice(0, commaAt);
+  const hoursTime = commaAt === -1 ? '' : hours.slice(commaAt + 1).trim();
 
   // Live values from Settings → Social, same fail-safe/hide-when-blank pattern as contact.
   const socialLinks = SOCIAL_LINKS.map(({ key, label, Icon }) => ({
@@ -53,19 +57,19 @@ export function SiteFooter({
   })).filter((link) => link.url !== '');
 
   return (
-    <footer className="mt-16 border-t border-border bg-footer text-footer-foreground">
-      <Container className="py-12">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+    <footer className="mt-12 border-t border-border bg-footer text-footer-foreground">
+      <Container className="py-8">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.5fr_1fr_1.2fr_1fr_1.2fr]">
 
           {/* Col 1 - Identity + contact */}
           <div>
             <div className="flex items-center gap-3">
-              <Image src="/logo-sidhkofed.png" alt="SIDHKOFED" width={256} height={256} quality={90} className="h-16 w-16 shrink-0 object-contain" />
+              <Image src="/logo-sidhkofed.png" alt="SIDHKOFED" width={256} height={256} quality={90} className="h-12 w-12 shrink-0 object-contain" />
               <span className="text-lg font-bold" lang={language}>
                 {t('site.name')}
               </span>
             </div>
-            <ul className="mt-4 space-y-2 text-sm text-footer-foreground/85">
+            <ul className="mt-3 space-y-1.5 text-sm text-footer-foreground/85">
               {address !== '' ? (
                 <li className="flex items-start gap-2">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
@@ -98,13 +102,14 @@ export function SiteFooter({
                   <Clock className="h-4 w-4 shrink-0" aria-hidden="true" />
                   <span>
                     <span className="sr-only">{t('contact.hours')}: </span>
-                    {hours}
+                    {hoursDays}
+                    {hoursTime !== '' ? <span className="block">{hoursTime}</span> : null}
                   </span>
                 </li>
               ) : null}
             </ul>
             {socialLinks.length > 0 ? (
-              <ul className="mt-4 flex items-center gap-3">
+              <ul className="mt-3 flex items-center gap-2">
                 {socialLinks.map(({ label, Icon, url }) => (
                   <li key={label}>
                     <a
@@ -135,21 +140,20 @@ export function SiteFooter({
           <FooterLinkColumn headingKey="footer.policies" items={FOOTER_NAV.policies} language={language} t={t} />
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-footer-foreground/15 pt-6 text-sm text-footer-foreground/85 sm:flex-row sm:items-center">
-          <div>
+        <div className="mt-6 border-t border-footer-foreground/15 pt-4 text-sm text-footer-foreground/85">
+          <div className="flex items-center justify-between gap-4">
             <p>© {year} {t('footer.copyright')}</p>
-            <p className="mt-1 text-xs text-footer-foreground/80">
+            <Link href="/search" className="hover:text-footer-foreground hover:underline">
+              {t('nav.search')}
+            </Link>
+          </div>
+          <div className="mt-1 grid gap-1 text-xs text-footer-foreground/75 sm:grid-cols-3 sm:items-center sm:gap-4">
+            <p>
               {t('footer.lastUpdated')} <span lang={language}>{lastUpdated}</span>
             </p>
+            <p className="sm:text-center" lang={language}>{t('footer.designedDeveloped')}</p>
           </div>
-          <Link href="/search" className="hover:text-footer-foreground hover:underline">
-            {t('nav.search')}
-          </Link>
         </div>
-
-        <p className="mt-4 text-center text-xs text-footer-foreground/70" lang={language}>
-          {t('footer.designedDeveloped')}
-        </p>
       </Container>
     </footer>
   );
@@ -171,7 +175,7 @@ function FooterLinkColumn({
       <h2 className="text-sm font-semibold uppercase tracking-wide text-footer-foreground">
         {t(headingKey)}
       </h2>
-      <ul className="mt-4 space-y-2 text-sm">
+      <ul className="mt-3 space-y-1.5 text-sm">
         {items.map((item) => (
           <li key={item.key}>
             {item.external ? (

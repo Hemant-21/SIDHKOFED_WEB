@@ -14,17 +14,17 @@ const CARDS: { labelKey: TranslationKey; descKey: TranslationKey; href: string }
   {
     labelKey: 'home.knowledgeHub.policies.label',
     descKey: 'home.knowledgeHub.policies.desc',
-    href: '/publications?knowledge_category=training-resources&document_type=guideline,manuals#listing',
+    href: '/publications?knowledge_category=policies-guidelines-and-training-resources&document_type=policy,guideline,acts,bye-laws#listing',
   },
   {
     labelKey: 'home.knowledgeHub.training.label',
     descKey: 'home.knowledgeHub.training.desc',
-    href: '/publications?knowledge_category=training-resources#listing',
+    href: '/publications?knowledge_category=policies-guidelines-and-training-resources&document_type=training-material#listing',
   },
   {
     labelKey: 'home.knowledgeHub.forms.label',
     descKey: 'home.knowledgeHub.forms.desc',
-    href: '/publications?knowledge_category=acts-and-rules&document_type=form#listing',
+    href: '/publications?knowledge_category=forms-and-formats#listing',
   },
 ];
 

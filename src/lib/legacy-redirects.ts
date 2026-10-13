@@ -50,24 +50,24 @@ export const LEGACY_REDIRECTS = {
   },
   'publications/training-materials': {
     path: '/publications',
-    fixedParams: { knowledge_category: 'training-resources' },
+    fixedParams: { knowledge_category: 'policies-guidelines-and-training-resources', document_type: 'training-material' },
     passthroughKeys: ['search', 'year'],
-    // Same category (whole category - deliberately NOT narrowed to document_type=training-material)
-    // and same ordering (-publication_date).
+    // Training Resources now lives inside the combined category, narrowed to its one type;
+    // same ordering (-publication_date).
     preservePage: true,
   },
   'publications/policies-guidelines-sops': {
     path: '/publications',
-    fixedParams: { knowledge_category: 'training-resources', document_type: 'guideline,manuals' },
+    fixedParams: { knowledge_category: 'policies-guidelines-and-training-resources', document_type: 'policy,guideline,acts,bye-laws' },
     passthroughKeys: ['search', 'year'],
-    // Relabelled from two now-retired knowledge categories (policies-and-guidelines,
-    // sops-and-manuals) onto one active category + type filter - scope isn't equivalent, so old
-    // page numbers don't line up with the new result set.
+    // The old route merged two retired knowledge categories (policies-and-guidelines,
+    // sops-and-manuals); the destination is one category narrowed by type - scope isn't
+    // equivalent, so old page numbers don't line up with the new result set.
     preservePage: false,
   },
   'publications/forms-formats': {
     path: '/publications',
-    fixedParams: { knowledge_category: 'acts-and-rules', document_type: 'form' },
+    fixedParams: { knowledge_category: 'forms-and-formats' },
     passthroughKeys: ['search', 'year'],
     // Ordering changes from the old route's display_order to the destination's -publication_date
     // (a deliberate consolidation onto Publications' native ordering, not silently replicated) -

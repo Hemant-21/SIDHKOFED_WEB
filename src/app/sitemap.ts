@@ -10,9 +10,9 @@ interface SlugRow {
   updated_at?: string | null;
 }
 
-// Static + dynamic public routes. Listings are bounded to the first page (100) per
-// content type to keep the sitemap lightweight (codex: keep payloads small). For a
-// very large corpus this would paginate into a sitemap index.
+// Static + dynamic public routes. Listings are fetched page by page (100 per request).
+// changefreq/priority are omitted on purpose - Google ignores them; lastModified is only
+// emitted where the backend supplies a real date.
 const STATIC_ROUTES = [
   '',
   '/about',
@@ -61,25 +61,37 @@ const DYNAMIC_SOURCES: Array<{ endpoint: string; prefix: string }> = [
 
 export const revalidate = 3600;
 
+/** Safety cap so a misbehaving backend can never make the sitemap loop forever. */
+const MAX_PAGES = 50;
+
+/** Walk every page of a listing (not just the first) so older content stays discoverable. */
+async function fetchAllRows(endpoint: string): Promise<SlugRow[]> {
+  const rows: SlugRow[] = [];
+  let totalPages = 1;
+  for (let page = 1; page <= Math.min(totalPages, MAX_PAGES); page += 1) {
+    const result = await getListSafe<SlugRow>(endpoint, { query: { page, page_size: 100 }, revalidate: 3600 });
+    if (result.error) break;
+    rows.push(...result.items);
+    totalPages = result.pagination.total_pages;
+  }
+  return rows;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = env.siteUrl;
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
     url: `${base}${route}`,
-    changeFrequency: 'daily',
-    priority: route === '' ? 1 : 0.7,
   }));
 
   const dynamicLists = await Promise.all(
     DYNAMIC_SOURCES.map(async ({ endpoint, prefix }) => {
-      const { items } = await getListSafe<SlugRow>(endpoint, { query: { page_size: 100 }, revalidate: 3600 });
+      const items = await fetchAllRows(endpoint);
       return items.map((row) => ({
         url: `${base}${row.public_url ?? `${prefix}/${row.slug}`}`,
         ...(row.updated_at || row.published_at
           ? { lastModified: new Date(row.updated_at ?? row.published_at!) }
           : {}),
-        changeFrequency: 'weekly' as const,
-        priority: 0.6,
       }));
     }),
   );

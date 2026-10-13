@@ -22,7 +22,7 @@ export function AboutHero() {
               {t('page.about.title')}
             </h1>
             <p className="mt-2 text-base font-medium text-hero-muted" lang="en">
-              Sidho-Kanho Agriculture and Forest Produce State Cooperative Federation Ltd.
+              Sidho-Kanho Agriculture and Forest Produce State Co-operative Federation Ltd.
             </p>
             <p className="mt-1 text-base text-hero-muted" lang="hi">
               सिद्धो-कान्हो कृषि एवं वनोपज राज्य सहकारी संघ लि०

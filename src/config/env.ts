@@ -21,7 +21,12 @@ export const env = {
   /** Absolute backend API base for Server Component fetches (no CORS). */
   serverApiBaseUrl: `${backendOrigin}${apiBaseUrl}`,
   /** Public canonical site URL (SEO canonical/OG, sitemap, robots). */
-  siteUrl: read('NEXT_PUBLIC_SITE_URL', 'http://localhost:3002'),
+  siteUrl: read(
+    'NEXT_PUBLIC_SITE_URL',
+    // A production build/runtime without the variable must never emit localhost canonicals,
+    // OG URLs or sitemap entries - fall back to the official domain instead.
+    process.env.NODE_ENV === 'production' ? 'https://sidhkofed.jharkhand.gov.in' : 'http://localhost:3002',
+  ).replace(/\/+$/, ''),
   /** Default UI language. English primary, Hindi optional (codex §10). */
   defaultLanguage: read('NEXT_PUBLIC_DEFAULT_LANGUAGE', 'en') as 'en' | 'hi',
 } as const;

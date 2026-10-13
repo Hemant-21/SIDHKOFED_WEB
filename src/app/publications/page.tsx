@@ -33,7 +33,7 @@ const ICON_CLASS = 'h-5 w-5 text-primary';
  *  back to Folder (same fallback pattern as /activities' event-category icons). */
 const CATEGORY_ICONS: Record<string, ReactNode> = {
   'bye-laws': <FileText className={ICON_CLASS} aria-hidden="true" />,
-  'training-resources': <GraduationCap className={ICON_CLASS} aria-hidden="true" />,
+  'policies-guidelines-and-training-resources': <GraduationCap className={ICON_CLASS} aria-hidden="true" />,
   'sops-and-manuals': <BookOpen className={ICON_CLASS} aria-hidden="true" />,
   'policies-and-guidelines': <FileText className={ICON_CLASS} aria-hidden="true" />,
   'forms-and-formats': <FileText className={ICON_CLASS} aria-hidden="true" />,
